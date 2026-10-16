@@ -16,6 +16,7 @@ spring:
     hikari:
       maximum-pool-size: 5
       minimum-idle: 1
+      connection-init-sql: "SET time_zone = '+00:00'"
   flyway:
     enabled: ${DB_MIGRATION_ENABLED:false}
     locations: classpath:db/migration
@@ -35,3 +36,7 @@ mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
   configuration:
     map-underscore-to-camel-case: true
+health:
+  demo:
+    enabled: ${HEALTH_DEMO_ENABLED:false}
+    token: ${HEALTH_DEMO_API_TOKEN:}

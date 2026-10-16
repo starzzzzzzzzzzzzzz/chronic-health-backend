@@ -1,0 +1,12 @@
+{
+  "id":"00000000-0000-4000-8000-000000000001",
+  "name":"虚构演示患者A",
+  "facts":[
+    {"axis":"H","code":"health_stage","value":"健康状况尚未专业核实"},
+    {"axis":"F","code":"self_care","value":"示例自述可独立活动"},
+    {"axis":"B","code":"daily_routine","value":"示例自述希望改善久坐习惯"},
+    {"axis":"C","code":"care_support","value":null},
+    {"axis":"E","code":"available_equipment","value":null},
+    {"axis":"G","code":"desired_goal","value":"示例希望规律作息"}
+  ]
+}

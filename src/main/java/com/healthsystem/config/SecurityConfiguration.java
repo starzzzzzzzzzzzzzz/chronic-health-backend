@@ -1,6 +1,10 @@
 package com.healthsystem.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
+import com.healthsystem.common.security.DemoAuthenticationFilter;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
+import java.util.Arrays;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,8 +17,13 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfiguration {
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // 当前没有登录实现，只开放健康检查；不把任意 Token 视为有效身份。
+    SecurityFilterChain securityFilterChain(HttpSecurity http, Environment environment) throws Exception {
+        boolean demo = Arrays.asList(environment.getActiveProfiles()).contains("local")
+                && environment.getProperty("health.demo.enabled", Boolean.class, false);
+        if (demo) {
+            http.addFilterBefore(new DemoAuthenticationFilter(environment.getProperty("health.demo.token")), AnonymousAuthenticationFilter.class);
+        }
+        // Real authentication is not integrated. Only explicit local DEMO can authenticate here.
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
@@ -24,6 +33,9 @@ public class SecurityConfiguration {
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(a -> a
                         .requestMatchers(HttpMethod.GET, "/health", "/actuator/health").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/patients", "/patients/**", "/plan-versions/*").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/care-plans").authenticated()
+                        .requestMatchers(HttpMethod.PATCH, "/plan-versions/*").authenticated()
                         .anyRequest().denyAll())
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint((request, response, exception) -> {
