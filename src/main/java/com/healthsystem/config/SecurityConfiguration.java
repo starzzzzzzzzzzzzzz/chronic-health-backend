@@ -47,6 +47,8 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST,"/plan-versions/*/task-bundles").authenticated()
                         .requestMatchers(HttpMethod.GET,"/task-bundles/*").authenticated()
                         .requestMatchers(HttpMethod.PATCH,"/task-bundles/*").authenticated()
+                        .requestMatchers(HttpMethod.GET,"/task-bundles/*/review-context","/schedule-previews/*").authenticated()
+                        .requestMatchers(HttpMethod.POST,"/task-bundles/*/schedule-previews","/task-bundles/*/review-submissions","/task-bundles/*/versions").authenticated()
                         .anyRequest().denyAll())
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint((request, response, exception) -> {

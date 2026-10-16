@@ -89,6 +89,6 @@ public class PlanReviewServiceImpl implements PlanReviewService {
     private ReviewSubmissionVO view(ReviewSubmission s) {
         var d=decisions.selectOne(new QueryWrapper<ReviewDecision>().eq("org_id",s.getOrgId()).eq("submission_id",s.getId()));
         var decision=d==null?null:new ReviewSubmissionVO.Decision(d.getId(),d.getDecision(),d.getComment(),d.getReviewerId(),utc(d.getReviewedAt()));
-        return new ReviewSubmissionVO(s.getId(),s.getPlanVersionId(),s.getStage(),String.valueOf(s.getRowVersion()),String.valueOf(s.getTargetRevision()),s.getContentHash(),s.getStatus(),JsonValues.read(s.getContentSnapshotJson()),s.getSubmittedBy(),utc(s.getSubmittedAt()),s.getClosedBy(),utc(s.getClosedAt()),s.getClosedReason(),decision);
+        return new ReviewSubmissionVO(s.getId(),s.getPlanVersionId(),s.getStage(),String.valueOf(s.getRowVersion()),String.valueOf(s.getTargetRevision()),s.getContentHash(),s.getStatus(),JsonValues.read(s.getContentSnapshotJson()),s.getSubmittedBy(),utc(s.getSubmittedAt()),s.getClosedBy(),utc(s.getClosedAt()),s.getClosedReason(),decision,null,null);
     }
 }

@@ -1,6 +1,6 @@
 # 七维任务到基础打卡实施计划
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** 确定性派生已审方案的任务，完成二审、幂等发布、日任务和基础反馈。
 
@@ -38,11 +38,11 @@
 - Consumes: PlanReviewSupport.context(p,id,capability,lock)、CarePlanService.get(p,id)、PatientService.healthSummary(p,id)、已批准 review_submission 与 review_decision。
 - Produces: TaskBundleService.generate(p,planVersionId,body)、get(p,id)、update(p,id,body)；TaskBundleStore.context(p,id,capability,lock)、view(bundle)、groups(bundle)、advance/audit；TaskSourcePolicy.validate(context)。
 
-- [ ] 写 HTTP 失败测试：未审来源冲突；批准后只派生执行条目、冻结来源和二次快照；非法字段与来源篡改；越权和跨模式；未知专业参数阻断。
-- [ ] `./scripts/test-db.sh -Dtest=TaskGenerationApiTest`，Expected: 新接口未开放导致201断言失败。
-- [ ] 实现 V5、来源验证、规则模板与草稿存取；缺必需执行参数保留 BLOCKER，不补医学内容。保留现有 PLAN 审核约束直到 Task 2 明确扩展。
-- [ ] 同一命令及现有业务回归，Expected: 全绿。
-- [ ] 提交来源与任务包功能。
+- [x] 写 HTTP 失败测试：未审来源冲突；批准后只派生执行条目、冻结来源和二次快照；非法字段与来源篡改；越权和跨模式；未知专业参数阻断。
+- [x] `./scripts/test-db.sh -Dtest=TaskGenerationApiTest`，Expected: 新接口未开放导致201断言失败。
+- [x] 实现 V5、来源验证、规则模板与草稿存取；缺必需执行参数保留 BLOCKER，不补医学内容。保留现有 PLAN 审核约束直到 Task 2 明确扩展。
+- [x] 同一命令及现有业务回归，Expected: 全绿。
+- [x] 提交来源与任务包功能。
 
 ### Task 2: 确定排程与任务二审
 
@@ -52,11 +52,11 @@
 - Consumes: Task 1 context/view/groups/source policy。
 - Produces: TaskScheduleService.preview(p,bundleId,body)、get(p,previewId)；TaskReviewService.context/submit/get/decide/withdraw；TaskBundleService.newVersion；审核通用路径按stage分派。
 
-- [ ] 写失败测试：双槽位/7、14、28天/跨日/DST/轮换/负担/ANCHOR拒绝；旧预览失效；TASK审核独立权限和禁自审；退回撤回重提；已审任务包新版本不继承审核。
-- [ ] `./scripts/test-db.sh -Dtest=TaskScheduleApiTest,TaskReviewApiTest,TaskSchedulePolicyTest`，Expected: 新路由或TASK阶段尚不可用。
-- [ ] 确定展开并冻结完整实例和问题；更新V4 CHECK、TASK 外键及待审唯一键；保持PLAN原路径和修订归属不变。
-- [ ] 同一命令 + `./scripts/test-db.sh`，Expected: 全绿，无一审回归。
-- [ ] 提交排程与二审。
+- [x] 写失败测试：双槽位/7、14、28天/跨日/DST/轮换/负担/ANCHOR拒绝；旧预览失效；TASK审核独立权限和禁自审；退回撤回重提；已审任务包新版本不继承审核。
+- [x] `./scripts/test-db.sh -Dtest=TaskScheduleApiTest,TaskReviewApiTest,TaskSchedulePolicyTest`，Expected: 新路由或TASK阶段尚不可用。
+- [x] 确定展开并冻结完整实例和问题；更新V4 CHECK、TASK 外键及待审唯一键；保持PLAN原路径和修订归属不变。
+- [x] 同一命令 + `./scripts/test-db.sh`，Expected: 全绿，无一审回归。
+- [x] 提交排程与二审。
 
 ### Task 3: 事务发布与患者日任务
 
