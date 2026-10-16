@@ -51,6 +51,11 @@ class TaskFeedbackApiTest extends FeedbackApiTestSupport {
   for(var entry:deadlines.entrySet()) {
    var t=publishedTask();var cutoff=java.time.Instant.parse(entry.getValue());
    db.update("UPDATE execution_task SET dimension_code=?,normal_cutoff_at=?,makeup_cutoff_at=? WHERE id=?",entry.getKey(),java.time.LocalDateTime.parse("2026-10-17T01:00:00"),java.time.LocalDateTime.ofInstant(cutoff,java.time.ZoneOffset.UTC),t.path("id").asText());
+   if("medication".equals(entry.getKey())) {
+    var snapshot=(tools.jackson.databind.node.ObjectNode)t.path("contentSnapshot").deepCopy();
+    ((tools.jackson.databind.node.ObjectNode)snapshot.path("group")).set("professionalBinding",json.valueToTree(Map.of("drugName","fictional-boundary-order")));
+    db.update("UPDATE execution_task SET content_snapshot_json=? WHERE id=?",json.writeValueAsString(snapshot),t.path("id").asText());
+   }
    workflowClock.set(cutoff.minusNanos(1000).toString());var f=feedback(checkins(t),PATIENT,"before-"+entry.getKey(),Map.of(),201);
    assertThat(f.path("assessment").path("submissionSource").asText()).isEqualTo("MAKEUP");
    workflowClock.set(cutoff.toString());feedback("/check-ins/"+f.path("id").asText()+"/amendments",PATIENT,"at-"+entry.getKey(),Map.of("expectedRevision","0","note","边界更正"),409);
@@ -58,5 +63,12 @@ class TaskFeedbackApiTest extends FeedbackApiTestSupport {
  }
  @Test void missingIdempotencyHeaderIsAClientError() throws Exception {
   var t=publishedTask();mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post(checkins(t)).header("Authorization",PATIENT).contentType("application/json").content("{}")).andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.status().isBadRequest());
+ }
+ @Test void aPublishedNextDoseAlsoCapsEarlierFeedbackAcrossBundleChanges() throws Exception {
+  var t=publishedTask();var snapshot=(tools.jackson.databind.node.ObjectNode)t.path("contentSnapshot").deepCopy();((tools.jackson.databind.node.ObjectNode)snapshot.path("group")).set("professionalBinding",json.valueToTree(Map.of("drugName","虚构同药")));
+  db.update("UPDATE execution_task SET dimension_code='medication',normal_cutoff_at='2026-10-17 01:00:00',makeup_cutoff_at='2026-10-17 13:00:00',content_snapshot_json=? WHERE id=?",json.writeValueAsString(snapshot),t.path("id").asText());
+  String next=db.queryForObject("SELECT id FROM execution_task WHERE publication_id=? AND execution_date='2026-10-18'",String.class,t.path("publicationId").asText());
+  db.update("UPDATE execution_task SET dimension_code='medication',opens_at='2026-10-17 04:00:00',closes_at='2026-10-17 05:00:00',normal_cutoff_at='2026-10-17 05:00:00',content_snapshot_json=? WHERE id=?",json.writeValueAsString(snapshot),next);
+  workflowClock.set("2026-10-17T04:00:00Z");feedback(checkins(t),PATIENT,"after-next-dose",Map.of(),409);
  }
 }

@@ -31,7 +31,12 @@ public class PlanReviewSupport {
         if(plan==null)throw new BusinessException(404,"Plan not found");
         patients.require(p,plan.getPatientId(),capability,lock);
         if(!"PATIENT_READ".equals(capability))patients.require(p,plan.getPatientId(),"PATIENT_READ",false);
-        if(lock)v=plans.lockVersion(p.orgId(),id);
+        if(lock) {
+            // A concurrent version can change the pointer while this request waits for the patient.
+            plan=plans.selectOne(new QueryWrapper<CarePlan>().eq("org_id",p.orgId()).eq("id",v.getPlanId()));
+            if(plan==null)throw new BusinessException(404,"Plan not found");
+            v=plans.lockVersion(p.orgId(),id);
+        }
         return new Context(plan,v,carePlans.get(p,id));
     }
     public void capability(BusinessPrincipal p,Context c,String ability){patients.require(p,c.plan().getPatientId(),ability,false);}

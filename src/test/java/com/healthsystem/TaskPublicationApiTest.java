@@ -50,4 +50,23 @@ class TaskPublicationApiTest extends PublicationApiTestSupport {
   db.update("UPDATE schedule_preview SET preview_hash=? WHERE id=?","1".repeat(64),r.preview().path("id").asText());publish(r,pre,"corrupt-preview",409);
   assertThat(db.queryForObject("SELECT COUNT(*) FROM publication WHERE task_bundle_id=?",Integer.class,r.bundle().path("id").asText())).isZero();
  }
+ @Test void replacementCannotBackdateOrPublishAfterItsInspectedBoundaryHasPassed() throws Exception {
+  var old=approvedTask();publish(old,prepare(old,"NONE","2026-10-16T00:00:00Z"),"old-backdate",201);
+  var b=postJson("/task-bundles/"+old.bundle().path("id").asText()+"/versions",TOKEN,Map.of("expectedRevision","5","changeReason","时间边界测试"),201);b=configure(b,List.of(slot("morning","09:00",0,60)));var p=preview(b);
+  var s=postJson("/task-bundles/"+b.path("id").asText()+"/review-submissions",TOKEN,Map.of("expectedRevision","2","schedulePreviewId",p.path("id").asText()),201);s=postJson("/review-submissions/"+s.path("id").asText()+"/decisions",REVIEWER,Map.of("expectedRevision","0","decision","APPROVE"),201);b=getJson("/task-bundles/"+b.path("id").asText(),TOKEN,200);var r=new Ready(b,p,s);
+  var pre=prepare(r,"ALL_FUTURE","2026-10-17T00:00:00Z");workflowClock.set("2026-10-17T02:00:00Z");
+  postJson("/task-bundles/"+b.path("id").asText()+"/publication-previews",TOKEN,publicationIntent(r,"ALL_FUTURE","2026-10-17T00:00:00Z"),400);
+  publish(r,pre,"late-publication",400);
+ }
+ @Test void unchangedActionsKeepOneBoundaryOccurrenceAcrossDifferentPlanItemIds() throws Exception {
+  var old=approvedTask();publish(old,prepare(old,"NONE","2026-10-16T00:00:00Z"),"plan-v1-key",201);
+  String oldVersion=old.bundle().path("sourcePlanVersionId").asText();String plan=db.queryForObject("SELECT plan_id FROM care_plan_version WHERE id=?",String.class,oldVersion);
+  var v=postJson("/care-plans/"+plan+"/versions",TOKEN,Map.of("sourceVersionId",oldVersion,"expectedRevision","4","changeReason","复制相同执行动作的新版方案"),201);String newVersion=v.path("versionId").asText();String item=v.path("items").get(0).path("id").asText();
+  postJson("/plan-versions/"+newVersion+"/condition-confirmations",TOKEN,Map.of("expectedRevision","0","entries",List.of(executionEntry("execution."+item))),201);
+  var s=postJson("/plan-versions/"+newVersion+"/review-submissions",TOKEN,Map.of("expectedRevision","1"),201);postJson("/review-submissions/"+s.path("id").asText()+"/decisions",REVIEWER,Map.of("expectedRevision","0","decision","APPROVE"),201);
+  var b=postJson("/plan-versions/"+newVersion+"/task-bundles",TOKEN,Map.of("expectedRevision","3"),201);b=configure(b,List.of(slot("morning","08:00",0,60)));var p=preview(b);
+  s=postJson("/task-bundles/"+b.path("id").asText()+"/review-submissions",TOKEN,Map.of("expectedRevision","2","schedulePreviewId",p.path("id").asText()),201);s=postJson("/review-submissions/"+s.path("id").asText()+"/decisions",REVIEWER,Map.of("expectedRevision","0","decision","APPROVE"),201);b=getJson("/task-bundles/"+b.path("id").asText(),TOKEN,200);var r=new Ready(b,p,s);
+  var pre=prepare(r,"ALL_FUTURE","2026-10-17T00:00:00Z");assertThat(pre.path("createOccurrenceKeys").size()).isEqualTo(6);publish(r,pre,"plan-v2-key",201);
+  workflowClock.set("2026-10-17T00:30:00Z");var day=getJson("/patients/"+b.path("patientId").asText()+"/execution-tasks?date=2026-10-17",PATIENT,200);assertThat(day.size()).isEqualTo(1);assertThat(day.get(0).path("taskBundleId")).isEqualTo(old.bundle().path("id"));
+ }
 }

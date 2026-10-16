@@ -78,4 +78,13 @@ class TaskSchedulePolicyTest extends TaskApiTestSupport {
         var f=approved("routine",true);var b=configure(bundle(f,"4"),List.of(slot("same","08:00",0,90),slot("same","09:00",0,90)));
         assertThat(preview(b).path("issues").toString()).contains("DUPLICATE_SLOT_KEY");
     }
+    @Test void routineNormalDeadlineCannotBeOverridden() throws Exception {
+        var b=readyBundle();var custom=new LinkedHashMap<String,Object>(slot("morning","08:00",0,60));custom.put("normalCutoffOffsetMinutes",60);
+        b=editBundle(b.path("id").asText(),Map.of("expectedRevision","1","groups",List.of(Map.of("id",b.path("groups").get(0).path("id").asText(),"schedule",Map.of("isoWeekdays",List.of(1,2,3,4,5,6,7),"slots",List.of(custom))))),200);
+        assertThat(preview(b).path("issues").toString()).contains("FIXED_NORMAL_CUTOFF");
+    }
+    @Test void crossDayMonitoringCannotEndAfterItsMakeupDeadline() throws Exception {
+        var f=approved("monitoring",true);var monitoring=configure(bundle(f,"4"),List.of(slot("late","23:00",0,120)));
+        assertThat(preview(monitoring).path("issues").toString()).contains("INVALID_DEADLINE_ORDER");
+    }
 }

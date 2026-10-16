@@ -70,9 +70,11 @@ public class TaskSchedulePolicy {
                     Instant planned=local.atZone(zone).toInstant(),opens=planned.plusSeconds(slot.path("opensOffsetMinutes").longValue()*60),closes=planned.plusSeconds(slot.path("closesOffsetMinutes").longValue()*60);
                     Instant normal=closes;
                     if("routine".equals(g.path("dimensionCode").asText()))normal=date.plusDays(1).atTime(12,0).atZone(zone).toInstant();
-                    if(slot.has("normalCutoffOffsetMinutes")){check(slot.path("normalCutoffOffsetMinutes").isIntegralNumber(),"Invalid submission cutoff");int offset=slot.path("normalCutoffOffsetMinutes").intValue();check(offset>=slot.path("closesOffsetMinutes").intValue()&&offset<=2880,"Invalid submission cutoff");normal=planned.plusSeconds(offset*60L);}
+                    if(slot.has("normalCutoffOffsetMinutes")){check(slot.path("normalCutoffOffsetMinutes").isIntegralNumber(),"Invalid submission cutoff");int offset=slot.path("normalCutoffOffsetMinutes").intValue();check(offset>=slot.path("closesOffsetMinutes").intValue()&&offset<=2880,"Invalid submission cutoff");Instant configured=planned.plusSeconds(offset*60L);
+                        if("routine".equals(g.path("dimensionCode").asText()) && !configured.equals(normal)){issues.add(issue("FIXED_NORMAL_CUTOFF",field,"Routine submission cutoff must remain next business day 12:00"));continue;}normal=configured;}
                     if(normal.isBefore(closes)){issues.add(issue("INVALID_SUBMISSION_CUTOFF",field,"Submission cutoff is earlier than execution window end"));continue;}
                     Instant makeup=makeupDeadline(g.path("dimensionCode").asText(),date,normal,closes,zone);
+                    if(makeup.isBefore(normal)){issues.add(issue("INVALID_DEADLINE_ORDER",field,"Submission and makeup rules cannot contain this execution window"));continue;}
                     var n=new LinkedHashMap<String,Object>();
                     n.put("occurrenceKey",g.path("id").asText()+":"+date+":"+slot.path("slotKey").asText());n.put("groupId",g.path("id").asText());n.put("variantId",variant.path("id").asText());
                     n.put("dimensionCode",g.path("dimensionCode").asText());n.put("executionDate",date.toString());n.put("zoneId",zone.getId());n.put("slotKey",slot.path("slotKey").asText());
@@ -93,12 +95,13 @@ public class TaskSchedulePolicy {
             long active=day.getValue().stream().filter(n->n.path("activeInputRequired").asBoolean()).count();
             if(day.getValue().size()>displayLimit(bundle) || active>6)issues.add(issue("DAILY_LOAD_EXCEEDED",day.getKey(),"Daily task or active-input limit exceeded; safety items retained"));
         }
-        // The next confirmed dose caps makeup; no guessed dosing or replacement suggestion.
-        var medication=result.stream().filter(n->"medication".equals(n.path("dimensionCode").asText())).toList();
+        // Match the confirmed medicine across groups, never just an incidental group UUID.
+        var medication=result.stream().filter(n->"medication".equals(n.path("dimensionCode").asText())).sorted(Comparator.comparing(n->n.path("opensAt").asText())).toList();
         for(int i=0;i<medication.size();i++)for(int j=i+1;j<medication.size();j++) {
-            var a=medication.get(i);var b=medication.get(j);
-            if(a.path("groupId").equals(b.path("groupId"))) {
-                Instant next=Instant.parse(b.path("opensAt").asText()),deadline=Instant.parse(a.path("makeupCutoffAt").asText());
+            var a=medication.get(i);var b=medication.get(j);String medicine=TaskMedicationIdentity.of(a.path("contentSnapshot").path("group"));
+            if(medicine!=null && medicine.equals(TaskMedicationIdentity.of(b.path("contentSnapshot").path("group")))) {
+                Instant next=Instant.parse(b.path("opensAt").asText()),normal=Instant.parse(a.path("normalCutoffAt").asText()),deadline=Instant.parse(a.path("makeupCutoffAt").asText());
+                if(next.isBefore(normal))issues.add(issue("MEDICATION_WINDOW_CONFLICT",a.path("groupId").asText(),"Confirmed same-drug execution/submission windows overlap"));
                 if(next.isBefore(deadline))((ObjectNode)a).put("makeupCutoffAt",next.toString());break;
             }
         }

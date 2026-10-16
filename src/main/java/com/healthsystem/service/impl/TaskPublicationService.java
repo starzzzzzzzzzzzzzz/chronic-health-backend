@@ -17,11 +17,11 @@ import static com.healthsystem.service.impl.PlanReviewSupport.*;
 
 @Service
 public class TaskPublicationService {
- private final TaskBundleStore store;private final TaskSourcePolicy source;private final TaskScheduleService schedules;
+ private final Clock clock;private final TaskBundleStore store;private final TaskSourcePolicy source;private final TaskScheduleService schedules;
  private final ReviewSubmissionMapper reviews;private final ReviewDecisionMapper decisions;private final CarePlanVersionMapper versions;
  private final PublicationPreviewMapper previews;private final PublicationMapper publications;private final PublicationRequestMapper requests;
  private final TaskResultMapper results;private final ExecutionTaskMapper tasks;private final OutboxEventMapper outbox;private final com.healthsystem.service.PatientService patients;
- public TaskPublicationService(TaskBundleStore s,TaskSourcePolicy so,TaskScheduleService sc,ReviewSubmissionMapper r,ReviewDecisionMapper d,CarePlanVersionMapper v,PublicationPreviewMapper pr,PublicationMapper p,PublicationRequestMapper req,ExecutionTaskMapper t,TaskResultMapper resultMapper,OutboxEventMapper o,com.healthsystem.service.PatientService pa){store=s;source=so;schedules=sc;reviews=r;decisions=d;versions=v;previews=pr;publications=p;requests=req;tasks=t;results=resultMapper;outbox=o;patients=pa;}
+ public TaskPublicationService(Clock c,TaskBundleStore s,TaskSourcePolicy so,TaskScheduleService sc,ReviewSubmissionMapper r,ReviewDecisionMapper d,CarePlanVersionMapper v,PublicationPreviewMapper pr,PublicationMapper p,PublicationRequestMapper req,ExecutionTaskMapper t,TaskResultMapper resultMapper,OutboxEventMapper o,com.healthsystem.service.PatientService pa){clock=c;store=s;source=so;schedules=sc;reviews=r;decisions=d;versions=v;previews=pr;publications=p;requests=req;tasks=t;results=resultMapper;outbox=o;patients=pa;}
  public record Published(JsonNode data,boolean created){}
  @Transactional(isolation=Isolation.READ_COMMITTED) public JsonNode preview(BusinessPrincipal p,String id,ReviewWorkflowRequest request) {
   var body=request.body();fields(body,"expectedRevision","reviewSubmissionId","schedulePreviewId","effectiveAt","replacementScope");
@@ -61,7 +61,8 @@ public class TaskPublicationService {
   var schedule=schedules.requireCurrent(p,b,string(body,"schedulePreviewId",true,36));var s=reviews.lockSubmission(p.orgId(),string(body,"reviewSubmissionId",true,36));
   if(s==null||!"TASK".equals(s.getStage())||!b.getId().equals(s.getTaskBundleId())||!"APPROVED".equals(s.getStatus())||s.getTargetRevision()!=b.getContentRevision().longValue()||!schedule.getId().equals(s.getSchedulePreviewId())||!TaskReviewService.reviewHash(b,schedule).equals(s.getContentHash()))throw BusinessException.conflict("Approved task review does not match publication");
   var d=decisions.selectOne(new QueryWrapper<ReviewDecision>().eq("org_id",p.orgId()).eq("submission_id",s.getId()).eq("decision","APPROVE"));if(d==null)throw BusinessException.conflict("Task approval decision is missing");
-  String scope=string(body,"replacementScope",true,16);check(Set.of("NONE","ALL_FUTURE").contains(scope),"Explicit replacement scope required");time(body,"effectiveAt");return schedule;
+  String scope=string(body,"replacementScope",true,16);check(Set.of("NONE","ALL_FUTURE").contains(scope),"Explicit replacement scope required");
+  var effective=time(body,"effectiveAt");if("ALL_FUTURE".equals(scope))check(!effective.isBefore(LocalDateTime.now(clock)),"Replacement boundary must not be before server time; inspect a new future boundary");return schedule;
  }
  private record Manifest(List<String> createOccurrenceKeys,List<String> replaceTaskIds,List<String> retainTaskIds){}
  private Manifest manifest(TaskBundleStore.Context c,SchedulePreview schedule,JsonNode body) {
@@ -83,7 +84,12 @@ public class TaskPublicationService {
  }
  // Feedback and publication serialize on the same patient lock.
  private boolean hasFeedback(ExecutionTask t){return results.selectCount(new QueryWrapper<TaskResult>().eq("org_id",t.getOrgId()).eq("execution_task_id",t.getId()))>0;}
- private static String businessSlot(JsonNode snapshot,String date,String slot){return CanonicalJson.text(snapshot.path("group").path("sourcePlanItemIds"))+":"+date+":"+slot;}
+ private static String businessSlot(JsonNode snapshot,String date,String slot){
+  var group=snapshot.path("group");var identity=new TreeMap<String,JsonNode>();
+  // Exact frozen execution semantics survive cloned plan-item IDs; no fuzzy title matching.
+  for(String field:List.of("dimensionCode","actorType","action","basicGoal","sourceContraindications","professionalBinding"))identity.put(field,group.path(field));
+  return CanonicalJson.hash(JsonValues.tree(identity))+":"+date+":"+slot;
+ }
  private static String previewHash(PublicationPreview p){return CanonicalJson.hash(JsonValues.tree(Map.of("taskBundleId",p.getTaskBundleId(),"bundleRevision",String.valueOf(p.getBundleRevision()),"intent",JsonValues.read(p.getIntentJson()),"manifest",JsonValues.read(p.getManifestJson()))));}
  private JsonNode previewView(PublicationPreview p){var result=(tools.jackson.databind.node.ObjectNode)JsonValues.read(p.getIntentJson()).deepCopy();result.put("id",p.getId()).put("taskBundleId",p.getTaskBundleId()).put("previewHash",p.getPreviewHash());for(var e:JsonValues.read(p.getManifestJson()).properties())result.set(e.getKey(),e.getValue());return result;}
  private JsonNode view(Publication p){return JsonValues.tree(Map.of("id",p.getId(),"taskBundleId",p.getTaskBundleId(),"patientId",p.getPatientId(),"reviewSubmissionId",p.getReviewSubmissionId(),"schedulePreviewId",p.getSchedulePreviewId(),"publicationPreviewId",p.getPublicationPreviewId(),"effectiveAt",utc(p.getEffectiveAt()),"status",p.getStatus(),"notificationStatus",p.getNotificationStatus(),"taskCount",tasks.selectCount(new QueryWrapper<ExecutionTask>().eq("org_id",p.getOrgId()).eq("publication_id",p.getId()))));}

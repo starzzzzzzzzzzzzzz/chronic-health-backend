@@ -32,11 +32,12 @@ public class TaskScheduleService {
         var row=store.previews.selectOne(new QueryWrapper<SchedulePreview>().eq("org_id",p.orgId()).eq("id",id));
         if(row==null)throw new BusinessException(404,"Schedule preview not found");return row;
     }
-    public SchedulePreview requireCurrent(BusinessPrincipal p,TaskBundle b,String id) {
+    public SchedulePreview requireCurrent(BusinessPrincipal p,TaskBundle b,String id) {return requireCurrent(p,b,id,true);}
+    public SchedulePreview requireCurrent(BusinessPrincipal p,TaskBundle b,String id,boolean approvable) {
         var row=find(p,id);
         if(!row.getTaskBundleId().equals(b.getId()) || !id.equals(b.getLatestPreviewId()) || row.getBundleRevision()!=b.getContentRevision().longValue()
                 || !row.getContentHash().equals(b.getContentHash()) || !store.hash(b).equals(b.getContentHash()) || !hash(row).equals(row.getPreviewHash()))throw BusinessException.conflict("Schedule preview is stale or does not match bundle");
-        if(!JsonValues.read(row.getIssuesJson()).isEmpty() || !store.issues(b,store.groups(b)).isEmpty())throw BusinessException.badRequest("Task preview has blocking issues");
+        if(approvable && (!JsonValues.read(row.getIssuesJson()).isEmpty() || !store.issues(b,store.groups(b)).isEmpty()))throw BusinessException.badRequest("Task preview has blocking issues");
         return row;
     }
     public static String hash(SchedulePreview row){return CanonicalJson.hash(JsonValues.tree(Map.of("bundleRevision",String.valueOf(row.getBundleRevision()),"contentHash",row.getContentHash(),"ruleVersion",row.getRuleVersion(),"occurrences",JsonValues.read(row.getOccurrencesJson()),"issues",JsonValues.read(row.getIssuesJson()))));}

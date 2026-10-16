@@ -42,4 +42,16 @@ class TaskReviewApiTest extends TaskApiTestSupport {
         assertThat(getJson("/review-submissions/"+s.path("id").asText(),TOKEN,200).path("status").asText()).isEqualTo("RETURNED");
         assertThat(getJson("/task-bundles/"+id+"/review-context",TOKEN,200).path("submissions").size()).isEqualTo(2);
     }
+    @Test void disablingTheTemplateDoesNotTrapTheOwnerInPendingReview() throws Exception {
+        var b=readyBundle();var p=preview(b);var s=postJson(submitRoute(b.path("id").asText()),TOKEN,Map.of("expectedRevision","2","schedulePreviewId",p.path("id").asText()),201);
+        db.update("UPDATE task_template SET review_status='DISABLED' WHERE id=?",b.path("groups").get(0).path("template").path("id").asText());
+        postJson("/review-submissions/"+s.path("id").asText()+"/withdrawals",TOKEN,Map.of("expectedRevision","0","reason","模板失效，撤回重新编排"),201);
+        assertThat(getJson("/task-bundles/"+b.path("id").asText(),TOKEN,200).path("status").asText()).isEqualTo("DRAFT");
+    }
+    @Test void disablingTheTemplateAllowsReturnButStillPreventsApproval() throws Exception {
+        var b=readyBundle();var p=preview(b);var s=postJson(submitRoute(b.path("id").asText()),TOKEN,Map.of("expectedRevision","2","schedulePreviewId",p.path("id").asText()),201);
+        db.update("UPDATE task_template SET review_status='DISABLED' WHERE id=?",b.path("groups").get(0).path("template").path("id").asText());
+        postJson("/review-submissions/"+s.path("id").asText()+"/decisions",REVIEWER,Map.of("expectedRevision","0","decision","APPROVE"),400);
+        postJson("/review-submissions/"+s.path("id").asText()+"/decisions",REVIEWER,Map.of("expectedRevision","0","decision","RETURN","comment","模板已失效"),201);
+    }
 }

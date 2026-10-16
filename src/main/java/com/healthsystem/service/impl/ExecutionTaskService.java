@@ -25,11 +25,23 @@ public class ExecutionTaskService {
  public ExecutionTask require(BusinessPrincipal p,String id,String capability,boolean lock) {
   var task=tasks.selectOne(new QueryWrapper<ExecutionTask>().eq("org_id",p.orgId()).eq("id",id));if(task==null)throw new BusinessException(404,"Execution task not found");
   patients.require(p,task.getPatientId(),capability,lock);if(lock)task=tasks.lock(p.orgId(),id);
-  if(!visible(task,LocalDateTime.now(clock)))throw new BusinessException(404,"Execution task is not active");return task;
+  if(!visible(task,LocalDateTime.now(clock)))throw new BusinessException(404,"Execution task is not active");
+  task.setMakeupCutoffAt(effectiveMakeupCutoff(task));return task;
+ }
+ private LocalDateTime effectiveMakeupCutoff(ExecutionTask task) {
+  var cutoff=task.getMakeupCutoffAt();if(!"medication".equals(task.getDimensionCode()))return cutoff;
+  String medicine=TaskMedicationIdentity.of(JsonValues.read(task.getContentSnapshotJson()).path("group"));
+  if(medicine==null)return task.getNormalCutoffAt().isBefore(cutoff)?task.getNormalCutoffAt():cutoff;
+  var next=tasks.selectList(new QueryWrapper<ExecutionTask>().eq("org_id",task.getOrgId()).eq("patient_id",task.getPatientId()).eq("dimension_code","medication").gt("opens_at",task.getOpensAt()).lt("opens_at",cutoff).orderByAsc("opens_at","id"));
+  for(var dose:next) {
+   var pub=publications.selectById(dose.getPublicationId());
+   if(pub!=null&&"PUBLISHED".equals(pub.getStatus())&&!pub.getEffectiveAt().isAfter(dose.getOpensAt())&&(dose.getCancelledAt()==null||dose.getCancelledAt().isAfter(dose.getOpensAt()))&&medicine.equals(TaskMedicationIdentity.of(JsonValues.read(dose.getContentSnapshotJson()).path("group"))))return dose.getOpensAt();
+  }
+  return cutoff;
  }
  private boolean visible(ExecutionTask t,LocalDateTime now){var pub=publications.selectById(t.getPublicationId());return pub!=null&&"PUBLISHED".equals(pub.getStatus())&&!pub.getEffectiveAt().isAfter(now)&&(t.getCancelledAt()==null||t.getCancelledAt().isAfter(now));}
  public JsonNode view(ExecutionTask t) {
-  var m=new LinkedHashMap<String,Object>();m.put("id",t.getId());m.put("patientId",t.getPatientId());m.put("publicationId",t.getPublicationId());m.put("taskBundleId",t.getTaskBundleId());m.put("occurrenceKey",t.getOccurrenceKey());m.put("dimensionCode",t.getDimensionCode());m.put("executionDate",t.getExecutionDate());m.put("zoneId",t.getZoneId());m.put("slotKey",t.getSlotKey());m.put("plannedAt",utc(t.getPlannedAt()));m.put("opensAt",utc(t.getOpensAt()));m.put("closesAt",utc(t.getClosesAt()));m.put("normalCutoffAt",utc(t.getNormalCutoffAt()));m.put("makeupCutoffAt",utc(t.getMakeupCutoffAt()));m.put("contentSnapshot",JsonValues.read(t.getContentSnapshotJson()));m.put("taskClass",t.getTaskClass());m.put("priorityCode",t.getPriorityCode());m.put("safetyFocus",t.getSafetyFocus());m.put("scheduledCancellationAt",utc(t.getCancelledAt()));
+  var m=new LinkedHashMap<String,Object>();m.put("id",t.getId());m.put("patientId",t.getPatientId());m.put("publicationId",t.getPublicationId());m.put("taskBundleId",t.getTaskBundleId());m.put("occurrenceKey",t.getOccurrenceKey());m.put("dimensionCode",t.getDimensionCode());m.put("executionDate",t.getExecutionDate());m.put("zoneId",t.getZoneId());m.put("slotKey",t.getSlotKey());m.put("plannedAt",utc(t.getPlannedAt()));m.put("opensAt",utc(t.getOpensAt()));m.put("closesAt",utc(t.getClosesAt()));m.put("normalCutoffAt",utc(t.getNormalCutoffAt()));m.put("makeupCutoffAt",utc(effectiveMakeupCutoff(t)));m.put("contentSnapshot",JsonValues.read(t.getContentSnapshotJson()));m.put("taskClass",t.getTaskClass());m.put("priorityCode",t.getPriorityCode());m.put("safetyFocus",t.getSafetyFocus());m.put("scheduledCancellationAt",utc(t.getCancelledAt()));
   var result=results.selectOne(new QueryWrapper<TaskResult>().eq("org_id",t.getOrgId()).eq("execution_task_id",t.getId()));
   m.put("currentResult",result==null?null:Map.of("rowVersion",String.valueOf(result.getRowVersion()),"currentFeedbackId",result.getCurrentFeedbackId(),"assessment",JsonValues.read(result.getAssessmentJson()),"updatedAt",utc(result.getUpdatedAt())));return JsonValues.tree(m);
  }

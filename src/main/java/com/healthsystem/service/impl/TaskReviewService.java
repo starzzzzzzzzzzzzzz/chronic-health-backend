@@ -37,7 +37,7 @@ public class TaskReviewService {
         var body=request.body();fields(body,"expectedRevision","decision","comment");long expected=expected(body);String decision=string(body,"decision",true,16);check(Set.of("APPROVE","RETURN").contains(decision),"Invalid review decision");String comment=string(body,"comment","RETURN".equals(decision),20000);
         var initial=find(p,id);var c=store.context(p,initial.getTaskBundleId(),"TASK_REVIEW",true);var s=submissions.lockSubmission(p.orgId(),id);
         if(p.subjectId().equals(s.getSubmittedBy()))throw new BusinessException(403,"Self-review is not allowed");
-        pending(p,c.bundle(),s,expected);if("APPROVE".equals(decision))source.validate(c.bundle(),c.source());
+        pending(p,c.bundle(),s,expected,"APPROVE".equals(decision));if("APPROVE".equals(decision))source.validate(c.bundle(),c.source());
         var d=stamp(new ReviewDecision(),p);d.setSubmissionId(id);d.setDecision(decision);d.setComment(comment);d.setReviewerId(p.subjectId());d.setReviewedAt(d.getCreatedAt());decisions.insert(d);
         finish(s,p,"APPROVE".equals(decision)?"APPROVED":"RETURNED",null);store.advance(p,c.bundle(),"APPROVE".equals(decision)?"APPROVED":"DRAFT",false,"TASK_REVIEW_DECIDED");return view(s);
     }
@@ -45,11 +45,11 @@ public class TaskReviewService {
         var body=request.body();fields(body,"expectedRevision","reason");long expected=expected(body);String reason=string(body,"reason",true,1000);
         var initial=find(p,id);var c=store.context(p,initial.getTaskBundleId(),"TASK_EDIT",true);var s=submissions.lockSubmission(p.orgId(),id);
         if(!p.subjectId().equals(s.getSubmittedBy()))throw new BusinessException(403,"Only the submitter may withdraw");
-        pending(p,c.bundle(),s,expected);finish(s,p,"WITHDRAWN",reason);store.advance(p,c.bundle(),"DRAFT",false,"TASK_REVIEW_WITHDRAWN");return view(s);
+        pending(p,c.bundle(),s,expected,false);finish(s,p,"WITHDRAWN",reason);store.advance(p,c.bundle(),"DRAFT",false,"TASK_REVIEW_WITHDRAWN");return view(s);
     }
-    private void pending(BusinessPrincipal p,TaskBundle b,ReviewSubmission s,long expected) {
+    private void pending(BusinessPrincipal p,TaskBundle b,ReviewSubmission s,long expected,boolean approvable) {
         if(s.getRowVersion()!=expected || !"PENDING".equals(s.getStatus()) || !"IN_REVIEW".equals(b.getStatus()) || s.getTargetRevision()!=b.getContentRevision().longValue())throw BusinessException.conflict("Task review is closed or stale");
-        var preview=schedules.requireCurrent(p,b,s.getSchedulePreviewId());
+        var preview=schedules.requireCurrent(p,b,s.getSchedulePreviewId(),approvable);
         if(!reviewHash(b,preview).equals(s.getContentHash()))throw BusinessException.conflict("Task review content changed");
     }
     public static String reviewHash(TaskBundle b,SchedulePreview preview){return CanonicalJson.hash(JsonValues.tree(Map.of("bundleHash",b.getContentHash(),"previewHash",preview.getPreviewHash(),"sourceReviewHash",b.getSourceReviewHash())));}
