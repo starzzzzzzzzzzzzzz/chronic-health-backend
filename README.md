@@ -2,6 +2,8 @@
 
 当前已建立 Spring Boot 4.1.1 后端骨架，包含健康检查、请求追踪、安全默认拒绝和 Flyway 迁移。采用常见的 Controller / Service / Mapper 分层结构，目前仅保留业务层目录，尚未实现业务功能。目录说明见 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)，接口约定见 [docs/API-CONTRACT.md](docs/API-CONTRACT.md)。
 
+数据库设计初稿见 [设计总览](docs/database/DATABASE-DESIGN.md)、[表与字段字典](docs/database/TABLE-DICTIONARY.md) 和 [视频页面字段映射](docs/database/VIDEO-FIELD-MAPPING.md)。这些是待评审设计，尚未执行业务建表。
+
 ## 项目目录
 
 ```text
@@ -40,7 +42,8 @@ chronic-health-backend/
 │   └── MybatisPlusDatabaseTest.java     MySQL 数据访问测试
 └── docs/
     ├── ARCHITECTURE.md                  分层职责与架构说明
-    └── API-CONTRACT.md                  RESTful 接口约定
+    ├── API-CONTRACT.md                  RESTful 接口约定
+    └── database/                        核心业务数据库设计初稿
 ```
 
 业务请求通常依次经过 `Controller → Service → Mapper → MySQL`。目前部分业务层仅通过 `package-info.java` 保留目录，具体业务功能后续逐步实现。本地 `.env`、依赖缓存 `.dev/` 和构建产物 `target/` 已忽略，不提交到仓库。
