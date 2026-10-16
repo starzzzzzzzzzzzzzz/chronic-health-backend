@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.healthsystem.mapper.HealthFactMapper">
+  <select id="currentFacts" resultType="com.healthsystem.entity.HealthFact">
+    SELECT f.* FROM health_fact f WHERE f.org_id=#{org} AND f.patient_id=#{patient}
+    AND NOT EXISTS (SELECT 1 FROM health_fact next WHERE next.org_id=f.org_id AND next.patient_id=f.patient_id AND next.supersedes_fact_id=f.id)
+    ORDER BY f.axis_code,f.fact_code,f.id
+  </select>
+</mapper>
