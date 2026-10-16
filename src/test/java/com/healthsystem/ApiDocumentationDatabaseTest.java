@@ -19,12 +19,12 @@ class ApiDocumentationDatabaseTest extends DatabaseApiTestSupport {
     @Test void generatedContractListsCurrentRoutesAndRawAuthorizationHeader() throws Exception {
         var doc=document();
         assertThat(doc.path("openapi").asText()).startsWith("3.0.");
-        assertThat(doc.path("paths").size()).isEqualTo(12);
+        assertThat(doc.path("paths").size()).isEqualTo(14);
         int operations=0;
         for(var path:doc.path("paths")) {
             for(String method:java.util.List.of("get","post","patch"))if(path.has(method))operations++;
         }
-        assertThat(operations).isEqualTo(14); // GET/PATCH and GET/POST share two resource paths.
+        assertThat(operations).isEqualTo(17); // Multiple methods can share one resource path.
         var scheme=doc.path("components").path("securitySchemes").path("AuthorizationToken");
         assertThat(scheme.path("type").asText()).isEqualTo("apiKey");
         assertThat(scheme.path("name").asText()).isEqualTo("Authorization");
