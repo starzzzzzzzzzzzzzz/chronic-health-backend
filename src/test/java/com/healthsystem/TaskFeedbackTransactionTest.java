@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.*;
+@org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable(named="RUN_DB_TESTS",matches="true")
 class TaskFeedbackTransactionTest extends FeedbackApiTestSupport {
  @MockitoSpyBean AuditLogMapper audit;
  @Test void auditFailureRollsBackFeedbackResultAndSafetyEvent() throws Exception {

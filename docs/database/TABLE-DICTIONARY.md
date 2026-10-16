@@ -1,6 +1,6 @@
 # 数据表与字段字典 初稿 v0.1
 
-日期：2026-10-16。共 26 张业务候选表；现有 app_metadata、flyway_schema_history 不计入。A 批已按 V2/V3 迁移实现；V4 增加执行条件、一审提交及决策三表；B 批其余两表和 C/D 批仍为设计；实际 SQL 位于 src/main/resources/db/migration。
+日期：2026-10-16。共 26 张业务候选表；现有 app_metadata、flyway_schema_history 不计入。本文主体保留早期候选字段；当前实现已到V8，实际字段以迁移SQL为准，新增/调整清单见文末。
 
 返回 [设计总览](DATABASE-DESIGN.md) · [页面字段映射](VIDEO-FIELD-MAPPING.md)
 
@@ -761,3 +761,19 @@ V4 已实现 PLAN 一审；TASK、task_bundle_id 和 schedule_preview_id 留作�
 索引：IDX(org_id,target_type,target_id,occurred_at)；IDX(org_id,request_id)。
 
 约束：业务变更审计与业务写入同一事务；事务外的请求失败另记去敏运行日志。target_id 为多态逻辑关联，无法声明到单一业务表的 FK。
+
+## 实施更新 V5—V8
+
+| 迁移 | 实际存储 | 关键约束或字段 |
+|---|---|---|
+| V5 | task_template / task_bundle | 模板DEMO标记/版本/摘要；来源一审、TASK输入、包row_version与content_revision、latest_preview_id |
+| V5 | task_group / task_group_variant / task_group_source | 独立组、候选、完整条目—模块—事实多来源；固定专业内容在content_json |
+| V5 | schedule_preview | 完整occurrences_json、issues_json、正文修订/摘要、preview_hash、规则版本 |
+| V6 | review_submission扩展 | PLAN/TASK目标二选一、TASK外键与待审唯一键 |
+| V7 | publication_preview | 不可变intent_json/manifest_json及摘要 |
+| V7 | publication / publication_request | 包发布唯一；机构内幂等键唯一、请求摘要及键别名 |
+| V7 | execution_task / outbox_event | 发布+occurrence_key唯一、业务日期/UTC窗口、冻结内容、取消生效时刻；通知NOT_CONFIGURED |
+| V8 | task_feedback | 任务+version_no唯一、机构内幂等键唯一、不可变正文/评估/接收时刻/前序ID |
+| V8 | task_result / task_safety_event | 一任务一个当前结果与修订；独立OPEN安全信号，反馈更正不能清除 |
+
+详细字段可直接查看 src/main/resources/db/migration/V5—V8 文件。此处新增14表，不把原候选 generation_job/rule_set_version 当成已完成，也不声称原26表设计一一照搬。

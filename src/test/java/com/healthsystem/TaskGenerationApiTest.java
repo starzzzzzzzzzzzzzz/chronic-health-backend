@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Transactional
+@org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable(named="RUN_DB_TESTS",matches="true")
 class TaskGenerationApiTest extends TaskApiTestSupport {
     @Test void approvedPlanProducesOnlyItsExecutionDimensionAndKeepsSourceChain() throws Exception {
         var f=approved("routine",true);

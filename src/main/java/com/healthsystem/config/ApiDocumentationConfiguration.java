@@ -23,8 +23,8 @@ public class ApiDocumentationConfiguration {
                 .replaceWithClass(tools.jackson.databind.node.ObjectNode.class,Object.class);
     }
     @Bean OpenAPI healthOpenApi(@Value("${server.servlet.context-path:/ncd-ai}") String contextPath) {
-        return new OpenAPI().info(new Info().title("慢病健康管理后端 API").version("0.2.0")
-                .description("本地 DEMO：患者资料、手工方案、条件确认与一审。Authorize 中填写原始 Token，不加 Bearer。编辑身份使用 .env.demo 中 HEALTH_DEMO_API_TOKEN；审核身份使用 HEALTH_DEMO_REVIEWER_TOKEN。文档不包含凭证值。"))
+        return new OpenAPI().info(new Info().title("慢病健康管理后端 API").version("0.3.0")
+                .description("本地 DEMO：患者、方案与一审、七维任务与二审、发布、日任务与基础打卡。Authorize 中填写原始 Token，不加 Bearer。编辑身份使用 .env.demo 中 HEALTH_DEMO_API_TOKEN；审核身份使用 HEALTH_DEMO_REVIEWER_TOKEN。患者打卡使用 HEALTH_DEMO_PATIENT_TOKEN。计完成模式，无真实AI、质量评分及消息发送。文档不包含凭证值。"))
                 .servers(List.of(new Server().url(contextPath)))
                 .components(new Components().addSecuritySchemes("AuthorizationToken",new SecurityScheme()
                         .type(SecurityScheme.Type.APIKEY).in(SecurityScheme.In.HEADER).name("Authorization")
@@ -53,6 +53,7 @@ public class ApiDocumentationConfiguration {
                 var schema=schemas.get(entry.getKey());
                 if(schema!=null)for(String field:entry.getValue())schema.addProperty(field,new Schema<>().nullable(true));
             }
+            TaskApiDocumentation.apply(api);
             api.getPaths().forEach((path,item)->item.readOperationsMap().forEach((method,operation)->{
                 // Preserve standard OpenAPI examples and show a copyable body in Knife4j's description.
                 if(operation.getRequestBody()!=null && operation.getRequestBody().getContent()!=null) {

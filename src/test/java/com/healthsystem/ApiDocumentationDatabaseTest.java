@@ -56,6 +56,15 @@ class ApiDocumentationDatabaseTest extends DatabaseApiTestSupport {
             assertThat(operation.path("description").asText()).contains("可复制的请求示例", "```json", row[2]);
         }
     }
+    @Test void taskWorkflowDocumentationHasEditableRootBodiesAndPatientIdentityGuidance() throws Exception {
+        var doc=document();
+        String[][] cases={{"/plan-versions/{id}/task-bundles","post","expectedRevision"},{"/task-bundles/{id}","patch","groups"},{"/task-bundles/{id}/schedule-previews","post","expectedRevision"},{"/task-bundles/{id}/review-submissions","post","schedulePreviewId"},{"/task-bundles/{id}/versions","post","changeReason"},{"/task-bundles/{id}/publication-previews","post","replacementScope"},{"/task-bundles/{id}/publications","post","publicationPreviewId"},{"/execution-tasks/{id}/check-ins","post","completion"},{"/check-ins/{id}/amendments","post","expectedRevision"}};
+        for(var row:cases){var op=doc.path("paths").path(row[0]).path(row[1]);var media=op.path("requestBody").path("content").path("application/json");var schema=media.path("schema");if(schema.has("$ref"))schema=doc.path("components").path("schemas").path(schema.path("$ref").asText().replace("#/components/schemas/",""));assertThat(schema.path("properties").has(row[2])).as(row[0]).isTrue();assertThat(schema.path("properties").has("body")).isFalse();assertThat(media.has("example")).isTrue();assertThat(op.path("description").asText()).contains("可复制的请求示例");}
+        assertThat(doc.path("info").path("description").asText()).contains("HEALTH_DEMO_PATIENT_TOKEN");
+        var response=doc.path("paths").path("/execution-tasks/{id}/check-ins").path("post").path("responses").path("201").path("content").path("application/json").path("schema");
+        assertThat(response.has("$ref")).as("Knife4j needs a named response envelope to render nested feedback fields").isTrue();
+        for(String route:java.util.List.of("/task-bundles/{id}/publications","/execution-tasks/{id}/check-ins","/check-ins/{id}/amendments")){var op=doc.path("paths").path(route).path("post");assertThat(op.path("responses").has("200")).isTrue();assertThat(op.path("parameters").toString()).contains("Idempotency-Key");}
+    }
     JsonNode document() throws Exception {
         return json.readTree(mvc.perform(get("/v3/api-docs/health")).andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
     }

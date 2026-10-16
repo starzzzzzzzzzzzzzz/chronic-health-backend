@@ -8,6 +8,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 @Transactional
+@org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable(named="RUN_DB_TESTS",matches="true")
 class TaskPublicationApiTest extends PublicationApiTestSupport {
  @Test void patientSeesOnlyPublishedFrozenOccurrencesAndPublicationIsIdempotent() throws Exception {
   var r=approvedTask();String patient=r.bundle().path("patientId").asText();

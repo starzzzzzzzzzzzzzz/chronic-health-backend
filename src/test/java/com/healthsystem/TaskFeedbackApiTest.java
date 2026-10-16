@@ -4,6 +4,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import static org.assertj.core.api.Assertions.*;
 @Transactional
+@org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable(named="RUN_DB_TESTS",matches="true")
 class TaskFeedbackApiTest extends FeedbackApiTestSupport {
  @Test void emptyOneClickMeansSelfReportedCompletionWithoutInventingTimingOrSafety() throws Exception {
   var t=publishedTask();feedback(checkins(t),TOKEN,"staff-forbidden",Map.of(),403);
@@ -54,5 +55,8 @@ class TaskFeedbackApiTest extends FeedbackApiTestSupport {
    assertThat(f.path("assessment").path("submissionSource").asText()).isEqualTo("MAKEUP");
    workflowClock.set(cutoff.toString());feedback("/check-ins/"+f.path("id").asText()+"/amendments",PATIENT,"at-"+entry.getKey(),Map.of("expectedRevision","0","note","边界更正"),409);
   }
+ }
+ @Test void missingIdempotencyHeaderIsAClientError() throws Exception {
+  var t=publishedTask();mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post(checkins(t)).header("Authorization",PATIENT).contentType("application/json").content("{}")).andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.status().isBadRequest());
  }
 }

@@ -4,6 +4,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import static org.assertj.core.api.Assertions.*;
 @Transactional
+@org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable(named="RUN_DB_TESTS",matches="true")
 class TaskReviewApiTest extends TaskApiTestSupport {
     String submitRoute(String bundle){return "/task-bundles/"+bundle+"/review-submissions";}
     @Test void taskReviewHasItsOwnStageAndCannotBeSelfApprovedOrEditedWhilePending() throws Exception {

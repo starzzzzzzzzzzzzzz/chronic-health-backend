@@ -12,7 +12,7 @@ SERVER_PORT=9089 ./scripts/run-demo.sh
 - 页面：<http://127.0.0.1:9089/ncd-ai/doc.html>
 - 当前接口的 OpenAPI JSON：<http://127.0.0.1:9089/ncd-ai/v3/api-docs/health>
 
-页面按患者资料、方案草稿、执行条件、一审、方案版本和运行状态分组，共 14 个操作（13 个业务接口和 1 个存活检查）。Actuator 依赖健康检查不属于本组。接口说明随 Controller、DTO/VO 和文档模型生成；动态 JSON 请求体通过专门的文档模型展示真实根字段。
+页面按患者资料、方案、条件确认、一审、任务派生、二审、发布、日任务、打卡和运行状态分组，共32个操作（31个业务操作和1个存活检查）。Actuator 依赖健康检查不属于本组。接口说明随 Controller、DTO/VO 和文档模型生成；动态 JSON 请求体通过专门的文档模型展示真实根字段。
 
 ## 第一次调用
 
@@ -22,7 +22,7 @@ SERVER_PORT=9089 ./scripts/run-demo.sh
 4. 一审决策前，把 Authorize 值换成 `.env.demo` 的 `HEALTH_DEMO_REVIEWER_TOKEN`；审核人必须与提交人不同。若已打开调试页仍显示旧值，关闭该接口标签后重新打开，并在“请求头部”确认 Authorization。
 5. 调试结束在 **Authorize → 注销** 清除授权值。Knife4j 会在本机浏览器缓存输入，不要在共享设备上保留凭证，也不要把授权值截图发给别人。
 
-有请求体的接口，在“接口描述”中提供 **可复制的请求示例**；复制到调试正文并替换版本 ID、条目 ID、修订号。Knife4j 4.5 会另外自动生成一份包含所有字段的完整结构，其中空值不能直接当作有效请求。示例创建的草稿不含完整正文，执行条件确认和送审还需要满足 [第二批业务规则](PHASE-B-API.md)。完整契约见 [第一批](PHASE-A-API.md) 与 [第二批](PHASE-B-API.md)。响应示例同样来自 schema，不代表实际调用成功；以“调试”返回和测试结果为准。
+有请求体的接口，在“接口描述”中提供 **可复制的请求示例**；复制到调试正文并替换版本 ID、条目 ID、修订号。Knife4j 4.5 会另外自动生成一份包含所有字段的完整结构，其中空值不能直接当作有效请求。示例创建的草稿不含完整正文，执行条件确认和送审还需要满足 [第二批业务规则](PHASE-B-API.md)。完整契约见 [第一批](PHASE-A-API.md) 、[第二批](PHASE-B-API.md) 和 [第三批](PHASE-CDE-API.md)。响应示例同样来自 schema，不代表实际调用成功；以“调试”返回和测试结果为准。
 
 ## 开关与环境
 
@@ -34,4 +34,6 @@ SERVER_PORT=9089 ./scripts/run-demo.sh
 
 当前使用 `springdoc-openapi-starter-webmvc-ui 3.1.1` 生成 OpenAPI 3.0 文档，搭配 `knife4j-openapi3-ui 4.5.0` 纯 UI。没有引入面向旧 Spring Boot 的 Knife4j starter，也没有改动项目 Java 17 / Spring Boot 4.1.1。参考 [springdoc 兼容说明](https://springdoc.org/#what-is-the-compatibility-matrix-of-springdoc-openapi-with-spring-boot) 和 [Knife4j 模块说明](https://doc.xiaominfo.com/docs/upgrading/upgrading-to-v4)。
 
-验证命令为 `./scripts/test-db.sh`，覆盖真实 MySQL 业务回归、14 个文档操作、请求体根字段、原始 Authorization 声明、关闭文档和非 local 访问边界。浏览器还需验证页面加载、未授权 401、授权后 200 和请求示例；自动生成文档不替代这些测试。
+验证命令为 `./scripts/test-db.sh`，覆盖真实 MySQL 业务回归、32个文档操作、请求体根字段、原始 Authorization 声明、关闭文档和非 local 访问边界。浏览器还需验证页面加载、未授权 401、授权后 200 和请求示例；自动生成文档不替代这些测试。
+
+患者打卡使用 `.env.demo` 的 `HEALTH_DEMO_PATIENT_TOKEN`，编辑/发布、审核、患者三个身份分开。二审沿用审核接口，审核提交的 expectedRevision 不等于任务包 rowVersion。发布和反馈需另填 Idempotency-Key；重复调用相同键相同正文回读200。打卡空对象为自述完成，质量始终 NOT_APPLICABLE。

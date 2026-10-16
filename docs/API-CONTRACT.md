@@ -1,6 +1,6 @@
 # 前后端接口基线
 
-第一批患者资料与方案草稿接口已实现，完整请求/响应和 DEMO 联调方式见 [PHASE-A-API.md](PHASE-A-API.md)。执行条件与一审扩展见 [PHASE-B-API.md](PHASE-B-API.md)；任务、二审与发布仍未实现。
+第一批患者资料与方案草稿接口已实现，完整请求/响应和 DEMO 联调方式见 [PHASE-A-API.md](PHASE-A-API.md)。执行条件与一审扩展见 [PHASE-B-API.md](PHASE-B-API.md)；任务、二审、发布和基础反馈见 [PHASE-CDE-API.md](PHASE-CDE-API.md)。
 
 ## RESTful 设计要求
 
@@ -43,17 +43,21 @@
 
 所有请求经 X-Request-Id 过滤器：允许 1～64 位字母、数字及 `._:-`；缺失或非法时生成 UUID；响应头返回最终编号。日志上下文在请求结束后清理。请求编号不等于业务幂等键。
 
-无有效认证的非公开路径返回 HTTP 401 和 `{"code":401,"message":"Authentication required","data":null}`。正式登录入口尚未接入；仅 local 且显式开启 DEMO 时接受服务端配置的开发凭证，身份固定为 demo-org 下的 demo-clinician 或 demo-reviewer，数据模式 DEMO；能力和患者范围仍逐次校验。实际患者查询与草稿写入进一步验证有效患者授权。默认或非 local 配置继续拒绝未认证业务访问。
+无有效认证的非公开路径返回 HTTP 401 和 `{"code":401,"message":"Authentication required","data":null}`。正式登录入口尚未接入；仅 local 且显式开启 DEMO 时接受服务端配置的开发凭证，身份固定为 demo-org 下的 demo-clinician、demo-reviewer 或 demo-patient，数据模式 DEMO；能力和患者范围仍逐次校验。实际患者查询与草稿写入进一步验证有效患者授权。默认或非 local 配置继续拒绝未认证业务访问。
 
 ## 业务实现时遵守的约定
 
 - JSON 使用 camelCase，所有业务 ID 使用 String。已实现业务 DTO/VO 的 ID 与修订号使用 String，尚未配置全局 Long 序列化器。
 - 常规业务响应使用 ApiResponse 的 code、message、data，HTTP 状态与业务结果保持一致。
 - API 时间使用带时区偏移的 ISO 8601 字符串；新业务时刻按 UTC DATETIME(6) 存储，业务日历配 zoneId。
-- 患者列表已约定 page/size/q；草稿 PATCH 要求 expectedRevision，冲突返回 409。发布幂等等后续用例在实现时另行冻结。
+- 患者列表已约定 page/size/q；草稿 PATCH 要求 expectedRevision，冲突返回 409。发布与反馈要求机构内 Idempotency-Key；具体重试和版本规则见第三批契约。
 - 兼容旧系统原始 Authorization Token 的需求保留，真实会话验证未接入；已实现 DEMO 机构/模式隔离及患者授权，尚未对接旧平台会话与档案归属。
 - 统一异常处理、患者授权测试和本地 Knife4j/OpenAPI 文档已实现，调试入口与开关见 [KNIFE4J.md](KNIFE4J.md)；文件上传、事件补拉和正式身份接入为后续工作。
 
 ## 执行条件与一审
 
 第二批接口、两种 expectedRevision、审核快照与新版本契约见 [PHASE-B-API.md](PHASE-B-API.md)。POST condition-confirmations 追加历史；POST review-submissions 固定送审目标；POST decisions/withdrawals 在事务中结束本次提交。禁止提交者自审，禁止待审或已批准正文原地修改。
+
+## 任务到执行
+
+C/D/E 已实现确定性任务、七维按需派生、二审冻结、事务发布、日任务和基础反馈，详见 [PHASE-CDE-API.md](PHASE-CDE-API.md)。任务包修订、审核提交修订和反馈结果修订彼此独立，不互相代用。

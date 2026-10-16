@@ -239,4 +239,12 @@ schedule_rule_json 描述星期、时点、事件锚点、间隔和允许窗口�
 - 原始资料、两阶段输入、送审内容、排程预览、正式内容分别保存，不靠当前数据重建历史。
 - 审核绑定明确目标和修订；发布检查在同一受控事务内，唯一约束避免重复正式任务。
 - 字段字典生成时已校验表名/字段名不重复、普通外键目标存在且类型一致；页面映射也做了字段存在性检查。
-- 已执行 A 批建表并验证真实 MySQL；B/C/D 表未创建，未对参考服务器进行业务写入。
+- 当前实际迁移已到 V8；原设计候选表及字段并非全部实现，下面的实施对照优先。未对参考服务器进行业务写入。
+
+## 13 任务与执行实施对照
+
+V5 新增 task_template、task_bundle、task_group、task_group_variant、task_group_source、schedule_preview；V6明确PLAN/TASK二选一审核目标及TASK待审唯一约束。V7新增 publication_preview、publication、publication_request、execution_task、outbox_event；V8新增 task_feedback、task_result、task_safety_event。共14张新增业务表；其字段以迁移SQL为准，[第三批契约](../PHASE-CDE-API.md)说明业务语义。
+
+发布预览冻结替代清单；publication_request 保存机构级幂等键及同包不同键的别名；执行实例复制二审预览，不重新拼模板。task_feedback 追加版本，task_result 汇总当前结果，task_safety_event 独立保留OPEN信号。所有新表采用机构复合外键和区分大小写ID/键；不级联删除历史。previous_feedback_id为追加链来源，应用在患者父锁下校验同任务和最新版本；当前结果对反馈有物理外键。
+
+没有实现 generation_job、在线 rule_set_version 管理、真实AI、外部通知worker、质量评分或护士工单。规则版本固定到代码和快照；无通道outbox为NOT_CONFIGURED。V1—V4未回写。

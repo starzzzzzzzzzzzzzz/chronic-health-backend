@@ -5,6 +5,7 @@ import java.util.*;
 import static org.assertj.core.api.Assertions.*;
 
 @Transactional
+@org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable(named="RUN_DB_TESTS",matches="true")
 class TaskScheduleApiTest extends TaskApiTestSupport {
     @Test void sevenDaysWithTwoSlotsProduceFourteenDistinctFrozenOccurrences() throws Exception {
         var f=approved("routine",true);var b=configure(bundle(f,"4"),List.of(slot("morning","08:00",0,60),slot("evening","20:00",0,60)));

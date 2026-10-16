@@ -1,8 +1,8 @@
 # 慢病健康管理后端
 
-当前已实现患者资料查询、方案草稿、执行条件确认、一审及已批准方案的新版本调整，支持输入快照、并发修订校验和审计。采用 Spring Boot 4.1.1 与常见的 Controller / Service / Mapper 分层结构。目录说明见 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)，接口约定见 [docs/API-CONTRACT.md](docs/API-CONTRACT.md)。
+当前已实现患者资料、方案草稿、执行条件与一审，以及七维任务派生、排程与二审、事务发布、日任务、基础打卡和追加更正。支持输入快照、并发修订校验和审计；目前仅开放虚构 DEMO 的计完成流程。采用 Spring Boot 4.1.1 与常见的 Controller / Service / Mapper 分层结构。目录说明见 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)，接口约定见 [docs/API-CONTRACT.md](docs/API-CONTRACT.md)。
 
-数据库设计初稿见 [设计总览](docs/database/DATABASE-DESIGN.md)、[表与字段字典](docs/database/TABLE-DICTIONARY.md) 和 [视频页面字段映射](docs/database/VIDEO-FIELD-MAPPING.md)。A 批 12 张表已实现；V4 增加条件确认和审核三表；模拟生成、任务及发布仍待实施。
+数据库设计初稿见 [设计总览](docs/database/DATABASE-DESIGN.md)、[表与字段字典](docs/database/TABLE-DICTIONARY.md) 和 [视频页面字段映射](docs/database/VIDEO-FIELD-MAPPING.md)。实际迁移已到 V8：V2/V3 患者与方案，V4 条件与审核，V5/V6 任务与二审，V7 发布，V8 反馈与独立安全事件。
 
 第一批“患者资料与方案草稿”的[实施计划](docs/superpowers/plans/2026-10-16-patient-and-plan-drafts.md)已确认并实施；前端对接见 [第一批接口与启动说明](docs/PHASE-A-API.md)。
 
@@ -48,11 +48,12 @@ chronic-health-backend/
     ├── API-CONTRACT.md                  RESTful 接口约定
     ├── PHASE-A-API.md                   第一批前端联调契约
     ├── PHASE-B-API.md                   执行条件与一审接口
+    ├── PHASE-CDE-API.md                 任务、二审、发布、日任务与打卡
     ├── KNIFE4J.md                       接口文档与在线调试
     └── database/                        核心业务数据库设计与字段字典
 ```
 
-业务请求通常依次经过 `Controller → Service → Mapper → MySQL`。患者与方案草稿已具备 Controller、Service 和 Mapper；条件确认与一审见 [第二批接口](docs/PHASE-B-API.md)；生成、排程、二审和发布待后续逐批实现。本地 `.env`、依赖缓存 `.dev/` 和构建产物 `target/` 已忽略，不提交到仓库。
+业务请求通常依次经过 `Controller → Service → Mapper → MySQL`。患者与方案草稿已具备 Controller、Service 和 Mapper；条件确认与一审见 [第二批接口](docs/PHASE-B-API.md)；任务到打卡见 [第三批联调契约](docs/PHASE-CDE-API.md)。本地 `.env`、依赖缓存 `.dev/` 和构建产物 `.dev/build.nosync/`（历史 `target/`） 已忽略，不提交到仓库。
 
 ## 第一批联调
 
@@ -71,6 +72,7 @@ Knife4j 文档与在线调试：<http://127.0.0.1:9089/ncd-ai/doc.html>。先在
 |---|---|
 | Java | JDK 17；本机复用 Homebrew 17.0.15 |
 | Maven | 本机 3.9.9；项目脚本固定 JDK 17 |
+| Maven 构建产物 | `.dev/build.nosync`，避免同步生成重复文件 |
 | Maven 依赖缓存 | `.dev/m2`，不写入默认用户依赖缓存 |
 | Spring Boot | 4.1.1 |
 | MyBatis-Plus | 3.5.17，Spring Boot 4 starter |
@@ -146,6 +148,6 @@ local 启动自动执行 Flyway，V1 为元数据，V2/V3 为患者与方案草�
 
 2026-10-16 第一批历史验证：28 项测试全部通过（含真实 MySQL 与并发事务）；实际 HTTP 已验证患者查询、资料摘要、草稿创建/编辑/读取及 401/409。
 
-2026-10-16 第二批验证：48 项测试全部通过（含真实 MySQL、权限、并发和回滚）；普通离线构建通过，6 项通过、42 项数据库测试明确跳过。实际 HTTP 24 步覆盖执行条件、一审退回重提、通过、新版本和撤回，以及 401/403/409。联调说明见 [PHASE-B-API.md](docs/PHASE-B-API.md)。正式登录、真实 AI、任务、二审和发布尚未接入。
+2026-10-16 第二批验证：48 项测试全部通过（含真实 MySQL、权限、并发和回滚）；普通离线构建通过，6 项通过、42 项数据库测试明确跳过。实际 HTTP 24 步覆盖执行条件、一审退回重提、通过、新版本和撤回，以及 401/403/409。联调说明见 [PHASE-B-API.md](docs/PHASE-B-API.md)。该历史批次未包含任务；当前进度以文首和第三批契约为准。
 
 2026-10-16 文档接入验证：`./scripts/test-db.sh` 53 项全部通过；普通离线构建通过，6 项通过、47 项数据库测试明确跳过。Knife4j 页面显示当前 14 个操作，浏览器验证未授权 401、原始 Token 授权后患者查询 200；OpenAPI 生成、请求字段和关闭文档/非 local 访问边界均有测试覆盖。使用说明见 [KNIFE4J.md](docs/KNIFE4J.md)。

@@ -4,6 +4,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import static org.assertj.core.api.Assertions.*;
 @Transactional
+@org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable(named="RUN_DB_TESTS",matches="true")
 class TaskSchedulePolicyTest extends TaskApiTestSupport {
     @Test void medicationUsesTheEntireConfirmedOrderScheduleAndRejectsReminderRewriting() throws Exception {
         String patient=patient("demo-org","DEMO","虚构医嘱来源测试",true);
