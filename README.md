@@ -4,6 +4,8 @@
 
 数据库设计初稿见 [设计总览](docs/database/DATABASE-DESIGN.md)、[表与字段字典](docs/database/TABLE-DICTIONARY.md) 和 [视频页面字段映射](docs/database/VIDEO-FIELD-MAPPING.md)。这些是待评审设计，尚未执行业务建表。
 
+第一批“患者资料与方案草稿”的[实施计划](docs/superpowers/plans/2026-10-16-patient-and-plan-drafts.md)已整理，当前待计划评审。
+
 ## 项目目录
 
 ```text
