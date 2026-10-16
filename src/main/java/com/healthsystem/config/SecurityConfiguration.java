@@ -33,8 +33,8 @@ public class SecurityConfiguration {
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(a -> a
                         .requestMatchers(HttpMethod.GET, "/health", "/actuator/health").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/patients", "/patients/**", "/plan-versions/*", "/plan-versions/*/condition-confirmations").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/plan-versions/*/condition-confirmations").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/patients", "/patients/**", "/plan-versions/*", "/plan-versions/*/condition-confirmations", "/plan-versions/*/review-context", "/review-submissions/*").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/plan-versions/*/condition-confirmations", "/plan-versions/*/review-submissions", "/review-submissions/*/decisions", "/review-submissions/*/withdrawals").authenticated()
                         .requestMatchers(HttpMethod.POST, "/care-plans").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/plan-versions/*").authenticated()
                         .anyRequest().denyAll())

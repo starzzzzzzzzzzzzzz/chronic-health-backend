@@ -48,7 +48,11 @@ abstract class ReviewApiTestSupport extends DatabaseApiTestSupport {
     JsonNode submit(Fixture f,String revision) throws Exception {
         return postJson(submissions(f),TOKEN,Map.of("expectedRevision",revision),201);
     }
+    @org.springframework.beans.factory.annotation.Autowired org.springframework.transaction.PlatformTransactionManager transactions;
     void cleanup(Fixture f) {
+        new org.springframework.transaction.support.TransactionTemplate(transactions).executeWithoutResult(status->cleanupRows(f));
+    }
+    private void cleanupRows(Fixture f) {
         db.update("DELETE d FROM review_decision d JOIN review_submission s ON s.id=d.submission_id WHERE s.plan_version_id=?",f.version());
         db.update("DELETE FROM review_submission WHERE plan_version_id=?",f.version());
         db.update("DELETE FROM condition_confirmation WHERE plan_version_id=?",f.version());
