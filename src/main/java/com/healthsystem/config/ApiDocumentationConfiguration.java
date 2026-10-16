@@ -1,0 +1,88 @@
+package com.healthsystem.config;
+
+import io.swagger.v3.oas.models.*;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.*;
+import io.swagger.v3.oas.models.servers.Server;
+import io.swagger.v3.oas.models.media.*;
+import io.swagger.v3.oas.models.responses.ApiResponses;
+import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
+import org.springdoc.core.models.GroupedOpenApi;
+import org.springdoc.core.utils.SpringDocUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.*;
+import java.util.*;
+
+@Configuration
+@Profile("local")
+@ConditionalOnProperty(name="health.docs.enabled",havingValue="true")
+public class ApiDocumentationConfiguration {
+    static {
+        SpringDocUtils.getConfig().replaceWithClass(tools.jackson.databind.JsonNode.class,Object.class)
+                .replaceWithClass(tools.jackson.databind.node.ObjectNode.class,Object.class);
+    }
+    @Bean OpenAPI healthOpenApi(@Value("${server.servlet.context-path:/ncd-ai}") String contextPath) {
+        return new OpenAPI().info(new Info().title("慢病健康管理后端 API").version("0.2.0")
+                .description("本地 DEMO：患者资料、手工方案、条件确认与一审。Authorize 中填写原始 Token，不加 Bearer。编辑身份使用 .env.demo 中 HEALTH_DEMO_API_TOKEN；审核身份使用 HEALTH_DEMO_REVIEWER_TOKEN。文档不包含凭证值。"))
+                .servers(List.of(new Server().url(contextPath)))
+                .components(new Components().addSecuritySchemes("AuthorizationToken",new SecurityScheme()
+                        .type(SecurityScheme.Type.APIKEY).in(SecurityScheme.In.HEADER).name("Authorization")
+                        .description("原始 DEMO Token，不加 Bearer。审核时切换为审核身份 Token；调试完成后在 Authorize 页面点击注销，清除本机浏览器保存的授权值。")))
+                .addSecurityItem(new SecurityRequirement().addList("AuthorizationToken"));
+    }
+    @Bean GroupedOpenApi healthDocumentationGroup() {
+        return GroupedOpenApi.builder().group("health").displayName("慢病健康管理")
+                .packagesToScan("com.healthsystem.controller").build();
+    }
+    @Bean GlobalOpenApiCustomizer apiResponseDocumentation() {
+        return api -> {
+            var error=new ObjectSchema().addProperty("code",new IntegerSchema().example(400))
+                    .addProperty("message",new StringSchema().example("Invalid request parameters"))
+                    .addProperty("data",new Schema<>().nullable(true));
+            api.getComponents().addSchemas("ApiError",error);
+            // Jackson 3 JsonNode fields need explicit shapes after schema resolution.
+            var schemas=api.getComponents().getSchemas();
+            schemas.get("Item").addProperty("references",new ArraySchema().items(new ObjectSchema()).maxItems(30).nullable(true));
+            schemas.get("Item").addProperty("contraindications",new ComposedSchema()
+                    .oneOf(List.of(new ObjectSchema(),new ArraySchema().items(new Schema<>())))
+                    .nullable(true).description("禁忌信息，可为 JSON 对象或数组"));
+            schemas.get("Item").addProperty("professionalParameters",new ObjectSchema().maxProperties(0).nullable(true)
+                    .description("当前阶段仅允许空对象或 null"));
+            for(var entry:Map.of("FactVO",List.of("value","sourceRef"),"Condition",List.of("requirement"),"Record",List.of("requirement","value")).entrySet()) {
+                var schema=schemas.get(entry.getKey());
+                if(schema!=null)for(String field:entry.getValue())schema.addProperty(field,new Schema<>().nullable(true));
+            }
+            api.getPaths().forEach((path,item)->item.readOperationsMap().forEach((method,operation)->{
+                // Preserve standard OpenAPI examples and show a copyable body in Knife4j's description.
+                if(operation.getRequestBody()!=null && operation.getRequestBody().getContent()!=null) {
+                    operation.getRequestBody().getContent().values().forEach(media->{
+                        if(media.getExample()==null && media.getExamples()!=null && media.getExamples().size()==1) {
+                            media.setExample(media.getExamples().values().iterator().next().getValue());
+                            media.setExamples(null);
+                        }
+                        // This UI version generates debug bodies from properties, ignoring request examples.
+                        if(media.getExample()!=null) {
+                            String example=io.swagger.v3.core.util.Json.pretty(media.getExample());
+                            operation.setDescription(Objects.toString(operation.getDescription(),"")
+                                    +"\n\n**可复制的请求示例**：将以下 JSON 复制到调试正文，替换实际 ID 和修订号。下方自动生成的完整结构仅供字段参考。\n\n```json\n"+example+"\n```");
+                        }
+                    });
+                }
+                if("/health".equals(path)){operation.setSecurity(List.of());return;}
+                // Knife4j 4.5 reads operation security rather than inheriting the root declaration.
+                operation.setSecurity(List.of(new SecurityRequirement().addList("AuthorizationToken")));
+                ApiResponses responses=operation.getResponses();
+                addError(responses,"401","需要有效认证");addError(responses,"403","缺少患者能力授权，或不允许自审/撤回");
+                if(path.contains("{id}") || "/care-plans".equals(path))addError(responses,"404","目标不存在或机构/数据模式不可见");
+                if(method==PathItem.HttpMethod.POST || method==PathItem.HttpMethod.PATCH){
+                    addError(responses,"400","参数、依据或送审条件不满足");addError(responses,"409","修订过期、状态冲突或重复操作");
+                } else if("/patients".equals(path))addError(responses,"400","分页或查询条件不合法");
+            }));
+        };
+    }
+    private static void addError(ApiResponses responses,String code,String description) {
+        responses.addApiResponse(code,new io.swagger.v3.oas.models.responses.ApiResponse().description(description)
+                .content(new Content().addMediaType("application/json",new MediaType().schema(new Schema<>().$ref("#/components/schemas/ApiError")))));
+    }
+}

@@ -2,3 +2,6 @@
 spring:
   flyway:
     enabled: ${DB_MIGRATION_ENABLED:true}
+health:
+  docs:
+    enabled: ${HEALTH_DOCS_ENABLED:true}

@@ -23,6 +23,13 @@ public class SecurityConfiguration {
         if (demo) {
             http.addFilterBefore(new DemoAuthenticationFilter(environment.getProperty("health.demo.token"), environment.getProperty("health.demo.reviewer-token")), AnonymousAuthenticationFilter.class);
         }
+        boolean docs = Arrays.asList(environment.getActiveProfiles()).contains("local")
+                && environment.getProperty("health.docs.enabled", Boolean.class, false);
+        if (docs) {
+            http.authorizeHttpRequests(a -> a.requestMatchers(HttpMethod.GET,
+                    "/doc.html", "/webjars/**", "/img/icons/**", "/swagger-ui.html", "/swagger-ui/**",
+                    "/v3/api-docs", "/v3/api-docs/**", "/v3/api-docs.yaml").permitAll());
+        }
         // Real authentication is not integrated. Only explicit local DEMO can authenticate here.
         return http
                 .csrf(AbstractHttpConfigurer::disable)
