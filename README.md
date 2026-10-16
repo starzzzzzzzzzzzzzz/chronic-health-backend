@@ -1,8 +1,8 @@
 # 慢病健康管理后端
 
-当前已实现第一批患者资料查询和方案草稿的新建、编辑与读取，支持输入快照、并发修订校验和审计。采用 Spring Boot 4.1.1 与常见的 Controller / Service / Mapper 分层结构。目录说明见 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)，接口约定见 [docs/API-CONTRACT.md](docs/API-CONTRACT.md)。
+当前已实现患者资料查询和方案草稿的新建、编辑与读取；正在验证第二批执行条件确认与一审。支持输入快照、并发修订校验和审计。采用 Spring Boot 4.1.1 与常见的 Controller / Service / Mapper 分层结构。目录说明见 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)，接口约定见 [docs/API-CONTRACT.md](docs/API-CONTRACT.md)。
 
-数据库设计初稿见 [设计总览](docs/database/DATABASE-DESIGN.md)、[表与字段字典](docs/database/TABLE-DICTIONARY.md) 和 [视频页面字段映射](docs/database/VIDEO-FIELD-MAPPING.md)。A 批 12 张表已实现，其余批次仍为设计。
+数据库设计初稿见 [设计总览](docs/database/DATABASE-DESIGN.md)、[表与字段字典](docs/database/TABLE-DICTIONARY.md) 和 [视频页面字段映射](docs/database/VIDEO-FIELD-MAPPING.md)。A 批 12 张表已实现；V4 增加条件确认和审核三表；模拟生成、任务及发布仍待实施。
 
 第一批“患者资料与方案草稿”的[实施计划](docs/superpowers/plans/2026-10-16-patient-and-plan-drafts.md)已确认并实施；前端对接见 [第一批接口与启动说明](docs/PHASE-A-API.md)。
 
@@ -47,10 +47,11 @@ chronic-health-backend/
     ├── ARCHITECTURE.md                  分层职责与架构说明
     ├── API-CONTRACT.md                  RESTful 接口约定
     ├── PHASE-A-API.md                   第一批前端联调契约
+    ├── PHASE-B-API.md                   执行条件与一审接口
     └── database/                        核心业务数据库设计与字段字典
 ```
 
-业务请求通常依次经过 `Controller → Service → Mapper → MySQL`。患者与方案草稿已具备 Controller、Service 和 Mapper；审核、生成、排程和发布待后续逐批实现。本地 `.env`、依赖缓存 `.dev/` 和构建产物 `target/` 已忽略，不提交到仓库。
+业务请求通常依次经过 `Controller → Service → Mapper → MySQL`。患者与方案草稿已具备 Controller、Service 和 Mapper；条件确认与一审见 [第二批接口](docs/PHASE-B-API.md)；生成、排程、二审和发布待后续逐批实现。本地 `.env`、依赖缓存 `.dev/` 和构建产物 `target/` 已忽略，不提交到仓库。
 
 ## 第一批联调
 
@@ -132,7 +133,7 @@ curl -i http://127.0.0.1:9088/ncd-ai/health
 curl -i http://127.0.0.1:9088/ncd-ai/actuator/health
 ```
 
-local 启动自动执行 Flyway，V1 为元数据，V2/V3 为患者与方案草稿 12 张业务表。常规测试使用 MVC 测试切片，不依赖数据库；真实数据库迁移和依赖健康需启动后验证。生产配置未设置默认数据库密码，迁移默认关闭。不要在公共网络直接暴露开发服务。
+local 启动自动执行 Flyway，V1 为元数据，V2/V3 为患者与方案草稿 12 张业务表，V4 为执行条件与审核 3 张表。常规测试使用 MVC 测试切片，不依赖数据库；真实数据库迁移和依赖健康需启动后验证。生产配置未设置默认数据库密码，迁移默认关闭。不要在公共网络直接暴露开发服务。
 
 ## 数据访问
 

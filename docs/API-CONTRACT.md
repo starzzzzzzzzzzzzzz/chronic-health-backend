@@ -1,10 +1,10 @@
 # 前后端接口基线
 
-第一批患者资料与方案草稿接口已实现，完整请求/响应和 DEMO 联调方式见 [PHASE-A-API.md](PHASE-A-API.md)。后续审核、任务与发布仍未实现。
+第一批患者资料与方案草稿接口已实现，完整请求/响应和 DEMO 联调方式见 [PHASE-A-API.md](PHASE-A-API.md)。执行条件与一审扩展见 [PHASE-B-API.md](PHASE-B-API.md)；任务、二审与发布仍未实现。
 
 ## RESTful 设计要求
 
-项目业务 API 统一采用 RESTful 设计方式。以下是统一约定；已实现路径以本文接口表和第一批接口说明为准，其余示例属于后续设计。
+项目业务 API 统一采用 RESTful 设计方式。以下是统一约定；已实现路径以本文接口表和第一、二批接口说明为准，其余示例属于后续设计。
 
 - 保留当前服务前缀 `/ncd-ai`。资源路径使用小写复数名词，多词使用连字符，例如 `/ncd-ai/patients`、`/ncd-ai/recovery-plans`，避免 `getPatient`、`addPatient` 等操作名。
 - HTTP 方法表达操作：GET 查询，POST 创建，PUT 完整替换，PATCH 部分更新，DELETE 删除。GET 不修改业务状态；PUT、DELETE 按幂等语义设计，重复请求的响应状态可以不同。POST、PATCH 是否支持幂等键由具体用例约定。
@@ -35,7 +35,7 @@
 
 所有请求经 X-Request-Id 过滤器：允许 1～64 位字母、数字及 `._:-`；缺失或非法时生成 UUID；响应头返回最终编号。日志上下文在请求结束后清理。请求编号不等于业务幂等键。
 
-无有效认证的非公开路径返回 HTTP 401 和 `{"code":401,"message":"Authentication required","data":null}`。正式登录入口尚未接入；仅 local 且显式开启 DEMO 时接受服务端配置的开发凭证，主体固定为 demo-org / demo-clinician / DEMO。实际患者查询与草稿写入进一步验证有效患者授权。默认或非 local 配置继续拒绝未认证业务访问。
+无有效认证的非公开路径返回 HTTP 401 和 `{"code":401,"message":"Authentication required","data":null}`。正式登录入口尚未接入；仅 local 且显式开启 DEMO 时接受服务端配置的开发凭证，身份固定为 demo-org 下的 demo-clinician 或 demo-reviewer，数据模式 DEMO；能力和患者范围仍逐次校验。实际患者查询与草稿写入进一步验证有效患者授权。默认或非 local 配置继续拒绝未认证业务访问。
 
 ## 业务实现时遵守的约定
 
@@ -45,3 +45,7 @@
 - 患者列表已约定 page/size/q；草稿 PATCH 要求 expectedRevision，冲突返回 409。发布幂等等后续用例在实现时另行冻结。
 - 兼容旧系统原始 Authorization Token 的需求保留，真实会话验证未接入；已实现 DEMO 机构/模式隔离及患者授权，尚未对接旧平台会话与档案归属。
 - 统一异常处理及首批患者授权测试已实现；文件上传、事件补拉、OpenAPI UI 和正式身份接入为后续工作。
+
+## 执行条件与一审
+
+第二批接口、两种 expectedRevision、审核快照与新版本契约见 [PHASE-B-API.md](PHASE-B-API.md)。POST condition-confirmations 追加历史；POST review-submissions 固定送审目标；POST decisions/withdrawals 在事务中结束本次提交。禁止提交者自审，禁止待审或已批准正文原地修改。

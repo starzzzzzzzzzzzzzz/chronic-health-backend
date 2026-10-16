@@ -1,6 +1,6 @@
 # 数据表与字段字典 初稿 v0.1
 
-日期：2026-10-16。共 26 张业务候选表；现有 app_metadata、flyway_schema_history 不计入。A 批已按 V2/V3 迁移实现，其他批次仍为设计；实际 SQL 位于 src/main/resources/db/migration。
+日期：2026-10-16。共 26 张业务候选表；现有 app_metadata、flyway_schema_history 不计入。A 批已按 V2/V3 迁移实现；V4 增加执行条件、一审提交及决策三表；B 批其余两表和 C/D 批仍为设计；实际 SQL 位于 src/main/resources/db/migration。
 
 返回 [设计总览](DATABASE-DESIGN.md) · [页面字段映射](VIDEO-FIELD-MAPPING.md)
 
@@ -332,7 +332,7 @@
 
 对应集中确认弹窗：保留缺项、人工核实和确认值；每次修改形成新确认行。
 
-首次批次：B。内容受父版本或追加修订规则约束。
+首次批次：B。V4 已建表；仅 PLAN 目标可写，TASK 字段保留为空并由 CHECK 限制。内容受父版本或追加修订规则约束。
 
 | 字段 | MySQL 类型 | 可空 | 含义与关联 |
 |---|---|---|---|
@@ -356,7 +356,7 @@
 
 索引：IDX(org_id,plan_version_id,condition_key)；IDX(org_id,task_bundle_id,condition_key)；UK(org_id,supersedes_confirmation_id)。
 
-约束：plan_version_id 与 task_bundle_id 恰好一个有值；CONFIRMED 时须有确认人、时间、合法值及来源。目标修订变化即须重校验确认引用；新修订未被重绑定的旧确认不自动适用。共享条件可以引用同一确认记录，界面计数按当前有效确认聚合。
+约束：plan_version_id 与 task_bundle_id 恰好一个有值；CONFIRMED 时须有确认人、时间、合法值及来源。目标正文修订或绑定摘要变化，旧确认查询显示 STALE；新修订未被显式重新核实的旧确认不自动适用。确认追加本身只递增父 row_version；一审通过时确认清单与正文一起固定。共享条件可以引用同一确认记录，界面计数按当前有效确认聚合。
 
 ## 13 generation_job AI / 模拟生成作业
 
@@ -600,17 +600,20 @@
 | `plan_version_id` | `CHAR(36)` | 是 | 一审目标；关联 `care_plan_version.id` |
 | `task_bundle_id` | `CHAR(36)` | 是 | 二审目标；关联 `task_bundle.id` |
 | `target_revision` | `BIGINT UNSIGNED` | 否 | 送审目标 content_revision，不是生命周期 row_version |
-| `content_hash` | `CHAR(64)` | 否 | 送审目标内容摘要 |
+| `content_hash` | `CHAR(64)` | 否 | 送审聚合摘要；包含方案正文摘要和有效确认清单 |
 | `content_snapshot_json` | `JSON` | 否 | 可独立还原送审正文、模块、权重、来源和确认结果 |
 | `schedule_preview_id` | `CHAR(36)` | 是 | 二审固定排程预览；一审为空；关联 `schedule_preview.id` |
 | `status` | `VARCHAR(16)` | 否 | PENDING / APPROVED / RETURNED / WITHDRAWN |
 | `submitted_by` | `VARCHAR(64)` | 否 | 提交者 |
 | `submitted_at` | `DATETIME(6)` | 否 | 提交时刻，UTC |
 | `closed_at` | `DATETIME(6)` | 是 | 结案/撤回时刻，UTC |
+| `closed_by` | `VARCHAR(64)` | 是 | 结案或撤回主体，来自身份上下文 |
+| `closed_reason` | `VARCHAR(1000)` | 是 | 撤回原因；审核意见保存在决策表 |
+| `pending_slot` | `TINYINT GENERATED` | 是 | 数据库派生列，PENDING 时 1，其他状态 NULL；配合唯一键避免重复待审 |
 
 索引：IDX(org_id,status,stage,submitted_at)；IDX(org_id,plan_version_id,status)；IDX(org_id,task_bundle_id,status)。
 
-约束：恰好一个目标且与 stage 一致；TASK 必须有 schedule_preview_id。每目标仅一个待审提交，通过目标行锁和事务保证；快照及目标字段创建后不可变，只有状态受控更新。
+约束：恰好一个目标且与 stage 一致；TASK 必须有 schedule_preview_id。每目标仅一个待审提交，通过目标行锁、事务和 UK(org_id,plan_version_id,pending_slot) 保证；快照及目标字段创建后不可变，只有状态受控更新。
 
 ## 22 review_decision 审核决策历史
 

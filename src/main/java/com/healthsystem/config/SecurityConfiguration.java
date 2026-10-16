@@ -35,7 +35,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/health", "/actuator/health").permitAll()
                         .requestMatchers(HttpMethod.GET, "/patients", "/patients/**", "/plan-versions/*", "/plan-versions/*/condition-confirmations", "/plan-versions/*/review-context", "/review-submissions/*").authenticated()
                         .requestMatchers(HttpMethod.POST, "/plan-versions/*/condition-confirmations", "/plan-versions/*/review-submissions", "/review-submissions/*/decisions", "/review-submissions/*/withdrawals").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/care-plans").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/care-plans", "/care-plans/*/versions").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/plan-versions/*").authenticated()
                         .anyRequest().denyAll())
                 .exceptionHandling(e -> e
