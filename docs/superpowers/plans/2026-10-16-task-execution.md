@@ -80,11 +80,11 @@
 - Consumes: Task 3 ExecutionTaskService.require；发布冻结窗口和补记规则。
 - Produces: checkIn(p,taskId,key,body)、amend(p,feedbackId,key,body)、history(p,taskId)；当前独立完成/时效/安全结果和追加历史。
 
-- [ ] 写失败测试：空正文一键完成，部分/未做/中止，字段选填，实际时间未知或与提交时刻不同，固定时钟七维补记边界，幂等、越权、并发、更正和安全保留。
-- [ ] `./scripts/test-db.sh -Dtest=TaskFeedbackApiTest,TaskFeedbackPolicyTest,TaskFeedbackTransactionTest`，Expected: 新反馈接口不可用。
-- [ ] 实现一任务一主提交、追加版本与独立结果；截止控制和权限检查在同一父锁事务；缺实际时间不猜按时，未填安全不猜无异常。
-- [ ] 同一命令与全量测试，Expected: 全绿。
-- [ ] 提交基础反馈。
+- [x] 写失败测试：空正文一键完成，部分/未做/中止，字段选填，实际时间未知或与提交时刻不同，固定时钟七维补记边界，幂等、越权、并发、更正和安全保留。
+- [x] `./scripts/test-db.sh -Dtest=TaskFeedbackApiTest,TaskFeedbackPolicyTest,TaskFeedbackTransactionTest`，Expected: 新反馈接口不可用。
+- [x] 实现一任务一主提交、追加版本与独立结果；截止控制和权限检查在同一父锁事务；缺实际时间不猜按时，未填安全不猜无异常。
+- [x] 同一命令与全量测试，Expected: 全绿。
+- [x] 提交基础反馈。
 
 ### Task 5: 接口文档与完整交付
 

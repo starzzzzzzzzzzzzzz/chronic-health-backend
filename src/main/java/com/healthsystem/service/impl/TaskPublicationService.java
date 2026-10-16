@@ -20,8 +20,8 @@ public class TaskPublicationService {
  private final TaskBundleStore store;private final TaskSourcePolicy source;private final TaskScheduleService schedules;
  private final ReviewSubmissionMapper reviews;private final ReviewDecisionMapper decisions;private final CarePlanVersionMapper versions;
  private final PublicationPreviewMapper previews;private final PublicationMapper publications;private final PublicationRequestMapper requests;
- private final ExecutionTaskMapper tasks;private final OutboxEventMapper outbox;private final com.healthsystem.service.PatientService patients;
- public TaskPublicationService(TaskBundleStore s,TaskSourcePolicy so,TaskScheduleService sc,ReviewSubmissionMapper r,ReviewDecisionMapper d,CarePlanVersionMapper v,PublicationPreviewMapper pr,PublicationMapper p,PublicationRequestMapper req,ExecutionTaskMapper t,OutboxEventMapper o,com.healthsystem.service.PatientService pa){store=s;source=so;schedules=sc;reviews=r;decisions=d;versions=v;previews=pr;publications=p;requests=req;tasks=t;outbox=o;patients=pa;}
+ private final TaskResultMapper results;private final ExecutionTaskMapper tasks;private final OutboxEventMapper outbox;private final com.healthsystem.service.PatientService patients;
+ public TaskPublicationService(TaskBundleStore s,TaskSourcePolicy so,TaskScheduleService sc,ReviewSubmissionMapper r,ReviewDecisionMapper d,CarePlanVersionMapper v,PublicationPreviewMapper pr,PublicationMapper p,PublicationRequestMapper req,ExecutionTaskMapper t,TaskResultMapper resultMapper,OutboxEventMapper o,com.healthsystem.service.PatientService pa){store=s;source=so;schedules=sc;reviews=r;decisions=d;versions=v;previews=pr;publications=p;requests=req;tasks=t;results=resultMapper;outbox=o;patients=pa;}
  public record Published(JsonNode data,boolean created){}
  @Transactional(isolation=Isolation.READ_COMMITTED) public JsonNode preview(BusinessPrincipal p,String id,ReviewWorkflowRequest request) {
   var body=request.body();fields(body,"expectedRevision","reviewSubmissionId","schedulePreviewId","effectiveAt","replacementScope");
@@ -81,8 +81,8 @@ public class TaskPublicationService {
   var create=new ArrayList<String>();for(var n:JsonValues.read(schedule.getOccurrencesJson()))if(!time(n,"opensAt").isBefore(effective)&&!retainedSlots.contains(businessSlot(n.path("contentSnapshot"),n.path("executionDate").asText(),n.path("slotKey").asText())))create.add(n.path("occurrenceKey").asText());
   check(!create.isEmpty(),"No new occurrences at the effective boundary");return new Manifest(List.copyOf(create),List.copyOf(replaceIds),List.copyOf(retainIds));
  }
- // Kept in SQL so V7 can run before the feedback migration; V8 adds its indexed result lookup.
- private boolean hasFeedback(ExecutionTask t){return false;}
+ // Feedback and publication serialize on the same patient lock.
+ private boolean hasFeedback(ExecutionTask t){return results.selectCount(new QueryWrapper<TaskResult>().eq("org_id",t.getOrgId()).eq("execution_task_id",t.getId()))>0;}
  private static String businessSlot(JsonNode snapshot,String date,String slot){return CanonicalJson.text(snapshot.path("group").path("sourcePlanItemIds"))+":"+date+":"+slot;}
  private static String previewHash(PublicationPreview p){return CanonicalJson.hash(JsonValues.tree(Map.of("taskBundleId",p.getTaskBundleId(),"bundleRevision",String.valueOf(p.getBundleRevision()),"intent",JsonValues.read(p.getIntentJson()),"manifest",JsonValues.read(p.getManifestJson()))));}
  private JsonNode previewView(PublicationPreview p){var result=(tools.jackson.databind.node.ObjectNode)JsonValues.read(p.getIntentJson()).deepCopy();result.put("id",p.getId()).put("taskBundleId",p.getTaskBundleId()).put("previewHash",p.getPreviewHash());for(var e:JsonValues.read(p.getManifestJson()).properties())result.set(e.getKey(),e.getValue());return result;}

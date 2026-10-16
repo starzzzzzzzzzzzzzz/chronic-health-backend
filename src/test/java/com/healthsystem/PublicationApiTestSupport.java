@@ -37,8 +37,9 @@ abstract class PublicationApiTestSupport extends TaskApiTestSupport {
  void cleanupTaskPatient(String patient) {
   new org.springframework.transaction.support.TransactionTemplate(transactions).executeWithoutResult(status->{
    db.update("UPDATE task_bundle SET latest_preview_id=NULL WHERE patient_id=?",patient);
-   for(String table:List.of("task_result","task_feedback"))if(db.queryForObject("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=DATABASE() AND table_name=?",Integer.class,table)>0)db.update("DELETE x FROM "+table+" x JOIN execution_task t ON t.id=x.execution_task_id WHERE t.patient_id=?",patient);
+   for(String table:List.of("task_safety_event","task_result","task_feedback"))if(db.queryForObject("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=DATABASE() AND table_name=?",Integer.class,table)>0)db.update("DELETE x FROM "+table+" x JOIN execution_task t ON t.id=x.execution_task_id WHERE t.patient_id=?",patient);
    db.update("DELETE x FROM outbox_event x JOIN publication p ON p.id=x.publication_id WHERE p.patient_id=?",patient);
+   db.update("DELETE a FROM audit_log a JOIN execution_task t ON a.target_id=t.id WHERE t.patient_id=?",patient);
    db.update("DELETE FROM execution_task WHERE patient_id=?",patient);
    db.update("DELETE x FROM publication_request x JOIN publication p ON p.id=x.publication_id WHERE p.patient_id=?",patient);
    db.update("DELETE FROM publication WHERE patient_id=?",patient);

@@ -51,6 +51,8 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST,"/task-bundles/*/schedule-previews","/task-bundles/*/review-submissions","/task-bundles/*/versions").authenticated()
                         .requestMatchers(HttpMethod.POST,"/task-bundles/*/publication-previews","/task-bundles/*/publications").authenticated()
                         .requestMatchers(HttpMethod.GET,"/publications/*","/execution-tasks/*","/task-bundles/*/publication-previews/*").authenticated()
+                        .requestMatchers(HttpMethod.POST,"/execution-tasks/*/check-ins","/check-ins/*/amendments").authenticated()
+                        .requestMatchers(HttpMethod.GET,"/execution-tasks/*/check-ins","/check-ins/*").authenticated()
                         .anyRequest().denyAll())
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint((request, response, exception) -> {

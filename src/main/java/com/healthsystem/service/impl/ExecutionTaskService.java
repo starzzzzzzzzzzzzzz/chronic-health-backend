@@ -15,8 +15,8 @@ import java.util.*;
 import static com.healthsystem.service.impl.PlanReviewSupport.utc;
 @Service
 public class ExecutionTaskService {
- final ExecutionTaskMapper tasks;final PublicationMapper publications;private final PatientService patients;final Clock clock;private final ZoneId defaultZone;
- public ExecutionTaskService(ExecutionTaskMapper t,PublicationMapper p,PatientService pa,Clock c,@Value("${health.workflow.zone-id:Asia/Shanghai}") String zone){tasks=t;publications=p;patients=pa;clock=c;defaultZone=ZoneId.of(zone);}
+ final ExecutionTaskMapper tasks;final PublicationMapper publications;private final PatientService patients;final Clock clock;private final TaskResultMapper results;private final ZoneId defaultZone;
+ public ExecutionTaskService(ExecutionTaskMapper t,PublicationMapper p,PatientService pa,TaskResultMapper r,Clock c,@Value("${health.workflow.zone-id:Asia/Shanghai}") String zone){tasks=t;publications=p;patients=pa;clock=c;results=r;defaultZone=ZoneId.of(zone);}
  @Transactional(readOnly=true) public List<JsonNode> list(BusinessPrincipal p,String patient,LocalDate date) {
   patients.require(p,patient,"TASK_READ",false);LocalDate day=date==null?LocalDate.now(clock.withZone(defaultZone)):date;
   var now=LocalDateTime.now(clock);return tasks.selectList(new QueryWrapper<ExecutionTask>().eq("org_id",p.orgId()).eq("patient_id",patient).eq("execution_date",day).orderByAsc("planned_at","priority_code","id")).stream().filter(t->visible(t,now)).map(this::view).toList();
@@ -29,6 +29,8 @@ public class ExecutionTaskService {
  }
  private boolean visible(ExecutionTask t,LocalDateTime now){var pub=publications.selectById(t.getPublicationId());return pub!=null&&"PUBLISHED".equals(pub.getStatus())&&!pub.getEffectiveAt().isAfter(now)&&(t.getCancelledAt()==null||t.getCancelledAt().isAfter(now));}
  public JsonNode view(ExecutionTask t) {
-  var m=new LinkedHashMap<String,Object>();m.put("id",t.getId());m.put("patientId",t.getPatientId());m.put("publicationId",t.getPublicationId());m.put("taskBundleId",t.getTaskBundleId());m.put("occurrenceKey",t.getOccurrenceKey());m.put("dimensionCode",t.getDimensionCode());m.put("executionDate",t.getExecutionDate());m.put("zoneId",t.getZoneId());m.put("slotKey",t.getSlotKey());m.put("plannedAt",utc(t.getPlannedAt()));m.put("opensAt",utc(t.getOpensAt()));m.put("closesAt",utc(t.getClosesAt()));m.put("normalCutoffAt",utc(t.getNormalCutoffAt()));m.put("makeupCutoffAt",utc(t.getMakeupCutoffAt()));m.put("contentSnapshot",JsonValues.read(t.getContentSnapshotJson()));m.put("taskClass",t.getTaskClass());m.put("priorityCode",t.getPriorityCode());m.put("safetyFocus",t.getSafetyFocus());m.put("scheduledCancellationAt",utc(t.getCancelledAt()));return JsonValues.tree(m);
+  var m=new LinkedHashMap<String,Object>();m.put("id",t.getId());m.put("patientId",t.getPatientId());m.put("publicationId",t.getPublicationId());m.put("taskBundleId",t.getTaskBundleId());m.put("occurrenceKey",t.getOccurrenceKey());m.put("dimensionCode",t.getDimensionCode());m.put("executionDate",t.getExecutionDate());m.put("zoneId",t.getZoneId());m.put("slotKey",t.getSlotKey());m.put("plannedAt",utc(t.getPlannedAt()));m.put("opensAt",utc(t.getOpensAt()));m.put("closesAt",utc(t.getClosesAt()));m.put("normalCutoffAt",utc(t.getNormalCutoffAt()));m.put("makeupCutoffAt",utc(t.getMakeupCutoffAt()));m.put("contentSnapshot",JsonValues.read(t.getContentSnapshotJson()));m.put("taskClass",t.getTaskClass());m.put("priorityCode",t.getPriorityCode());m.put("safetyFocus",t.getSafetyFocus());m.put("scheduledCancellationAt",utc(t.getCancelledAt()));
+  var result=results.selectOne(new QueryWrapper<TaskResult>().eq("org_id",t.getOrgId()).eq("execution_task_id",t.getId()));
+  m.put("currentResult",result==null?null:Map.of("rowVersion",String.valueOf(result.getRowVersion()),"currentFeedbackId",result.getCurrentFeedbackId(),"assessment",JsonValues.read(result.getAssessmentJson()),"updatedAt",utc(result.getUpdatedAt())));return JsonValues.tree(m);
  }
 }

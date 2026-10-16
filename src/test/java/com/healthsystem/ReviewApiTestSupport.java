@@ -25,7 +25,7 @@ abstract class ReviewApiTestSupport extends DatabaseApiTestSupport {
             .andExpect(status().is(expected)).andReturn().getResponse().getContentAsString()).path("data");
     }
     void grant(String patient,String subject,String cap) {
-        db.update("INSERT INTO patient_access_grant(id,org_id,created_at,created_by,updated_at,row_version,patient_id,subject_id,capability,valid_from) VALUES(?,'demo-org',UTC_TIMESTAMP(6),'test',UTC_TIMESTAMP(6),0,?,?,?,UTC_TIMESTAMP(6))",UUID.randomUUID().toString(),patient,subject,cap);
+        db.update("INSERT INTO patient_access_grant(id,org_id,created_at,created_by,updated_at,row_version,patient_id,subject_id,capability,valid_from) VALUES(?,'demo-org',UTC_TIMESTAMP(6),'test',UTC_TIMESTAMP(6),0,?,?,?,DATE_SUB(UTC_TIMESTAMP(6),INTERVAL 1 DAY))",UUID.randomUUID().toString(),patient,subject,cap);
     }
     Fixture draft(String dimension, boolean execution) throws Exception {
         String p=patient("demo-org","DEMO","第二批虚构测试患者",true);
