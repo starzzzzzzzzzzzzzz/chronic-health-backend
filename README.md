@@ -1,6 +1,6 @@
 # 慢病健康管理后端
 
-当前已实现患者资料查询和方案草稿的新建、编辑与读取；正在验证第二批执行条件确认与一审。支持输入快照、并发修订校验和审计。采用 Spring Boot 4.1.1 与常见的 Controller / Service / Mapper 分层结构。目录说明见 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)，接口约定见 [docs/API-CONTRACT.md](docs/API-CONTRACT.md)。
+当前已实现患者资料查询、方案草稿、执行条件确认、一审及已批准方案的新版本调整，支持输入快照、并发修订校验和审计。采用 Spring Boot 4.1.1 与常见的 Controller / Service / Mapper 分层结构。目录说明见 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)，接口约定见 [docs/API-CONTRACT.md](docs/API-CONTRACT.md)。
 
 数据库设计初稿见 [设计总览](docs/database/DATABASE-DESIGN.md)、[表与字段字典](docs/database/TABLE-DICTIONARY.md) 和 [视频页面字段映射](docs/database/VIDEO-FIELD-MAPPING.md)。A 批 12 张表已实现；V4 增加条件确认和审核三表；模拟生成、任务及发布仍待实施。
 
@@ -141,4 +141,6 @@ local 启动自动执行 Flyway，V1 为元数据，V2/V3 为患者与方案草�
 
 普通 `./scripts/mvn.sh -B -ntp verify` 运行 MVC 测试并跳过真实数据库测试。数据库启动后执行 `./scripts/test-db.sh`：加载本地 `.env`，启用 local 迁移并测试真实 MySQL，覆盖实体字段映射、XML SQL 和基础 CRUD，最后打包。测试资料使用事务回滚；独立并发/故障注入测试在 finally 中按其自有随机 ID 清理。该脚本仅用于项目开发数据库。
 
-2026-10-16 第一批验证：28 项测试全部通过（含真实 MySQL 与并发事务）；实际 HTTP 已验证患者查询、资料摘要、草稿创建/编辑/读取及 401/409。正式登录、真实 AI、审核、任务与发布尚未接入。
+2026-10-16 第一批历史验证：28 项测试全部通过（含真实 MySQL 与并发事务）；实际 HTTP 已验证患者查询、资料摘要、草稿创建/编辑/读取及 401/409。
+
+2026-10-16 第二批验证：48 项测试全部通过（含真实 MySQL、权限、并发和回滚）；普通离线构建通过，6 项通过、42 项数据库测试明确跳过。实际 HTTP 24 步覆盖执行条件、一审退回重提、通过、新版本和撤回，以及 401/403/409。联调说明见 [PHASE-B-API.md](docs/PHASE-B-API.md)。正式登录、真实 AI、任务、二审和发布尚未接入。

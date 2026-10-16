@@ -1,6 +1,6 @@
 # 第二批：执行条件确认与方案一审实施计划
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** 在第一批草稿上实现可追溯的执行条件确认、一审提交、退回、撤回、通过，以及通过后的新版本调整。
 
@@ -74,11 +74,11 @@
 - Consumes: PatientService.require、PlanDraftStore.load、CarePlanMapper.lockVersion、CarePlanService.get。
 - Produces: PlanReviewSupport.context(principal,id,capability,lock)；ConditionConfirmationService.get/save；PlanConditionPolicy.requirements(draft)；有效确认快照供 Task 2 使用。
 
-- [ ] 写失败测试：缺失条件派生，合法确认后重开可读，追加不覆盖，过期修订 409，正文编辑 STALE，批内非法值全回滚，专业来源与主体防篡改，机构/模式/能力边界；迁移一审重复待审及决策唯一约束。
-- [ ] 执行 `./scripts/test-db.sh -Dtest=ConditionConfirmationApiTest,PlanReviewSchemaDatabaseTest`。Expected: 新接口不可用/表缺失引起断言失败，记录 RED。
-- [ ] 实现 V4 与条件策略/事务/身份；记录新表由本批创建、未来目标 CHECK 限制和摘要边界。
-- [ ] 再运行同一命令。Expected: 全部通过，原有接口不受影响。
-- [ ] 提交 `feat: add version-bound execution condition confirmations`。
+- [x] 写失败测试：缺失条件派生，合法确认后重开可读，追加不覆盖，过期修订 409，正文编辑 STALE，批内非法值全回滚，专业来源与主体防篡改，机构/模式/能力边界；迁移一审重复待审及决策唯一约束。
+- [x] 执行 `./scripts/test-db.sh -Dtest=ConditionConfirmationApiTest,PlanReviewSchemaDatabaseTest`。Expected: 新接口不可用/表缺失引起断言失败，记录 RED。
+- [x] 实现 V4 与条件策略/事务/身份；记录新表由本批创建、未来目标 CHECK 限制和摘要边界。
+- [x] 再运行同一命令。Expected: 全部通过，原有接口不受影响。
+- [x] 提交 `feat: add version-bound execution condition confirmations`。
 
 ### Task 2: 一审状态机与不可变送审快照
 
@@ -91,11 +91,11 @@
 - Consumes: Task 1 context 与有效条件清单；CarePlanService.get 的一致性读视图。
 - Produces: submit/context/getSubmission/decide/withdraw；review_submission 与 review_decision 作为后续任务生成只读来源。
 
-- [ ] 写失败测试：缺主目标依据/模块/选中项/待核实条件不送审；不强制七维；提交快照含完整依据和确认；待审编辑拒绝；独立审核人通过和退回；自审/越权拒绝；撤回、退回后重提；重复和过期决策；普通资料更新不改送审内容。
-- [ ] 执行 `./scripts/test-db.sh -Dtest=PlanReviewApiTest,PlanReviewTransactionTest`。Expected: 新一审接口尚未实现，断言失败。
-- [ ] 实现父锁 + 事务 + 唯一键 + 合并摘要；审核意见仅审计必要标识，不写临床正文或 Token 日志。
-- [ ] 补并发提交/决策与审计故障注入，执行同一命令。Expected: 一次成功、另一次 409；故障回滚父状态/提交/决策/审计。
-- [ ] 提交 `feat: implement immutable first-review submissions and decisions`。
+- [x] 写失败测试：缺主目标依据/模块/选中项/待核实条件不送审；不强制七维；提交快照含完整依据和确认；待审编辑拒绝；独立审核人通过和退回；自审/越权拒绝；撤回、退回后重提；重复和过期决策；普通资料更新不改送审内容。
+- [x] 执行 `./scripts/test-db.sh -Dtest=PlanReviewApiTest,PlanReviewTransactionTest`。Expected: 新一审接口尚未实现，断言失败。
+- [x] 实现父锁 + 事务 + 唯一键 + 合并摘要；审核意见仅审计必要标识，不写临床正文或 Token 日志。
+- [x] 补并发提交/决策与审计故障注入，执行同一命令。Expected: 一次成功、另一次 409；故障回滚父状态/提交/决策/审计。
+- [x] 提交 `feat: implement immutable first-review submissions and decisions`。
 
 ### Task 3: 批准后版本调整与联调交付
 
@@ -108,13 +108,31 @@
 - Consumes: 当前 APPROVED 源版本、PlanDraftStore、条件与审核接口。
 - Produces: POST /care-plans/{id}/versions；独立新草稿及来源链，旧审核保留。
 
-- [ ] 写失败测试：批准后不能 PATCH；创建新版本与新子 ID/依据；确认与审核不继承；重复旧源请求 409；外机构/模式不越权。
-- [ ] 执行 `./scripts/test-db.sh -Dtest=PlanVersionApiTest`。Expected: 新版本接口未实现，断言失败。
-- [ ] 实现克隆事务，补请求示例及真实实现范围。
-- [ ] 执行 `./scripts/test-db.sh` 和 `./scripts/mvn.sh -B -ntp -o verify`。Expected: 数据库测试全通过；普通构建明确跳过数据库测试。
-- [ ] 重启本项目 9089 DEMO，HTTP 实测确认→送审→退回→重提→通过→新版本、401/403/409；保留 .env.demo 凭证。
+- [x] 写失败测试：批准后不能 PATCH；创建新版本与新子 ID/依据；确认与审核不继承；重复旧源请求 409；外机构/模式不越权。
+- [x] 执行 `./scripts/test-db.sh -Dtest=PlanVersionApiTest`。Expected: 新版本接口未实现，断言失败。
+- [x] 实现克隆事务，补请求示例及真实实现范围。
+- [x] 执行 `./scripts/test-db.sh` 和 `./scripts/mvn.sh -B -ntp -o verify`。Expected: 数据库测试全通过；普通构建明确跳过数据库测试。
+- [x] 重启本项目 9089 DEMO，HTTP 实测确认→送审→退回→重提→通过→新版本、401/403/409；保留 .env.demo 凭证。
 - [ ] 提交 `feat: create new drafts from approved plan versions`；独立代码审查并修复重要问题；保留分支，不合并主分支。
 
 ## 执行记录
 
 本批不重新开启整体数据库设计讨论；沿用已确认的业务对象和当前会话实施方式。审核角色采用独立 DEMO 身份、禁自审，是正式权限规则确认前的保守开发默认值。真实接入前仍需确认正式角色配置。
+
+### 验证记录
+
+- 条件接口和约束测试 RED → GREEN，8/8；连同第一批回归 36/36。
+- 一审接口 RED 10/10；实现后 9 项通过，并发用例在容器资源争用下触发 10 秒等待超时。MySQL 显示 handler commit 等待；测试等待改为 60 秒、清理合并为单一事务后 10/10 通过，未放宽业务断言。
+- 新版本接口 RED 2/2 → GREEN 2/2。
+- `./scripts/test-db.sh`：48/48 通过；`./scripts/mvn.sh -B -ntp -o verify`：6 项通过、42 项数据库测试明确跳过，构建成功。
+- 9089 DEMO 实际 HTTP 24 步通过，覆盖确认失效、退回重提、独立审核、新版本、撤回及 200/201/401/403/409。
+- 分支 feat/plan-conditions-review，从第一批提交 163a66d 继续，未合并 main。
+
+### 实施取舍
+
+- 沿用当前 checkout 和当前会话实施方式，新增第二批功能分支；不额外创建 worktree，后续可迁移分支。
+- 独立 DEMO 审核身份、暂禁自审；正式角色确认后可调整策略。
+- 确认只增加 row_version，审核摘要组合正文摘要与有效确认清单；后续任务阶段需使用审核聚合摘要校验来源。
+- 写事务采用 READ_COMMITTED 并共享患者/版本锁，防止等待锁后读取旧子项；后续写入应遵守相同锁顺序。
+- 登记实际通过的测试命令结果，不为登记再次重复相同测试。
+- 用户明确授权停止另一项目的 health-assistant-worker、health-assistant-flower 且不再启动；两者已确认 exited。未删除容器或数据，本项目服务和数据库继续运行。
