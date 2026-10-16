@@ -1,0 +1,4 @@
+# 仅本地开发自动迁移；部署环境须显式配置迁移策略。
+spring:
+  flyway:
+    enabled: ${DB_MIGRATION_ENABLED:true}

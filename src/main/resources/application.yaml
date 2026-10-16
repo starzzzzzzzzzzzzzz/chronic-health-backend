@@ -1,0 +1,37 @@
+server:
+  address: ${SERVER_ADDRESS:127.0.0.1}
+  port: ${SERVER_PORT:9088}
+  servlet:
+    context-path: /ncd-ai
+  error:
+    include-message: never
+    include-stacktrace: never
+spring:
+  application:
+    name: chronic-health
+  datasource:
+    url: ${DB_URL:jdbc:mysql://127.0.0.1:13306/chronic_health?connectionTimeZone=Asia/Shanghai}
+    username: ${DB_USERNAME:health_app}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 1
+  flyway:
+    enabled: ${DB_MIGRATION_ENABLED:false}
+    locations: classpath:db/migration
+    clean-disabled: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+logging:
+  pattern:
+    level: '%5p [requestId=%X{requestId:-}]'
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true

@@ -1,0 +1,26 @@
+name: chronic-health-dev
+services:
+  mysql:
+    image: mysql:8.4@sha256:24989179f58856db763f418010c1169fecc944e3ec1ea7e921572d83eb070f70
+    ports:
+      - "127.0.0.1:${MYSQL_PORT:-13306}:3306"
+    environment:
+      MYSQL_DATABASE: chronic_health
+      MYSQL_USER: health_app
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Run scripts/init-env.sh first}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Run scripts/init-env.sh first}
+      TZ: Asia/Shanghai
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_0900_ai_ci
+      - --default-time-zone=+08:00
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=\"$$MYSQL_PASSWORD\" mysql --protocol=TCP -h127.0.0.1 -uhealth_app chronic_health -Nse 'SELECT 1' >/dev/null"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+volumes:
+  mysql-data:

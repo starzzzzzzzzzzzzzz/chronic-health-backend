@@ -1,0 +1,8 @@
+.env
+.env.local
+.dev/
+target/
+**/target/
+.idea/
+*.iml
+.DS_Store
