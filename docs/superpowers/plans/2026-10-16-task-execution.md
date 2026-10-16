@@ -66,11 +66,11 @@
 - Consumes: Tasks 1/2 source验证、已批准 TASK 审核、确定预览。
 - Produces: publicationPreview/publish/get；ExecutionTaskService.list/get/require，后者对指定能力与锁进行检查；患者 DEMO Token。
 
-- [ ] 写失败测试：未发布不可见；两审/摘要不匹配；相同键回读和不同内容409；同包不同键不重复；实例与预览一致；新版边界只影响未开始实例；患者授权与同机构无权。
-- [ ] `./scripts/test-db.sh -Dtest=TaskPublicationApiTest,TaskPublicationTransactionTest`，Expected: 新发布接口不可用。
-- [ ] 实现发布预览、事务实例复制/替代、唯一键和审计；outbox保持NOT_CONFIGURED，不对外发送。增加独立患者开发凭证且限制患者能力。
-- [ ] 故障注入和并发测试验证原子性，同一命令 + 全量测试，Expected: 全绿。
-- [ ] 提交发布与日任务。
+- [x] 写失败测试：未发布不可见；两审/摘要不匹配；相同键回读和不同内容409；同包不同键不重复；实例与预览一致；新版边界只影响未开始实例；患者授权与同机构无权。
+- [x] `./scripts/test-db.sh -Dtest=TaskPublicationApiTest,TaskPublicationTransactionTest`，Expected: 新发布接口不可用。
+- [x] 实现发布预览、事务实例复制/替代、唯一键和审计；outbox保持NOT_CONFIGURED，不对外发送。增加独立患者开发凭证且限制患者能力。
+- [x] 故障注入和并发测试验证原子性，同一命令 + 全量测试，Expected: 全绿。
+- [x] 提交发布与日任务。
 
 ### Task 4: 一键打卡 补记与追加更正
 

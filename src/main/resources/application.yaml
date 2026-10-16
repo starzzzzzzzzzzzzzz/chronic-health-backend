@@ -44,6 +44,7 @@ health:
     enabled: ${HEALTH_DEMO_ENABLED:false}
     token: ${HEALTH_DEMO_API_TOKEN:}
     reviewer-token: ${HEALTH_DEMO_REVIEWER_TOKEN:}
+    patient-token: ${HEALTH_DEMO_PATIENT_TOKEN:}
 springdoc:
   api-docs:
     enabled: ${health.docs.enabled}

@@ -21,7 +21,7 @@ public class SecurityConfiguration {
         boolean demo = Arrays.asList(environment.getActiveProfiles()).contains("local")
                 && environment.getProperty("health.demo.enabled", Boolean.class, false);
         if (demo) {
-            http.addFilterBefore(new DemoAuthenticationFilter(environment.getProperty("health.demo.token"), environment.getProperty("health.demo.reviewer-token")), AnonymousAuthenticationFilter.class);
+            http.addFilterBefore(new DemoAuthenticationFilter(environment.getProperty("health.demo.token"), environment.getProperty("health.demo.reviewer-token"), environment.getProperty("health.demo.patient-token")), AnonymousAuthenticationFilter.class);
         }
         boolean docs = Arrays.asList(environment.getActiveProfiles()).contains("local")
                 && environment.getProperty("health.docs.enabled", Boolean.class, false);
@@ -49,6 +49,8 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.PATCH,"/task-bundles/*").authenticated()
                         .requestMatchers(HttpMethod.GET,"/task-bundles/*/review-context","/schedule-previews/*").authenticated()
                         .requestMatchers(HttpMethod.POST,"/task-bundles/*/schedule-previews","/task-bundles/*/review-submissions","/task-bundles/*/versions").authenticated()
+                        .requestMatchers(HttpMethod.POST,"/task-bundles/*/publication-previews","/task-bundles/*/publications").authenticated()
+                        .requestMatchers(HttpMethod.GET,"/publications/*","/execution-tasks/*","/task-bundles/*/publication-previews/*").authenticated()
                         .anyRequest().denyAll())
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint((request, response, exception) -> {

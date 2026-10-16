@@ -26,6 +26,7 @@ public class DemoDataInitializer implements ApplicationRunner {
         if (existing!=null) {
             if (!"demo-org".equals(existing.getOrgId()) || !"DEMO".equals(existing.getDataMode())) throw new IllegalStateException("Demo patient ID conflicts with non-demo data");
             initializeReviewGrants(id);
+            initializeTaskGrants(id);
             return; // Do not recreate revoked grants or overwrite clinician edits on restart.
         }
         LocalDateTime now=LocalDateTime.now(Clock.systemUTC());
@@ -37,6 +38,7 @@ public class DemoDataInitializer implements ApplicationRunner {
             PatientAccessGrant grant=new PatientAccessGrant();grant.setId(UUID.randomUUID().toString());grant.setOrgId("demo-org");grant.setCreatedAt(now);grant.setCreatedBy("system:demo");grant.setUpdatedAt(now);grant.setRowVersion(0L);grant.setPatientId(id);grant.setSubjectId("demo-clinician");grant.setCapability(ability);grant.setValidFrom(now);grants.insert(grant);
         }
         initializeReviewGrants(id);
+            initializeTaskGrants(id);
     }
     private void initializeReviewGrants(String patient) {
         String key="local-demo-review-v1";
@@ -49,5 +51,15 @@ public class DemoDataInitializer implements ApplicationRunner {
             }
         }
         var marker=new AppMetadata();marker.setMetadataKey(key);marker.setMetadataValue("one-time local demo review grants");marker.setCreatedAt(now);metadata.insert(marker);
+    }
+    private void initializeTaskGrants(String patient) {
+        String key="local-demo-task-v1";
+        if(metadata.selectById(key)!=null)return;
+        LocalDateTime now=LocalDateTime.now(Clock.systemUTC());
+        for(String subject:new String[]{"demo-clinician","demo-reviewer","demo-patient"}) {
+            var abilities=switch(subject){case "demo-clinician"->new String[]{"TASK_EDIT","TASK_PUBLISH","TASK_READ"};case "demo-reviewer"->new String[]{"TASK_REVIEW","TASK_READ"};default->new String[]{"TASK_READ","TASK_FEEDBACK"};};
+            for(String ability:abilities){var g=new PatientAccessGrant();g.setId(UUID.randomUUID().toString());g.setOrgId("demo-org");g.setCreatedAt(now);g.setCreatedBy("system:demo");g.setUpdatedAt(now);g.setRowVersion(0L);g.setPatientId(patient);g.setSubjectId(subject);g.setCapability(ability);g.setValidFrom(now);grants.insert(g);}
+        }
+        var marker=new AppMetadata();marker.setMetadataKey(key);marker.setMetadataValue("one-time local demo task grants");marker.setCreatedAt(now);metadata.insert(marker);
     }
 }
