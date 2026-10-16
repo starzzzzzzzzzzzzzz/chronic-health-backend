@@ -14,8 +14,9 @@ public class DemoDataInitializer implements ApplicationRunner {
     private final PatientMapper patients;
     private final HealthFactMapper facts;
     private final PatientAccessGrantMapper grants;
-    public DemoDataInitializer(PatientMapper patients, HealthFactMapper facts, PatientAccessGrantMapper grants) {
-        this.patients=patients; this.facts=facts; this.grants=grants;
+    private final AppMetadataMapper metadata;
+    public DemoDataInitializer(PatientMapper patients, HealthFactMapper facts, PatientAccessGrantMapper grants,AppMetadataMapper metadata) {
+        this.patients=patients; this.facts=facts; this.grants=grants;this.metadata=metadata;
     }
     @Override @Transactional public void run(ApplicationArguments args) throws Exception {
         var mapper=JsonMapper.builder().build();
@@ -24,6 +25,7 @@ public class DemoDataInitializer implements ApplicationRunner {
         Patient existing=patients.selectById(id);
         if (existing!=null) {
             if (!"demo-org".equals(existing.getOrgId()) || !"DEMO".equals(existing.getDataMode())) throw new IllegalStateException("Demo patient ID conflicts with non-demo data");
+            initializeReviewGrants(id);
             return; // Do not recreate revoked grants or overwrite clinician edits on restart.
         }
         LocalDateTime now=LocalDateTime.now(Clock.systemUTC());
@@ -34,5 +36,18 @@ public class DemoDataInitializer implements ApplicationRunner {
         for(String ability:new String[]{"PATIENT_READ","PLAN_EDIT"}) {
             PatientAccessGrant grant=new PatientAccessGrant();grant.setId(UUID.randomUUID().toString());grant.setOrgId("demo-org");grant.setCreatedAt(now);grant.setCreatedBy("system:demo");grant.setUpdatedAt(now);grant.setRowVersion(0L);grant.setPatientId(id);grant.setSubjectId("demo-clinician");grant.setCapability(ability);grant.setValidFrom(now);grants.insert(grant);
         }
+        initializeReviewGrants(id);
+    }
+    private void initializeReviewGrants(String patient) {
+        String key="local-demo-review-v1";
+        if(metadata.selectById(key)!=null)return;
+        LocalDateTime now=LocalDateTime.now(Clock.systemUTC());
+        for(String subject:new String[]{"demo-clinician","demo-reviewer"}) {
+            var abilities="demo-clinician".equals(subject)?new String[]{"PLAN_CONFIRM","PLAN_CONFIRM_PROFESSIONAL"}:new String[]{"PATIENT_READ","PLAN_REVIEW"};
+            for(String ability:abilities) {
+                var g=new PatientAccessGrant();g.setId(UUID.randomUUID().toString());g.setOrgId("demo-org");g.setCreatedAt(now);g.setCreatedBy("system:demo");g.setUpdatedAt(now);g.setRowVersion(0L);g.setPatientId(patient);g.setSubjectId(subject);g.setCapability(ability);g.setValidFrom(now);grants.insert(g);
+            }
+        }
+        var marker=new AppMetadata();marker.setMetadataKey(key);marker.setMetadataValue("one-time local demo review grants");marker.setCreatedAt(now);metadata.insert(marker);
     }
 }

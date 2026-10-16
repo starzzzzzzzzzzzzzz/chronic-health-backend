@@ -9,7 +9,7 @@ import org.springframework.context.annotation.*;
 @Profile("local")
 @ConditionalOnProperty(name="health.demo.enabled", havingValue="true")
 public class DemoConfiguration {
-    @Bean DemoDataInitializer demoDataInitializer(PatientMapper patients, HealthFactMapper facts, PatientAccessGrantMapper grants) {
-        return new DemoDataInitializer(patients, facts, grants);
+    @Bean DemoDataInitializer demoDataInitializer(PatientMapper patients, HealthFactMapper facts, PatientAccessGrantMapper grants,AppMetadataMapper metadata) {
+        return new DemoDataInitializer(patients, facts, grants, metadata);
     }
 }

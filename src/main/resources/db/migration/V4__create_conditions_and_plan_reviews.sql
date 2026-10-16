@@ -1,0 +1,65 @@
+-- First-review storage. Future TASK targets remain disabled until their tables and validators exist.
+CREATE TABLE condition_confirmation (
+ id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL PRIMARY KEY,
+ org_id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
+ created_at DATETIME(6) NOT NULL, created_by VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
+ plan_version_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NULL,
+ task_bundle_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NULL,
+ condition_key VARCHAR(100) COLLATE utf8mb4_bin NOT NULL,
+ requirement_json JSON NOT NULL, value_json JSON NULL,
+ status VARCHAR(24) COLLATE utf8mb4_bin NOT NULL,
+ source_fact_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NULL,
+ subject_revision BIGINT UNSIGNED NOT NULL,
+ binding_hash CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ confirmed_by VARCHAR(64) COLLATE utf8mb4_bin NULL, confirmed_at DATETIME(6) NULL,
+ confirmation_note TEXT NULL,
+ supersedes_confirmation_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NULL,
+ UNIQUE KEY uk_scope_id(org_id,id),
+ UNIQUE KEY uk_confirmation_successor(org_id,supersedes_confirmation_id),
+ KEY idx_plan_condition(org_id,plan_version_id,condition_key),
+ CONSTRAINT fk_confirmation_plan FOREIGN KEY(org_id,plan_version_id) REFERENCES care_plan_version(org_id,id),
+ CONSTRAINT fk_confirmation_fact FOREIGN KEY(org_id,source_fact_id) REFERENCES health_fact(org_id,id),
+ CONSTRAINT fk_confirmation_prior FOREIGN KEY(org_id,supersedes_confirmation_id) REFERENCES condition_confirmation(org_id,id),
+ CHECK(plan_version_id IS NOT NULL AND task_bundle_id IS NULL),
+ CHECK(status IN ('MISSING','PENDING','CONFIRMED','REJECTED')),
+ CHECK(status <> 'CONFIRMED' OR (value_json IS NOT NULL AND confirmed_by IS NOT NULL AND confirmed_at IS NOT NULL))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE review_submission (
+ id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL PRIMARY KEY,
+ org_id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
+ created_at DATETIME(6) NOT NULL, created_by VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
+ updated_at DATETIME(6) NOT NULL, row_version BIGINT UNSIGNED NOT NULL DEFAULT 0,
+ stage VARCHAR(16) COLLATE utf8mb4_bin NOT NULL,
+ plan_version_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NULL,
+ task_bundle_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NULL,
+ target_revision BIGINT UNSIGNED NOT NULL,
+ content_hash CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ content_snapshot_json JSON NOT NULL,
+ schedule_preview_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NULL,
+ status VARCHAR(16) COLLATE utf8mb4_bin NOT NULL,
+ submitted_by VARCHAR(64) COLLATE utf8mb4_bin NOT NULL, submitted_at DATETIME(6) NOT NULL,
+ closed_at DATETIME(6) NULL, closed_by VARCHAR(64) COLLATE utf8mb4_bin NULL, closed_reason VARCHAR(1000) NULL,
+ pending_slot TINYINT GENERATED ALWAYS AS (CASE WHEN status='PENDING' THEN 1 ELSE NULL END) STORED,
+ UNIQUE KEY uk_scope_id(org_id,id),
+ UNIQUE KEY uk_pending_plan(org_id,plan_version_id,pending_slot),
+ KEY idx_review_queue(org_id,status,stage,submitted_at),
+ CONSTRAINT fk_review_plan FOREIGN KEY(org_id,plan_version_id) REFERENCES care_plan_version(org_id,id),
+ CHECK(stage='PLAN' AND plan_version_id IS NOT NULL AND task_bundle_id IS NULL AND schedule_preview_id IS NULL),
+ CHECK(status IN ('PENDING','APPROVED','RETURNED','WITHDRAWN'))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE review_decision (
+ id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL PRIMARY KEY,
+ org_id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
+ created_at DATETIME(6) NOT NULL, created_by VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
+ submission_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ decision VARCHAR(16) COLLATE utf8mb4_bin NOT NULL, comment TEXT NULL,
+ reviewer_id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL, reviewed_at DATETIME(6) NOT NULL,
+ UNIQUE KEY uk_scope_id(org_id,id),
+ UNIQUE KEY uk_submission_decision(org_id,submission_id),
+ KEY idx_reviewer(org_id,reviewer_id,reviewed_at),
+ CONSTRAINT fk_decision_submission FOREIGN KEY(org_id,submission_id) REFERENCES review_submission(org_id,id),
+ CHECK(decision IN ('APPROVE','RETURN')),
+ CHECK(decision <> 'RETURN' OR (comment IS NOT NULL AND CHAR_LENGTH(TRIM(comment)) > 0))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
