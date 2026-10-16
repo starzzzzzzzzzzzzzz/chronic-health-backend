@@ -2,6 +2,49 @@
 
 当前已建立 Spring Boot 4.1.1 后端骨架，包含健康检查、请求追踪、安全默认拒绝和 Flyway 迁移。采用常见的 Controller / Service / Mapper 分层结构，目前仅保留业务层目录，尚未实现业务功能。目录说明见 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)，接口约定见 [docs/API-CONTRACT.md](docs/API-CONTRACT.md)。
 
+## 项目目录
+
+```text
+chronic-health-backend/
+├── pom.xml                              Maven 依赖与构建配置
+├── compose.yaml                         独立 MySQL 开发环境
+├── .mvn/settings.xml                    项目 Maven 设置
+├── scripts/
+│   ├── init-env.sh                      初始化本地环境变量
+│   ├── mvn.sh                           使用 Java 17 构建
+│   ├── db.sh                            数据库启停与检查
+│   ├── run.sh                           启动后端
+│   └── test-db.sh                       真实数据库测试与打包
+├── src/main/java/com/healthsystem/
+│   ├── HealthSystemApplication.java     Spring Boot 启动入口
+│   ├── controller/                      接收请求、返回响应
+│   ├── service/                         业务逻辑与事务
+│   │   └── impl/                        业务实现类（按需添加）
+│   ├── mapper/                          MyBatis-Plus 数据访问接口
+│   ├── entity/                          数据库实体
+│   ├── dto/                             请求参数、数据传输对象
+│   ├── vo/                              接口返回对象
+│   ├── config/                          安全、MyBatis-Plus 等配置
+│   ├── common/                          公共组件
+│   │   ├── api/                         统一响应
+│   │   └── web/                         请求编号过滤器
+│   ├── exception/                       异常定义与处理
+│   └── utils/                           工具类
+├── src/main/resources/
+│   ├── application.yaml                 通用配置
+│   ├── application-local.yaml           本地开发配置
+│   ├── mapper/                          自定义 SQL XML
+│   └── db/migration/                    Flyway 数据库迁移
+├── src/test/java/com/healthsystem/
+│   ├── WebFoundationTest.java           Web 基础行为测试
+│   └── MybatisPlusDatabaseTest.java     MySQL 数据访问测试
+└── docs/
+    ├── ARCHITECTURE.md                  分层职责与架构说明
+    └── API-CONTRACT.md                  RESTful 接口约定
+```
+
+业务请求通常依次经过 `Controller → Service → Mapper → MySQL`。目前部分业务层仅通过 `package-info.java` 保留目录，具体业务功能后续逐步实现。本地 `.env`、依赖缓存 `.dev/` 和构建产物 `target/` 已忽略，不提交到仓库。
+
 ## 环境约定
 
 | 组件 | 配置 |
