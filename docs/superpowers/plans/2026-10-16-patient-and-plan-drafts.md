@@ -83,62 +83,62 @@
 
 **Interfaces:** 产出 12 张 A 批表及对应实体/Mapper；业务引用使用 UUID，created/updated 时间明确为 UTC；V1 与原 MyBatis 元数据测试保持可运行。
 
-- [ ] 写 `PatientFoundationDatabaseTest.migrationsCreateScopedTablesAndPreserveMetadata()`：断言 12 表、复合外键、主要唯一键存在，app_metadata 原值不变；插入跨 org 的 patient FK 应失败；同组 supersedes_fact_id 的重复后继应失败。
-- [ ] 运行 `./scripts/test-db.sh -Dtest=PatientFoundationDatabaseTest`，确认预期因业务表缺失失败。
-- [ ] 按字典生成 V2/V3，使用 `CHAR(36) ... ascii_bin` 主键与 `VARCHAR(64) ... utf8mb4_bin` 编码/机构标识；普通中文名称保留默认中文排序规则。JSON 列通过明确映射读写，不依赖未经验证的自动 JSON 类型处理。
-- [ ] V3 先建 care_plan（current_version_id 可空）与版本，再追加循环 FK；外键包含 org_id，检查 current_version_id 归属由服务补齐。B/C/D 表外键不提前生成。
-- [ ] 为 12 表建立具名实体与 Mapper；按现有 Java 习惯使用显式访问器，不增加 Lombok。JSON 持久化字段可先用 String 在服务显式序列化；API 使用 Jackson 3 树/具名 DTO，不混用 Jackson 2 注解类型处理器。
-- [ ] 运行本任务真库测试及原有测试，验证北京时间跨日的样例 UTC 写入/读取不发生二次偏移。
-- [ ] 提交：`feat: add patient and care plan draft schema`。
+- [x] 写 `PatientFoundationDatabaseTest.migrationsCreateScopedTablesAndPreserveMetadata()`：断言 12 表、复合外键、主要唯一键存在，app_metadata 原值不变；插入跨 org 的 patient FK 应失败；同组 supersedes_fact_id 的重复后继应失败。
+- [x] 运行 `./scripts/test-db.sh -Dtest=PatientFoundationDatabaseTest`，确认预期因业务表缺失失败。
+- [x] 按字典生成 V2/V3，使用 `CHAR(36) ... ascii_bin` 主键与 `VARCHAR(64) ... utf8mb4_bin` 编码/机构标识；普通中文名称保留默认中文排序规则。JSON 列通过明确映射读写，不依赖未经验证的自动 JSON 类型处理。
+- [x] V3 先建 care_plan（current_version_id 可空）与版本，再追加循环 FK；外键包含 org_id，检查 current_version_id 归属由服务补齐。B/C/D 表外键不提前生成。
+- [x] 为 12 表建立具名实体与 Mapper；按现有 Java 习惯使用显式访问器，不增加 Lombok。JSON 持久化字段可先用 String 在服务显式序列化；API 使用 Jackson 3 树/具名 DTO，不混用 Jackson 2 注解类型处理器。
+- [x] 运行本任务真库测试及原有测试，验证北京时间跨日的样例 UTC 写入/读取不发生二次偏移。
+- [x] 提交：`feat: add patient and care plan draft schema`。
 
 ## Task 2 显式 DEMO 身份与可重复示例数据
 
 **Interfaces:** `BusinessPrincipal(String orgId, String subjectId, String dataMode)`，服务只接受该可信主体；DEMO token 来自环境变量，控制台不输出。后续任务可用同一个主体做范围校验。
 
-- [ ] 写身份测试：开关关闭或非 local 时 Token 无效；开启且 Token 正确时允许进入患者/草稿路由；无效 Token=401；尝试读取 REAL 或其他机构数据=404；有效范围内撤销授权=403。
-- [ ] 先运行身份测试并确认因业务身份未接入失败。
-- [ ] 实现 DemoAuthenticationFilter：常量时间比较已配置 Token；仅 local + demo 开关有效；不能信任请求中的 orgId/subjectId/dataMode。避免 Filter 同时被 Servlet 自动注册和 SecurityFilterChain 重复执行。
-- [ ] 限定只给本批 5 个业务入口加 authenticated；其它业务、Actuator 内部接口继续拒绝。错误响应沿用统一 401/403 JSON。
-- [ ] 初始化一位虚构患者与六方面来源，DEMO 来源不冒充专业确认；幂等第二次启动不覆盖人工改动、不重复加授权。示例 ID 固定并预留命名域；检测同 ID 非 DEMO 冲突时停止初始化而非覆盖。
-- [ ] 编写 run-demo.sh，原子创建本地随机 Token、权限 600；`.env.demo` 加入忽略；初始化器及脚本不把 Token 写入审计/日志。
-- [ ] 验证上述边界、默认健康接口和原安全测试；提交：`feat: add explicit local demo identity and seed data`。
+- [x] 写身份测试：开关关闭或非 local 时 Token 无效；开启且 Token 正确时允许进入患者/草稿路由；无效 Token=401；尝试读取 REAL 或其他机构数据=404；有效范围内撤销授权=403。
+- [x] 先运行身份测试并确认因业务身份未接入失败。
+- [x] 实现 DemoAuthenticationFilter：常量时间比较已配置 Token；仅 local + demo 开关有效；不能信任请求中的 orgId/subjectId/dataMode。避免 Filter 同时被 Servlet 自动注册和 SecurityFilterChain 重复执行。
+- [x] 限定只给本批 5 个业务入口加 authenticated；其它业务、Actuator 内部接口继续拒绝。错误响应沿用统一 401/403 JSON。
+- [x] 初始化一位虚构患者与六方面来源，DEMO 来源不冒充专业确认；幂等第二次启动不覆盖人工改动、不重复加授权。示例 ID 固定并预留命名域；检测同 ID 非 DEMO 冲突时停止初始化而非覆盖。
+- [x] 编写 run-demo.sh，原子创建本地随机 Token、权限 600；`.env.demo` 加入忽略；初始化器及脚本不把 Token 写入审计/日志。
+- [x] 验证上述边界、默认健康接口和原安全测试；提交：`feat: add explicit local demo identity and seed data`。
 
 ## Task 3 授权患者列表和六方面健康资料
 
 **Interfaces:** `PatientService.list(BusinessPrincipal principal, int page, int size, String query): PageVO<PatientSummaryVO>`；`PatientService.healthSummary(BusinessPrincipal principal, String patientId): PatientHealthSummaryVO`。提供仅服务内部使用的患者锁定和授权校验，供 Task 4 复用。
 
-- [ ] 写分页和范围测试：同主体仅返回有效授权患者，COUNT 与列表范围一致；无效 page/size=400；姓名 q 中 `%`/`_` 按字面匹配；相同 created_at 时 id 排序稳定。
-- [ ] 写资料测试：六轴均存在；缺失维度保持 UNKNOWN；事实含来源与观测时间；已被修订的事实不作为当前值；不同来源冲突保留；不因查看资料创建 health_input_snapshot。
-- [ ] 运行对应测试，确认业务 API 尚不存在而失败。
-- [ ] 实现 PatientController、PatientServiceImpl 和 XML 查询；枚举值集中在具名类型/常量中；时间与序列化遵循 UTC 存储、API 偏移时间约定。
-- [ ] 在 exception/ 增加 BusinessException 与统一处理；扩展 ApiResponse 支持 201 等真实状态；保留原健康响应形态。无效 JSON/日期/枚举 400，未识别服务器异常不回传 SQL 或病历内容。
-- [ ] 运行本任务 HTTP/真库测试与 WebFoundationTest；提交：`feat: expose scoped patient and health summary APIs`。
+- [x] 写分页和范围测试：同主体仅返回有效授权患者，COUNT 与列表范围一致；无效 page/size=400；姓名 q 中 `%`/`_` 按字面匹配；相同 created_at 时 id 排序稳定。
+- [x] 写资料测试：六轴均存在；缺失维度保持 UNKNOWN；事实含来源与观测时间；已被修订的事实不作为当前值；不同来源冲突保留；不因查看资料创建 health_input_snapshot。
+- [x] 运行对应测试，确认业务 API 尚不存在而失败。
+- [x] 实现 PatientController、PatientServiceImpl 和 XML 查询；枚举值集中在具名类型/常量中；时间与序列化遵循 UTC 存储、API 偏移时间约定。
+- [x] 在 exception/ 增加 BusinessException 与统一处理；扩展 ApiResponse 支持 201 等真实状态；保留原健康响应形态。无效 JSON/日期/枚举 400，未识别服务器异常不回传 SQL 或病历内容。
+- [x] 运行本任务 HTTP/真库测试与 WebFoundationTest；提交：`feat: expose scoped patient and health summary APIs`。
 
 ## Task 4 草稿聚合保存、快照与并发控制
 
 **Interfaces:** `CarePlanService.create(BusinessPrincipal principal, CreateCarePlanRequest request): CarePlanDraftVO`；`get(BusinessPrincipal principal, String versionId): CarePlanDraftVO`；`update(BusinessPrincipal principal, String versionId, UpdateCarePlanRequest request): CarePlanDraftVO`。
 
-- [ ] 先写完整往返测试：选虚构患者 → POST 草稿=201 与 Location → PATCH 模块/侧重/维度/条目及依据 → GET 内容一致；所有 API ID/修订号为 String，父子行同 org、同方案、同患者。
-- [ ] 写并发测试：两个独立事务携相同 expectedRevision 修改，恰好一个成功，一个 409；成功后 row_version 和 content_revision 各增 1，失败事务无子行或审计残留。测试不能用单个外层回滚事务假装并发。
-- [ ] 写错误测试：来源事实属于别的患者/不在输入快照、条目引用别版本维度/模块、权重不合 10000、结束日期早于开始日期、非法时区、非 DRAFT 编辑、非法枚举，全部拒绝且回滚。
-- [ ] 写 PATCH 语义测试：省略集合不修改；空集合表示清空允许为空的草稿集合；替换子行时按 FK 依赖顺序处理，保留被请求引用的合法 ID，不能删父模块后残留依据；未知/外来子 ID 拒绝。
-- [ ] 写快照测试：创建时 expectedProfileRevision 陈旧返回 409；创建成功保存实际读取的患者/事实；随后患者事实追加修订，再读旧草稿时快照原值保持。GET 不产生新快照。
-- [ ] 写 CanonicalJsonTest：对象键排序不同哈希相同；相同逻辑数据的不同序列化稳定；条目顺序按显式 sortOrder/稳定 ID 归一；真实内容变化哈希改变。
-- [ ] 逐项运行测试看见缺失功能失败，再实现事务逻辑：患者范围校验与锁定 → 读取/保存输入快照 → 新建身份/版本/七维决定 → 回填当前工作指针 → 审计；编辑按方案版本行锁 + row_version 验证，校验完整待保存聚合后写入子表、更新双修订与哈希。
-- [ ] 初稿没有一审/任务包数据，若状态不是 DRAFT 一律拒绝；保存只执行结构、引用与已确认边界校验，不承诺自动医学正确性。
-- [ ] 测试事务回滚、快照、并发和 HTTP 状态；提交：`feat: persist versioned care plan drafts with input snapshots`。
+- [x] 先写完整往返测试：选虚构患者 → POST 草稿=201 与 Location → PATCH 模块/侧重/维度/条目及依据 → GET 内容一致；所有 API ID/修订号为 String，父子行同 org、同方案、同患者。
+- [x] 写并发测试：两个独立事务携相同 expectedRevision 修改，恰好一个成功，一个 409；成功后 row_version 和 content_revision 各增 1，失败事务无子行或审计残留。测试不能用单个外层回滚事务假装并发。
+- [x] 写错误测试：来源事实属于别的患者/不在输入快照、条目引用别版本维度/模块、权重不合 10000、结束日期早于开始日期、非法时区、非 DRAFT 编辑、非法枚举，全部拒绝且回滚。
+- [x] 写 PATCH 语义测试：省略集合不修改；空集合表示清空允许为空的草稿集合；替换子行时按 FK 依赖顺序处理，保留被请求引用的合法 ID，不能删父模块后残留依据；未知/外来子 ID 拒绝。
+- [x] 写快照测试：创建时 expectedProfileRevision 陈旧返回 409；创建成功保存实际读取的患者/事实；随后患者事实追加修订，再读旧草稿时快照原值保持。GET 不产生新快照。
+- [x] 写 CanonicalJsonTest：对象键排序不同哈希相同；相同逻辑数据的不同序列化稳定；条目顺序按显式 sortOrder/稳定 ID 归一；真实内容变化哈希改变。
+- [x] 逐项运行测试看见缺失功能失败，再实现事务逻辑：患者范围校验与锁定 → 读取/保存输入快照 → 新建身份/版本/七维决定 → 回填当前工作指针 → 审计；编辑按方案版本行锁 + row_version 验证，校验完整待保存聚合后写入子表、更新双修订与哈希。
+- [x] 初稿没有一审/任务包数据，若状态不是 DRAFT 一律拒绝；保存只执行结构、引用与已确认边界校验，不承诺自动医学正确性。
+- [x] 测试事务回滚、快照、并发和 HTTP 状态；提交：`feat: persist versioned care plan drafts with input snapshots`。
 
 ## Task 5 实际启动联调与交付
 
 **Interfaces:** 提供真实可访问的本地 DEMO 服务和一组不含真实凭证的接口示例，供前端伙伴按视频接页面。
 
-- [ ] 运行 `./scripts/db.sh up`，再执行 `./scripts/test-db.sh`；普通 `./scripts/mvn.sh -B -ntp verify` 也通过并明确跳过真库测试。
-- [ ] 使用 run-demo.sh 在空闲端口启动本次代码；检查现存 9088 进程归属，避免把旧服务误当本次版本。若端口被旧实例使用，显式选 9089 联调，不终止未知进程。
-- [ ] HTTP 实测列表、健康资料、新建、PATCH、GET 往返、陈旧保存 409、缺凭证 401；检查 Location、X-Request-Id、中文内容和偏移时间。
-- [ ] 关闭 demo 开关再验证业务访问被拒绝；检查 `.env`/`.env.demo`/缓存/target 未进入暂存区。
-- [ ] 更新 README、API-CONTRACT 与数据库文档中的“已实现/未实现”，记录执行命令、测试结果、未接真实认证/AI/审核/发布的边界。
-- [ ] 内联自审聚合事务、跨患者引用、父子修订、幂等初始化及异常路径；修复后只重跑受影响测试和必要完整验证。
-- [ ] 提交并推送至当前私有仓库，报告提交号和前端可开始对接的 5 个接口。
+- [x] 运行 `./scripts/db.sh up`，再执行 `./scripts/test-db.sh`；普通 `./scripts/mvn.sh -B -ntp verify` 也通过并明确跳过真库测试。
+- [x] 使用 run-demo.sh 在空闲端口启动本次代码；检查现存 9088 进程归属，避免把旧服务误当本次版本。若端口被旧实例使用，显式选 9089 联调，不终止未知进程。
+- [x] HTTP 实测列表、健康资料、新建、PATCH、GET 往返、陈旧保存 409、缺凭证 401；检查 Location、X-Request-Id、中文内容和偏移时间。
+- [x] 关闭 demo 开关再验证业务访问被拒绝；检查 `.env`/`.env.demo`/缓存/target 未进入暂存区。
+- [x] 更新 README、API-CONTRACT 与数据库文档中的“已实现/未实现”，记录执行命令、测试结果、未接真实认证/AI/审核/发布的边界。
+- [x] 内联自审聚合事务、跨患者引用、父子修订、幂等初始化及异常路径；修复后只重跑受影响测试和必要完整验证。
+- [x] 提交并推送至当前私有仓库，报告提交号和前端可开始对接的 5 个接口。
 
 ## 计划自检
 
@@ -146,8 +146,18 @@
 - Review Focus 五类风险均已指定测试；JSON、同患者/同版本关联不能靠 FK 类型检查替代业务校验。
 - 新增 DEMO Token 是本计划的实施选择，需随计划评审确认；不会悄悄将“任意 Authorization 值”当真实认证。
 - 新建与编辑响应、双修订语义、集合替换和快照时机已写明。未确定的病种字典/医学配比不在本批自动生成。
-- 当前状态：计划待评审，未执行 V2/V3、未创建上述业务代码。
+- 当前状态：计划已确认，V2/V3、患者接口和草稿闭环已实现；最终真库测试 28 项全部通过，常规构建通过（6 项执行、22 项真库测试按开关跳过），真实 HTTP 联调通过。
 
 ## 执行方式
 
 建议由当前会话直接逐项实现（Native）：本批的数据迁移、身份范围和草稿事务紧密相关，统一实施更容易保持接口一致。只有用户选择分工方式后才启用子代理；计划本身不授权额外代理或真实医疗服务接入。
+
+## 实施结果与裁定
+
+- 当前会话直接实施于功能分支 feat/patient-plan-drafts，未改动其他运行服务。
+- 复用四个公共字段的 ScopedEntity；草稿子表存取和校验拆为 PlanDraftStore / PlanDraftValidation，保持 Service 事务边界。
+- MyBatis 一级缓存设为 STATEMENT，避免锁定读取复用过时实体；已审状态拒改有真实数据库回归测试。
+- 仅修改 changeReason 时只更新行修订，业务内容修订不变；相同内容保存为无操作。
+- 独立审查发现 null 依据条目会返回 500，已先复现再修复为 400，并验证无子表/修订/审计残留。
+- 真库测试开关显式标注在具体测试类，确保普通构建不初始化真库 Spring 上下文。
+- 实际 DEMO 服务在本机 9089 联调；默认模式临时实例已验证拒绝 DEMO 凭证后关闭。原 9088 服务保留。

@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Transactional
+@org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable(named="RUN_DB_TESTS",matches="true")
 class CarePlanApiTest extends DatabaseApiTestSupport {
     String createBody(String patient) {return "{\"patientId\":\""+patient+"\",\"expectedProfileRevision\":\"1\",\"title\":\"虚构患者周期方案\",\"startDate\":\"2026-10-17\",\"endDate\":\"2026-10-23\",\"zoneId\":\"Asia/Shanghai\"}";}
     JsonNode create(String patient) throws Exception {
@@ -104,6 +105,15 @@ class CarePlanApiTest extends DatabaseApiTestSupport {
         var repeat=patch(id,body.replace("\"0\"","\"1\""),200);
         assertThat(repeat.path("contentHash").asText()).isEqualTo(saved.path("contentHash").asText());
         assertThat(repeat.path("rowVersion").asText()).isEqualTo("1");
+    }
+    @Test void malformedNullBasisEntryIsBadRequestAndLeavesDraftUnchanged() throws Exception {
+        String patient=patient("demo-org","DEMO","空依据测试虚构患者",true);
+        var draft=create(patient);String id=draft.path("versionId").asText();
+        String body="{\"expectedRevision\":\"0\",\"dimensions\":[{\"dimensionCode\":\"routine\",\"decision\":\"ENABLED\"}],\"items\":[{\"dimensionCode\":\"routine\",\"title\":\"x\",\"content\":\"x\",\"actorType\":\"PATIENT\",\"isSelected\":false,\"basis\":[null]}]}";
+        patch(id,body,400);
+        assertThat(db.queryForObject("SELECT row_version FROM care_plan_version WHERE id=?",Long.class,id)).isZero();
+        assertThat(db.queryForObject("SELECT COUNT(*) FROM care_plan_dimension WHERE plan_version_id=?",Integer.class,id)).isZero();
+        assertThat(db.queryForObject("SELECT COUNT(*) FROM audit_log WHERE target_id=?",Integer.class,id)).isEqualTo(1);
     }
     @Test @Transactional(propagation=Propagation.NOT_SUPPORTED)
     void concurrentRequestsWithSameRevisionHaveExactlyOneWinner() throws Exception {

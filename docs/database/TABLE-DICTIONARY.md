@@ -1,6 +1,6 @@
 # 数据表与字段字典 初稿 v0.1
 
-日期：2026-10-16。共 26 张业务候选表；现有 app_metadata、flyway_schema_history 不计入。仅为设计，不是已执行迁移。
+日期：2026-10-16。共 26 张业务候选表；现有 app_metadata、flyway_schema_history 不计入。A 批已按 V2/V3 迁移实现，其他批次仍为设计；实际 SQL 位于 src/main/resources/db/migration。
 
 返回 [设计总览](DATABASE-DESIGN.md) · [页面字段映射](VIDEO-FIELD-MAPPING.md)
 

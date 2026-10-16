@@ -12,6 +12,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable(named="RUN_DB_TESTS",matches="true")
 class CarePlanDraftDatabaseTest extends DatabaseApiTestSupport {
  @MockitoSpyBean AuditLogMapper audit;
  @Test void auditWriteFailureRollsBackAlreadyWrittenDraftChildrenAndRevision() throws Exception {

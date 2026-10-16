@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Transactional
+@org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable(named="RUN_DB_TESTS",matches="true")
 class PatientApiTest extends DatabaseApiTestSupport {
  @Test void listsOnlyGrantedDemoPatientsAndTreatsLikeCharactersLiterally() throws Exception {
   String prefix="case-"+java.util.UUID.randomUUID();

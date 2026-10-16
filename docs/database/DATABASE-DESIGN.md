@@ -1,8 +1,8 @@
 # 慢病健康管理核心业务数据库设计初稿
 
-版本：v0.1 · 日期：2026-10-16 · 状态：待业务与前后端评审。
+版本：v0.1 · 日期：2026-10-16 · 状态：A 批已实现，B/C/D 批为待实施设计。
 
-本稿围绕演示视频的“患者 → 方案 → 一审 → 任务与排程 → 二审 → 发布”主线，从零设计新后端的数据模型。目标是支持页面真实保存、修改、审核及发布，并能追溯每次生成和审核所用的数据。当前只交付设计，未创建业务数据库表，也未修改既有 Flyway V1。
+本稿围绕演示视频的“患者 → 方案 → 一审 → 任务与排程 → 二审 → 发布”主线，从零设计新后端的数据模型。目标是支持页面真实保存、修改、审核及发布，并能追溯每次生成和审核所用的数据。A 批 12 张表已通过 Flyway V2/V3 建立，V1 未改；实现范围见 [第一批接口](../PHASE-A-API.md)。
 
 配套文件：[表与字段字典](TABLE-DICTIONARY.md)、[视频与接口字段映射](VIDEO-FIELD-MAPPING.md)。字段字典包含 26 张候选表、374 个字段定义（含各表通用字段），不是一次全部开发的工作量承诺。
 
@@ -145,7 +145,7 @@ schedule_rule_json 描述星期、时点、事件锚点、间隔和允许窗口�
 | 字段 | 必须包含的结构 | 约束 |
 |---|---|---|
 | health_fact.value_json | valueType、value；必要时 code、displayText | 数值配 unit；数组/对象遵循 fact_code 对应 schema；未知用确认状态表达，不填 0 或 false 冒充正常 |
-| health_input_snapshot.payload_json | schemaVersion、patient、facts、axes、conflicts、missingFields、sourceVersions | facts 保存事实值、来源和当时确认状态；按同一个 profile_revision 一致性读取 |
+| health_input_snapshot.payload_json | patient、profileRevision、facts、axes、conflicts、missingFields；结构版本在 schema_version 列，后续外部来源版本放 sourceVersions | facts 保存事实 ID（追加修订身份）、值、来源和当时确认状态；按同一个 profile_revision 一致性读取；不伪造尚未接入平台的版本号 |
 | plan_management_focus.dimension_weights_json | 七维代码到整数基点的映射 | 启用时覆盖七维，0 合法，总和 10000；字段和医学默认配比待确认 |
 | care_plan_item.references_json | citationId、title、url、sourceType、verificationStatus；作者年份等可选 | verificationStatus 至少 UNVERIFIED / VERIFIED / REJECTED；URL 去重不等于内容已核验 |
 | condition_confirmation.value_json | typedValues、sourceRef、professionalBinding（需要时） | 不把下拉选项标签当成业务编码；确认值与来源摘要绑定 |
@@ -239,4 +239,4 @@ schedule_rule_json 描述星期、时点、事件锚点、间隔和允许窗口�
 - 原始资料、两阶段输入、送审内容、排程预览、正式内容分别保存，不靠当前数据重建历史。
 - 审核绑定明确目标和修订；发布检查在同一受控事务内，唯一约束避免重复正式任务。
 - 字段字典生成时已校验表名/字段名不重复、普通外键目标存在且类型一致；页面映射也做了字段存在性检查。
-- 未执行建表、未对参考服务器进行业务写入；没有以文档检查替代数据库运行验证。
+- 已执行 A 批建表并验证真实 MySQL；B/C/D 表未创建，未对参考服务器进行业务写入。
