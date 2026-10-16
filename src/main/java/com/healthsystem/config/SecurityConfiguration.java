@@ -21,7 +21,7 @@ public class SecurityConfiguration {
         boolean demo = Arrays.asList(environment.getActiveProfiles()).contains("local")
                 && environment.getProperty("health.demo.enabled", Boolean.class, false);
         if (demo) {
-            http.addFilterBefore(new DemoAuthenticationFilter(environment.getProperty("health.demo.token")), AnonymousAuthenticationFilter.class);
+            http.addFilterBefore(new DemoAuthenticationFilter(environment.getProperty("health.demo.token"), environment.getProperty("health.demo.reviewer-token")), AnonymousAuthenticationFilter.class);
         }
         // Real authentication is not integrated. Only explicit local DEMO can authenticate here.
         return http
@@ -33,7 +33,8 @@ public class SecurityConfiguration {
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(a -> a
                         .requestMatchers(HttpMethod.GET, "/health", "/actuator/health").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/patients", "/patients/**", "/plan-versions/*").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/patients", "/patients/**", "/plan-versions/*", "/plan-versions/*/condition-confirmations").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/plan-versions/*/condition-confirmations").authenticated()
                         .requestMatchers(HttpMethod.POST, "/care-plans").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/plan-versions/*").authenticated()
                         .anyRequest().denyAll())

@@ -40,7 +40,7 @@ public class CarePlanServiceImpl implements CarePlanService {
   var v=findVersion(principal,id);var plan=findPlan(principal,v.getPlanId());patients.require(principal,plan.getPatientId(),"PATIENT_READ",false);
   return view(plan,v,store.load(v),snapshot(principal,v));
  }
- @Override @Transactional
+ @Override @Transactional(isolation=org.springframework.transaction.annotation.Isolation.READ_COMMITTED)
  public CarePlanDraftVO update(BusinessPrincipal principal,String id,UpdateCarePlanRequest request){
   JsonNode patch=request.changes();for(String field:patch.propertyNames())check(PATCH_FIELDS.contains(field),"Unknown patch field");
   var first=findVersion(principal,id);var plan=findPlan(principal,first.getPlanId());
