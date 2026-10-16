@@ -586,6 +586,8 @@
 
 一审和二审复用提交存储，业务校验分阶段。一个提交固定一次送审内容。
 
+V4 已实现 PLAN 一审；TASK、task_bundle_id 和 schedule_preview_id 留作未来阶段，目前由 CHECK 限制为 PLAN 及空的未来关联列。
+
 首次批次：B。可变行，带乐观锁。
 
 | 字段 | MySQL 类型 | 可空 | 含义与关联 |

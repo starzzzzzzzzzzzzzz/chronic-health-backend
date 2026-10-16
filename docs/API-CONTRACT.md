@@ -26,6 +26,14 @@
 | POST /ncd-ai/care-plans | 手工创建草稿与输入快照 | 201 + Location |
 | GET /ncd-ai/plan-versions/{id} | 读取完整草稿 | 200 |
 | PATCH /ncd-ai/plan-versions/{id} | 编辑草稿 | 200，陈旧修订 409 |
+| GET /ncd-ai/plan-versions/{id}/condition-confirmations | 当前执行条件与确认历史 | 200 |
+| POST /ncd-ai/plan-versions/{id}/condition-confirmations | 原子追加一批确认 | 201 + Location |
+| GET /ncd-ai/plan-versions/{id}/review-context | 一审依据、阻断项和历史 | 200 |
+| POST /ncd-ai/plan-versions/{id}/review-submissions | 固定本次送审快照 | 201 + Location |
+| GET /ncd-ai/review-submissions/{id} | 送审快照、状态与决策 | 200 |
+| POST /ncd-ai/review-submissions/{id}/decisions | 独立审核通过或退回 | 201 + Location |
+| POST /ncd-ai/review-submissions/{id}/withdrawals | 提交人撤回 | 201 + Location |
+| POST /ncd-ai/care-plans/{id}/versions | 已批准方案的新草稿 | 201 + Location |
 | GET /ncd-ai/health | 进程存活 | 200，公共响应包装 |
 | GET /ncd-ai/actuator/health | 依赖就绪，包含数据库检查 | 依赖健康 200，否则 503；Actuator 原生结构 |
 
