@@ -38,7 +38,20 @@ mybatis-plus:
     map-underscore-to-camel-case: true
     local-cache-scope: statement
 health:
+  docs:
+    enabled: false
   demo:
     enabled: ${HEALTH_DEMO_ENABLED:false}
     token: ${HEALTH_DEMO_API_TOKEN:}
     reviewer-token: ${HEALTH_DEMO_REVIEWER_TOKEN:}
+springdoc:
+  api-docs:
+    enabled: ${health.docs.enabled}
+    version: OPENAPI_3_0
+  swagger-ui:
+    enabled: ${health.docs.enabled}
+    persist-authorization: false
+    disable-swagger-default-url: true
+    validator-url: ""
+  packages-to-scan: com.healthsystem.controller
+  override-with-generic-response: false

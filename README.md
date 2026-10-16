@@ -48,6 +48,7 @@ chronic-health-backend/
     ├── API-CONTRACT.md                  RESTful 接口约定
     ├── PHASE-A-API.md                   第一批前端联调契约
     ├── PHASE-B-API.md                   执行条件与一审接口
+    ├── KNIFE4J.md                       接口文档与在线调试
     └── database/                        核心业务数据库设计与字段字典
 ```
 
@@ -61,6 +62,8 @@ SERVER_PORT=9089 ./scripts/run-demo.sh
 ```
 
 基址为 `http://127.0.0.1:9089/ncd-ai`。本地随机凭证存于 `.env.demo`，使用原始 Authorization Token。仅 local + 显式 DEMO 开关接受该身份；原 run.sh 默认不开启。示例资料均为虚构，详见 [接口说明与请求示例](docs/PHASE-A-API.md)。
+
+Knife4j 文档与在线调试：<http://127.0.0.1:9089/ncd-ai/doc.html>。先在 **Authorize** 填入 `.env.demo` 对应身份的原始 Token，再选择接口的 **调试 → 发送**。使用方法及开关见 [KNIFE4J.md](docs/KNIFE4J.md)。
 
 ## 环境约定
 
@@ -144,3 +147,5 @@ local 启动自动执行 Flyway，V1 为元数据，V2/V3 为患者与方案草�
 2026-10-16 第一批历史验证：28 项测试全部通过（含真实 MySQL 与并发事务）；实际 HTTP 已验证患者查询、资料摘要、草稿创建/编辑/读取及 401/409。
 
 2026-10-16 第二批验证：48 项测试全部通过（含真实 MySQL、权限、并发和回滚）；普通离线构建通过，6 项通过、42 项数据库测试明确跳过。实际 HTTP 24 步覆盖执行条件、一审退回重提、通过、新版本和撤回，以及 401/403/409。联调说明见 [PHASE-B-API.md](docs/PHASE-B-API.md)。正式登录、真实 AI、任务、二审和发布尚未接入。
+
+2026-10-16 文档接入验证：`./scripts/test-db.sh` 53 项全部通过；普通离线构建通过，6 项通过、47 项数据库测试明确跳过。Knife4j 页面显示当前 14 个操作，浏览器验证未授权 401、原始 Token 授权后患者查询 200；OpenAPI 生成、请求字段和关闭文档/非 local 访问边界均有测试覆盖。使用说明见 [KNIFE4J.md](docs/KNIFE4J.md)。
