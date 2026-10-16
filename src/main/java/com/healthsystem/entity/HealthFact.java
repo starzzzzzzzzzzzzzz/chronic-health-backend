@@ -6,15 +6,7 @@ import java.time.LocalDateTime;
 import java.math.BigDecimal;
 
 @TableName("health_fact")
-public class HealthFact {
-    @TableId(type = IdType.INPUT)
-    private String id;
-    @TableField(value = "org_id", updateStrategy = FieldStrategy.ALWAYS)
-    private String orgId;
-    @TableField(value = "created_at", updateStrategy = FieldStrategy.ALWAYS)
-    private LocalDateTime createdAt;
-    @TableField(value = "created_by", updateStrategy = FieldStrategy.ALWAYS)
-    private String createdBy;
+public class HealthFact extends ScopedEntity {
     @TableField(value = "patient_id", updateStrategy = FieldStrategy.ALWAYS)
     private String patientId;
     @TableField(value = "axis_code", updateStrategy = FieldStrategy.ALWAYS)
@@ -43,14 +35,6 @@ public class HealthFact {
     private String supersedesFactId;
     @TableField(value = "conflict_group_key", updateStrategy = FieldStrategy.ALWAYS)
     private String conflictGroupKey;
-    public String getId() { return id; }
-    public void setId(String value) { this.id = value; }
-    public String getOrgId() { return orgId; }
-    public void setOrgId(String value) { this.orgId = value; }
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime value) { this.createdAt = value; }
-    public String getCreatedBy() { return createdBy; }
-    public void setCreatedBy(String value) { this.createdBy = value; }
     public String getPatientId() { return patientId; }
     public void setPatientId(String value) { this.patientId = value; }
     public String getAxisCode() { return axisCode; }

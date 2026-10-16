@@ -6,15 +6,7 @@ import java.time.LocalDateTime;
 import java.math.BigDecimal;
 
 @TableName("health_input_snapshot")
-public class HealthInputSnapshot {
-    @TableId(type = IdType.INPUT)
-    private String id;
-    @TableField(value = "org_id", updateStrategy = FieldStrategy.ALWAYS)
-    private String orgId;
-    @TableField(value = "created_at", updateStrategy = FieldStrategy.ALWAYS)
-    private LocalDateTime createdAt;
-    @TableField(value = "created_by", updateStrategy = FieldStrategy.ALWAYS)
-    private String createdBy;
+public class HealthInputSnapshot extends ScopedEntity {
     @TableField(value = "patient_id", updateStrategy = FieldStrategy.ALWAYS)
     private String patientId;
     @TableField(value = "stage", updateStrategy = FieldStrategy.ALWAYS)
@@ -29,14 +21,6 @@ public class HealthInputSnapshot {
     private String payloadJson;
     @TableField(value = "payload_hash", updateStrategy = FieldStrategy.ALWAYS)
     private String payloadHash;
-    public String getId() { return id; }
-    public void setId(String value) { this.id = value; }
-    public String getOrgId() { return orgId; }
-    public void setOrgId(String value) { this.orgId = value; }
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime value) { this.createdAt = value; }
-    public String getCreatedBy() { return createdBy; }
-    public void setCreatedBy(String value) { this.createdBy = value; }
     public String getPatientId() { return patientId; }
     public void setPatientId(String value) { this.patientId = value; }
     public String getStage() { return stage; }
