@@ -19,12 +19,12 @@ class ApiDocumentationDatabaseTest extends DatabaseApiTestSupport {
     @Test void generatedContractListsCurrentRoutesAndRawAuthorizationHeader() throws Exception {
         var doc=document();
         assertThat(doc.path("openapi").asText()).startsWith("3.0.");
-        assertThat(doc.path("paths").size()).isEqualTo(28);
+        assertThat(doc.path("paths").size()).isEqualTo(29);
         int operations=0;
         for(var path:doc.path("paths")) {
             for(String method:java.util.List.of("get","post","patch"))if(path.has(method))operations++;
         }
-        assertThat(operations).isEqualTo(32); // Multiple methods can share one resource path.
+        assertThat(operations).isEqualTo(33); // Multiple methods can share one resource path.
         var scheme=doc.path("components").path("securitySchemes").path("AuthorizationToken");
         assertThat(scheme.path("type").asText()).isEqualTo("apiKey");
         assertThat(scheme.path("name").asText()).isEqualTo("Authorization");
@@ -85,5 +85,35 @@ class ApiDocumentationDatabaseTest extends DatabaseApiTestSupport {
     }
     JsonNode document() throws Exception {
         return json.readTree(mvc.perform(get("/v3/api-docs/health")).andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
+    }
+
+    @Test void legacyArchiveDocumentationMatchesFrozenQueryAndResponseTypes() throws Exception {
+        var doc=document();
+        var operation=doc.path("paths").path("/store/care/grant-administration/archives").path("get");
+        assertThat(operation.path("responses").has("200")).isTrue();
+        assertThat(operation.path("responses").has("400")).isTrue();
+        assertThat(operation.path("responses").has("409")).isTrue();
+        JsonNode fixture;
+        try(var in=new org.springframework.core.io.ClassPathResource("contracts/legacy-archives.openapi.json").getInputStream()) {
+            fixture=json.readTree(in);
+        }
+        var frozen=fixture.path("paths").path("/ncd-ai/store/care/grant-administration/archives").path("get");
+        for(var parameter:frozen.path("parameters")) {
+            if(!"query".equals(parameter.path("in").asText()))continue;
+            var actual=java.util.stream.StreamSupport.stream(operation.path("parameters").spliterator(),false)
+                    .filter(p->parameter.path("name").equals(p.path("name"))).findFirst().orElseThrow();
+            assertThat(actual.path("schema").path("type")).isEqualTo(parameter.path("schema").path("type"));
+            assertThat(actual.path("schema").path("default")).isEqualTo(parameter.path("schema").path("default"));
+        }
+        var schemas=doc.path("components").path("schemas");
+        for(var names:java.util.Map.of("LegacyManagedArchiveVO","ManagedArchive","LegacyArchivePageVO","ArchivePage").entrySet()) {
+            var schema=schemas.path(names.getKey());
+            for(var property:fixture.path("components").path("schemas").path(names.getValue()).path("properties").properties()) {
+                assertThat(schema.path("properties").path(property.getKey()).path("type")).isEqualTo(property.getValue().path("type"));
+            }
+        }
+        var archive=schemas.path("LegacyManagedArchiveVO");
+        assertThat(archive.path("properties").path("age").path("nullable").asBoolean()).isFalse();
+        for(var required:archive.path("required"))assertThat(required.asText()).isNotEqualTo("age");
     }
 }

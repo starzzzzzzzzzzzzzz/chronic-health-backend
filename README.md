@@ -153,3 +153,5 @@ local 启动自动执行 Flyway，V1 为元数据，V2/V3 为患者与方案草�
 2026-10-16 文档接入验证：`./scripts/test-db.sh` 53 项全部通过；普通离线构建通过，6 项通过、47 项数据库测试明确跳过。Knife4j 页面显示当前 14 个操作，浏览器验证未授权 401、原始 Token 授权后患者查询 200；OpenAPI 生成、请求字段和关闭文档/非 local 访问边界均有测试覆盖。使用说明见 [KNIFE4J.md](docs/KNIFE4J.md)。
 
 2026-10-16 第三批验证：真库108/108通过；普通离线构建15项通过、93项真库测试明确跳过。9089真实HTTP30步闭环通过，Knife4j展示32个操作。独立审查的7项边界问题已复现并修复；前端对接见 [第三批契约](docs/PHASE-CDE-API.md)，详细结果见 [验证记录](docs/PHASE-CDE-VALIDATION.md)。目前仍是虚构DEMO计完成流程。
+
+2026-10-17 旧契约适配第一批：新增旧档案选择 GET，使用 `keyword/page/pageSize` 和稳定字符串 `archiveId`；V9 管理兼容编号，现有 32 个操作保留，当前共 33 个。真库 125 项回归通过；后续旧方案与任务入口仍待适配，详情见 [前端契约对齐](docs/FRONTEND-CONTRACT-ALIGNMENT.md)。

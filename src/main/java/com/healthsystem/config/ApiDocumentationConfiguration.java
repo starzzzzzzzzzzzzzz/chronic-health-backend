@@ -79,6 +79,10 @@ public class ApiDocumentationConfiguration {
                 if(method==PathItem.HttpMethod.POST || method==PathItem.HttpMethod.PATCH){
                     addError(responses,"400","参数、依据或送审条件不满足");addError(responses,"409","修订过期、状态冲突或重复操作");
                 } else if("/patients".equals(path))addError(responses,"400","分页或查询条件不合法");
+                if("/store/care/grant-administration/archives".equals(path)) {
+                    addError(responses,"400","分页或查询条件不合法");
+                    addError(responses,"409","患者档案编号映射尚未准备");
+                }
             }));
         };
     }

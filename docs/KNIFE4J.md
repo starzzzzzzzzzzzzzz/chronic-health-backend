@@ -12,7 +12,7 @@ SERVER_PORT=9089 ./scripts/run-demo.sh
 - 页面：<http://127.0.0.1:9089/ncd-ai/doc.html>
 - 当前接口的 OpenAPI JSON：<http://127.0.0.1:9089/ncd-ai/v3/api-docs/health>
 
-页面按患者资料、方案、条件确认、一审、任务派生、二审、发布、日任务、打卡和运行状态分组，共32个操作（31个业务操作和1个存活检查）。Actuator 依赖健康检查不属于本组。接口说明随 Controller、DTO/VO 和文档模型生成；动态 JSON 请求体通过专门的文档模型展示真实根字段。
+页面按患者资料、方案、条件确认、一审、任务派生、二审、发布、日任务、打卡和运行状态分组，共33个操作（32个业务操作和1个存活检查），包括“11 旧接口兼容：档案选择”。Actuator 依赖健康检查不属于本组。接口说明随 Controller、DTO/VO 和文档模型生成；动态 JSON 请求体通过专门的文档模型展示真实根字段。
 
 ## 第一次调用
 
@@ -34,6 +34,8 @@ SERVER_PORT=9089 ./scripts/run-demo.sh
 
 当前使用 `springdoc-openapi-starter-webmvc-ui 3.1.1` 生成 OpenAPI 3.0 文档，搭配 `knife4j-openapi3-ui 4.5.0` 纯 UI。没有引入面向旧 Spring Boot 的 Knife4j starter，也没有改动项目 Java 17 / Spring Boot 4.1.1。参考 [springdoc 兼容说明](https://springdoc.org/#what-is-the-compatibility-matrix-of-springdoc-openapi-with-spring-boot) 和 [Knife4j 模块说明](https://doc.xiaominfo.com/docs/upgrading/upgrading-to-v4)。
 
-验证命令为 `./scripts/test-db.sh`，覆盖真实 MySQL 业务回归、32个文档操作、请求体根字段、原始 Authorization 声明、关闭文档和非 local 访问边界。浏览器还需验证页面加载、未授权 401、授权后 200 和请求示例；自动生成文档不替代这些测试。
+验证命令为 `./scripts/test-db.sh`，覆盖真实 MySQL 业务回归、33个文档操作、请求体根字段、原始 Authorization 声明、关闭文档和非 local 访问边界。浏览器还需验证页面加载、未授权 401、授权后 200 和请求示例；自动生成文档不替代这些测试。
 
 患者打卡使用 `.env.demo` 的 `HEALTH_DEMO_PATIENT_TOKEN`，编辑/发布、审核、患者三个身份分开。二审沿用审核接口，审核提交的 expectedRevision 不等于任务包 rowVersion。发布和反馈需另填 Idempotency-Key；重复调用相同键相同正文回读200。打卡空对象为自述完成，质量始终 NOT_APPLICABLE。
+
+旧前端请求的档案列表入口已提供，详见 [契约对齐进度](FRONTEND-CONTRACT-ALIGNMENT.md)。Apifox 若已绑定本机 OpenAPI，需要重新同步数据源才能看到新分组；出生日期的 nullable 修正也包含在新规范中。
