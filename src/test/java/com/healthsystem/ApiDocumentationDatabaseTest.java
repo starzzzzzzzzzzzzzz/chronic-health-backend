@@ -38,6 +38,24 @@ class ApiDocumentationDatabaseTest extends DatabaseApiTestSupport {
         assertThat(doc.path("paths").path("/health").path("get").has("security")).isTrue();
         assertThat(doc.path("paths").path("/health").path("get").path("security").isEmpty()).isTrue();
     }
+    @Test
+    @org.springframework.transaction.annotation.Transactional
+    void patientResponsesAllowUnknownBirthDateInBothPayloadAndContract() throws Exception {
+        String name="nullable-birth-date-"+java.util.UUID.randomUUID();
+        String id=patient("demo-org","DEMO",name,true);
+        var list=json.readTree(mvc.perform(get("/patients").header("Authorization",TOKEN).param("q",name))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
+        assertThat(list.path("data").path("items").size()).isEqualTo(1);
+        assertThat(list.path("data").path("items").get(0).path("birthDate").isNull()).isTrue();
+        var summary=json.readTree(mvc.perform(get("/patients/"+id+"/health-summary").header("Authorization",TOKEN))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
+        assertThat(summary.path("data").path("patient").path("birthDate").isNull()).isTrue();
+        var birthDate=document().path("components").path("schemas").path("PatientSummaryVO")
+                .path("properties").path("birthDate");
+        assertThat(birthDate.path("type").asText()).isEqualTo("string");
+        assertThat(birthDate.path("format").asText()).isEqualTo("date");
+        assertThat(birthDate.path("nullable").asBoolean()).as("unknown birth dates are returned as null").isTrue();
+    }
     @Test void flexibleWorkflowBodiesHaveRealRootFieldsAndExamples() throws Exception {
         var doc=document();
         var item=doc.path("components").path("schemas").path("Item").path("properties");
