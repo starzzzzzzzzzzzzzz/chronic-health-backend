@@ -2,7 +2,7 @@
 
 当前已实现患者资料、方案草稿、执行条件与一审，以及七维任务派生、排程与二审、事务发布、日任务、基础打卡和追加更正。支持输入快照、并发修订校验和审计；目前仅开放虚构 DEMO 的计完成流程。采用 Spring Boot 4.1.1 与常见的 Controller / Service / Mapper 分层结构。目录说明见 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)，接口约定见 [docs/API-CONTRACT.md](docs/API-CONTRACT.md)。
 
-数据库设计初稿见 [设计总览](docs/database/DATABASE-DESIGN.md)、[表与字段字典](docs/database/TABLE-DICTIONARY.md) 和 [视频页面字段映射](docs/database/VIDEO-FIELD-MAPPING.md)。实际迁移已到 V8：V2/V3 患者与方案，V4 条件与审核，V5/V6 任务与二审，V7 发布，V8 反馈与独立安全事件。
+数据库设计初稿见 [设计总览](docs/database/DATABASE-DESIGN.md)、[表与字段字典](docs/database/TABLE-DICTIONARY.md) 和 [视频页面字段映射](docs/database/VIDEO-FIELD-MAPPING.md)。实际迁移已到 V9：V2/V3 患者与方案，V4 条件与审核，V5/V6 任务与二审，V7 发布，V8 反馈与独立安全事件，V9 旧接口档案编号映射。
 
 第一批“患者资料与方案草稿”的[实施计划](docs/superpowers/plans/2026-10-16-patient-and-plan-drafts.md)已确认并实施；前端对接见 [第一批接口与启动说明](docs/PHASE-A-API.md)。
 
@@ -50,6 +50,7 @@ chronic-health-backend/
     ├── PHASE-B-API.md                   执行条件与一审接口
     ├── PHASE-CDE-API.md                 任务、二审、发布、日任务与打卡
     ├── KNIFE4J.md                       接口文档与在线调试
+    ├── FRONTEND-CONTRACT-ALIGNMENT.md    旧前端契约兼容进度
     └── database/                        核心业务数据库设计与字段字典
 ```
 

@@ -45,12 +45,12 @@
 - Produces: `LegacyArchiveMappingService.ensureForPatient(String orgId, String patientId): Long`，必须在调用方事务中执行；重复调用返回原编号。
 - Produces: LegacyArchiveMappingMapper extends BaseMapper，字段 archiveId:Long/orgId:String/patientId:String/createdAt:LocalDateTime，支持 insertIfAbsent(orgId,patientId,createdAt)。
 
-- [ ] 写迁移缺失的失败测试：information_schema 应存在 legacy_archive_mapping。
-- [ ] 运行 `./scripts/test-db.sh -o -Dtest=LegacyArchiveMappingDatabaseTest`，预期表不存在断言失败。
-- [ ] 写 V9：signed BIGINT AUTO_INCREMENT（MySQL 不允许自增列 CHECK，服务层拒绝非正编号）、唯一(org_id,patient_id)、组合外键，按稳定顺序 INSERT SELECT 回填现有患者。
-- [ ] 写初始化测试：迁移 SQL 为旧患者回填；重复 ensure 编号相同；外键拒绝跨机构；DEMO 重启补齐缺失映射且不恢复撤销授权；调用方回滚也回滚映射。
-- [ ] 实现实体、Mapper、MANDATORY 事务服务和 DEMO 两条初始化分支；执行定向测试，预期全部通过。
-- [ ] 提交本任务源码和测试，运行 task-done 同一测试命令记录结果。
+- [x] 写迁移缺失的失败测试：information_schema 应存在 legacy_archive_mapping。
+- [x] 运行 `./scripts/test-db.sh -o -Dtest=LegacyArchiveMappingDatabaseTest`，预期表不存在断言失败。
+- [x] 写 V9：signed BIGINT AUTO_INCREMENT（MySQL 不允许自增列 CHECK，服务层拒绝非正编号）、唯一(org_id,patient_id)、组合外键，按稳定顺序 INSERT SELECT 回填现有患者。
+- [x] 写初始化测试：迁移 SQL 为旧患者回填；重复 ensure 编号相同；外键拒绝跨机构；DEMO 重启补齐缺失映射且不恢复撤销授权；调用方回滚也回滚映射。
+- [x] 实现实体、Mapper、MANDATORY 事务服务和 DEMO 两条初始化分支；执行定向测试，预期全部通过。
+- [x] 提交本任务源码和测试，运行 task-done 同一测试命令记录结果。
 
 ## Task 2: 旧档案列表与契约验证
 
@@ -72,14 +72,14 @@
 - Produces: `LegacyArchiveService.list(BusinessPrincipal principal,int page,int pageSize,String keyword): LegacyArchivePageVO`。
 - Produces: LegacyArchivePageVO(items:List<LegacyManagedArchiveVO>,total:long,page:int,pageSize:int)；LegacyManagedArchiveVO(archiveId:String,name:String,diseaseTags:String,age:Integer)，age NON_NULL。
 
-- [ ] 从已读旧 OpenAPI 冻结此 GET 及 ResultArchivePage/ArchivePage/ManagedArchive 的引用闭包，保留来源和快照哈希，不加入凭证或业务数据。
-- [ ] 写 MockMvc 失败测试：授权旧 GET 应 200，目前被拒绝；精确字段/类型、默认值、分页/空页/字面查询、非法参数、19 位 ID、授权隔离/撤销/过期/非 ACTIVE、未知年龄及生日、无写入和缺映射 409；将响应递归校验到冻结的对象/数组/基本类型 schema。
-- [ ] 运行 `./scripts/test-db.sh -o -Dtest=LegacyArchiveApiTest`，预期旧 GET 返回 403 而不是 200。
-- [ ] 实现 Controller/Service/VO：复用患者列表，在同一只读事务按 org 和本页 patientId 批量读映射，任一缺失则 409；计算年龄并省略空值。仅添加此 GET 的 authenticated matcher。
-- [ ] 为生成文档补充 400/409，更新数量为 29 paths/33 operations；验证新操作、query 默认值、字段类型、age 非必填且不可 null。
-- [ ] 执行 `./scripts/test-db.sh -o`，预期全量零失败、零跳过；更新对接说明和实际验证记录。
-- [ ] 重启本项目 9089 DEMO，真实 HTTP 验证旧请求 200、无凭证 401、参数错误 400、GET 不写入；导出不含凭证的新本机 OpenAPI，明确尚未验证前端页面。
-- [ ] 提交并 task-done 记录已完成验证；按 executing-plans 要求做一次独立代码审查并处理重要发现。
+- [x] 从已读旧 OpenAPI 冻结此 GET 及 ResultArchivePage/ArchivePage/ManagedArchive 的引用闭包，保留来源和快照哈希，不加入凭证或业务数据。
+- [x] 写 MockMvc 失败测试：授权旧 GET 应 200，目前被拒绝；精确字段/类型、默认值、分页/空页/字面查询、非法参数、19 位 ID、授权隔离/撤销/过期/非 ACTIVE、未知年龄及生日、无写入和缺映射 409；将响应递归校验到冻结的对象/数组/基本类型 schema。
+- [x] 运行 `./scripts/test-db.sh -o -Dtest=LegacyArchiveApiTest`，预期旧 GET 返回 403 而不是 200。
+- [x] 实现 Controller/Service/VO：复用患者列表，在同一只读事务按 org 和本页 patientId 批量读映射，任一缺失则 409；计算年龄并省略空值。仅添加此 GET 的 authenticated matcher。
+- [x] 为生成文档补充 400/409，更新数量为 29 paths/33 operations；验证新操作、query 默认值、字段类型、age 非必填且不可 null。
+- [x] 执行 `./scripts/test-db.sh -o`，预期全量零失败、零跳过；更新对接说明和实际验证记录。
+- [x] 重启本项目 9089 DEMO，真实 HTTP 验证旧请求 200、无凭证 401、参数错误 400、GET 不写入；导出不含凭证的新本机 OpenAPI，明确尚未验证前端页面。
+- [x] 提交并 task-done 记录已完成验证；按 executing-plans 要求做一次独立代码审查并处理重要发现。
 
 ## Execution decisions
 
