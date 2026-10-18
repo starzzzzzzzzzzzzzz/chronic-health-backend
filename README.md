@@ -23,12 +23,7 @@ chronic-health-backend/
 │   ├── db.sh                            数据库启停与检查
 │   ├── run.sh                           启动后端
 │   ├── test-db.sh                       真实数据库测试与打包
-│   ├── run-demo.sh                      显式开启本地 DEMO 联调
-│   └── run-demo-web.sh                  启动 Vue 3 本地方案演示页
-├── demo-web/                            连接真实后端的独立演示前端
-│   ├── src/                            患者资料、AI 候选与草稿编辑
-│   ├── local-proxy.mjs                  本地编辑者代理及请求边界
-│   └── tests/                          代理和编辑字段边界测试
+│   └── run-demo.sh                      显式开启后端 DEMO 联调
 ├── src/main/java/com/healthsystem/
 │   ├── HealthSystemApplication.java     Spring Boot 启动入口
 │   ├── controller/                      接收请求、返回响应
@@ -76,11 +71,13 @@ SERVER_PORT=9089 ./scripts/run-demo.sh
 
 Knife4j 文档与在线调试：<http://127.0.0.1:9089/ncd-ai/doc.html>。先在 **Authorize** 填入 `.env.demo` 对应身份的原始 Token，再选择接口的 **调试 → 发送**。使用方法及开关见 [KNIFE4J.md](docs/KNIFE4J.md)。
 
-## 本地模拟前端
+## 前后端联调
 
-后端已按上面的 DEMO 方式启动后，另开终端运行 `./scripts/run-demo-web.sh`，打开 <http://127.0.0.1:9090/>。页面采用 Vue 3，直接调用本机真实后端，可完成“选择虚构患者 → 查看六方面资料 → DeepSeek 生成七维候选 → 核对依据 → 采纳 → 编辑保存”。生成会实际调用已配置的 AI 服务；页面范围止于草稿编辑。
+本仓库专注后端，前端伙伴使用自己的页面对接 API。云端地址、身份凭证使用方式和跨域配置见 [云端联调交接](docs/FRONTEND-CLOUD-HANDOFF.md)；逐项验收见 [业务功能协作清单](docs/business/FEATURE-COLLABORATION-CHECKLIST.md)。
 
-首次启动自动安装前端依赖，需 Node.js 22.12+（或 20.19+）及 npm。目录、操作和验证记录见 [演示工作台说明](docs/DEMO-WORKBENCH.md)。
+保留 Knife4j 在线调试、Apifox 测试资料及后端 DEMO 启动脚本。Apifox 场景与历史验证记录见 [全接口与业务流程验证](docs/APIFOX-FULL-FLOW-VALIDATION.md)。
+
+原模拟前端及其专属脚本已从主分支移除，可从 [Git 历史版本 1757568](https://github.com/starzzzzzzzzzzzzzz/chronic-health-backend/tree/1757568fb87202608a609ac1d7919225a0f29877/demo-web) 找回；后端开发无需安装该页面的 Node.js/npm 依赖。
 
 ## 环境约定
 

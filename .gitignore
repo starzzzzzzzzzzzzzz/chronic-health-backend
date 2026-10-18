@@ -11,8 +11,3 @@ target/
 .superpowers/
 .env.ai
 .apifox/
-
-# Local Vue demo
-demo-web/node_modules/
-demo-web/dist/
-demo-web/.vite/
