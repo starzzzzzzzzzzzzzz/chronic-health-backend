@@ -23,8 +23,8 @@ public class ApiDocumentationConfiguration {
                 .replaceWithClass(tools.jackson.databind.node.ObjectNode.class,Object.class);
     }
     @Bean OpenAPI healthOpenApi(@Value("${server.servlet.context-path:/ncd-ai}") String contextPath) {
-        return new OpenAPI().info(new Info().title("慢病健康管理后端 API").version("0.2.0")
-                .description("本地 DEMO：患者资料、手工方案、条件确认与一审。Authorize 中填写原始 Token，不加 Bearer。编辑身份使用 .env.demo 中 HEALTH_DEMO_API_TOKEN；审核身份使用 HEALTH_DEMO_REVIEWER_TOKEN。文档不包含凭证值。"))
+        return new OpenAPI().info(new Info().title("慢病健康管理后端 API").version("0.3.0")
+                .description("本地 DEMO：患者、方案与一审、七维任务与二审、发布、日任务与基础打卡。Authorize 中填写原始 Token，不加 Bearer。编辑身份使用 .env.demo 中 HEALTH_DEMO_API_TOKEN；审核身份使用 HEALTH_DEMO_REVIEWER_TOKEN。患者打卡使用 HEALTH_DEMO_PATIENT_TOKEN。计完成模式；可选 DeepSeek AI 方案候选，仅开放 DEMO 并需人工审核；无质量评分及消息发送。文档不包含凭证值。"))
                 .servers(List.of(new Server().url(contextPath)))
                 .components(new Components().addSecuritySchemes("AuthorizationToken",new SecurityScheme()
                         .type(SecurityScheme.Type.APIKEY).in(SecurityScheme.In.HEADER).name("Authorization")
@@ -45,14 +45,23 @@ public class ApiDocumentationConfiguration {
             var schemas=api.getComponents().getSchemas();
             schemas.get("Item").addProperty("references",new ArraySchema().items(new ObjectSchema()).maxItems(30).nullable(true));
             schemas.get("Item").addProperty("contraindications",new ComposedSchema()
-                    .oneOf(List.of(new ObjectSchema(),new ArraySchema().items(new Schema<>())))
-                    .nullable(true).description("禁忌信息，可为 JSON 对象或数组"));
+                    .oneOf(List.of(new ObjectSchema(),new ArraySchema().items(new Schema<>()),
+                            new StringSchema().nullable(true)._enum(Collections.singletonList(null))))
+                    .description("禁忌信息，可为 JSON 对象或数组"));
             schemas.get("Item").addProperty("professionalParameters",new ObjectSchema().maxProperties(0).nullable(true)
                     .description("当前阶段仅允许空对象或 null"));
             for(var entry:Map.of("FactVO",List.of("value","sourceRef"),"Condition",List.of("requirement"),"Record",List.of("requirement","value")).entrySet()) {
                 var schema=schemas.get(entry.getKey());
-                if(schema!=null)for(String field:entry.getValue())schema.addProperty(field,new Schema<>().nullable(true));
+                if(schema!=null)for(String field:entry.getValue())schema.addProperty(field,new ObjectSchema().nullable(true));
             }
+            TaskApiDocumentation.apply(api);
+            WorkflowResponseSchemas.apply(schemas);
+            // Jackson 3 JsonNode is globally projected to Object; restore the strict confirmation array schema.
+            io.swagger.v3.core.converter.ModelConverters.getInstance().readAll(com.healthsystem.dto.ConfirmedManagementRequest.class)
+                    .forEach(schemas::putIfAbsent);
+            for(String type:List.of("GeneratePlanRequest","LegacyGenerateRecommendationsRequest"))
+                schemas.get(type).addProperty("confirmedManagement",new ArraySchema().items(new Schema<>().$ref("#/components/schemas/ConfirmedManagementRequest"))
+                        .maxItems(20).nullable(true).description("来源绑定的人工侧重确认；evaluation/sourceHash 原样来自依据评估，权重为整数百分比"));
             api.getPaths().forEach((path,item)->item.readOperationsMap().forEach((method,operation)->{
                 // Preserve standard OpenAPI examples and show a copyable body in Knife4j's description.
                 if(operation.getRequestBody()!=null && operation.getRequestBody().getContent()!=null) {
@@ -78,6 +87,18 @@ public class ApiDocumentationConfiguration {
                 if(method==PathItem.HttpMethod.POST || method==PathItem.HttpMethod.PATCH){
                     addError(responses,"400","参数、依据或送审条件不满足");addError(responses,"409","修订过期、状态冲突或重复操作");
                 } else if("/patients".equals(path))addError(responses,"400","分页或查询条件不合法");
+                if("/store/care/grant-administration/archives".equals(path)) {
+                    addError(responses,"400","分页或查询条件不合法");
+                    addError(responses,"409","患者档案编号映射尚未准备");
+                }
+                if("/store/care/archives/{archiveId}/input".equals(path)) {
+                    addError(responses,"400","档案编号不合法");addError(responses,"404","档案不存在或不可见");
+                }
+                if("/store/care/drafts/recommendations/generate".equals(path)) {
+                    addError(responses,"404","档案不存在或不可见");addError(responses,"429","生成队列已满");
+                    addError(responses,"502","AI 输出校验失败或模型服务失败");addError(responses,"503","AI 未配置或等待中断");
+                    addError(responses,"504","等待超时；保留原 X-Request-Id 和请求体重试，避免重复生成");
+                }
             }));
         };
     }

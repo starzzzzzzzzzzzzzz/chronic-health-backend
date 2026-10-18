@@ -8,6 +8,9 @@ import java.util.*;
 public class PlanReviewValidation {
     public List<Issue> issues(CarePlanDraftVO plan,ConditionConfirmationVO conditions) {
         List<Issue> issues=new ArrayList<>();
+        var management=plan.inputSnapshot().path("managementContext");
+        if(!management.path("fusion").path("unconfirmedDiseases").isEmpty())
+            add(issues,"MANAGEMENT_CONFIRMATION_PENDING","managementFocuses","Confirm all disease management sources and priorities before review");
         if(plan.primaryGoal()==null || plan.primaryGoal().isBlank())add(issues,"PRIMARY_GOAL_REQUIRED","primaryGoal","A primary goal is required");
         var basis=plan.goalBasis().path("factIds");
         Set<String> facts=new HashSet<>();for(var f:plan.inputSnapshot().path("facts"))facts.add(f.path("id").asText());

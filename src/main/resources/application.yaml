@@ -38,12 +38,19 @@ mybatis-plus:
     map-underscore-to-camel-case: true
     local-cache-scope: statement
 health:
+  ai:
+    enabled: ${HEALTH_AI_ENABLED:false}
+    api-key: ${DEEPSEEK_API_KEY:}
+    base-url: ${DEEPSEEK_BASE_URL:https://api.deepseek.com}
+    model: ${DEEPSEEK_MODEL:deepseek-flash}
+    worker-enabled: ${HEALTH_AI_WORKER_ENABLED:true}
   docs:
     enabled: false
   demo:
     enabled: ${HEALTH_DEMO_ENABLED:false}
     token: ${HEALTH_DEMO_API_TOKEN:}
     reviewer-token: ${HEALTH_DEMO_REVIEWER_TOKEN:}
+    patient-token: ${HEALTH_DEMO_PATIENT_TOKEN:}
 springdoc:
   api-docs:
     enabled: ${health.docs.enabled}

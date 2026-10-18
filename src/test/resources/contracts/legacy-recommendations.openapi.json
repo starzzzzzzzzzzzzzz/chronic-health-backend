@@ -1,0 +1,618 @@
+{
+  "openapi": "3.1.0",
+  "x-source-url": "http://116.178.155.215:18006/ncd-ai/v3/api-docs",
+  "x-source-date": "2026-10-18",
+  "x-source-sha256": "49a63f1f8cf30a6aa84120ff6d9ddddee9b84498f5b373222e66e4580b491cbf",
+  "paths": {
+    "/ncd-ai/store/care/drafts/recommendations/generate": {
+      "post": {
+        "tags": [
+          "care-draft-recommendation-controller"
+        ],
+        "operationId": "generateRecommendations",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateRecommendationsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultGenerateRecommendationsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ncd-ai/store/care/archives/{archiveId}/input": {
+      "get": {
+        "tags": [
+          "care-input-controller"
+        ],
+        "operationId": "inspect_1",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "archiveId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultMapStringObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Action": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "frequency": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "string"
+          },
+          "condition": {
+            "type": "string"
+          },
+          "precautions": {
+            "type": "string"
+          },
+          "weekdays": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "times": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "feedback": {
+            "type": "string"
+          },
+          "qualityStandard": {
+            "$ref": "#/components/schemas/TaskQualityStandard"
+          }
+        }
+      },
+      "CandidateRef": {
+        "type": "object",
+        "properties": {
+          "candidateId": {
+            "type": "string"
+          },
+          "candidateRevision": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "payloadHash": {
+            "type": "string"
+          }
+        }
+      },
+      "ConfirmedManagement": {
+        "type": "object",
+        "properties": {
+          "evaluation": {
+            "$ref": "#/components/schemas/Disease"
+          },
+          "sourceHash": {
+            "type": "string"
+          },
+          "primarySubtype": {
+            "type": "string"
+          },
+          "secondarySubtypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "adjustmentReason": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string"
+          },
+          "weights": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "Coverage": {
+        "type": "object",
+        "properties": {
+          "disease": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "references": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Reference"
+            }
+          },
+          "repairDimensions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "DecisionExplanation": {
+        "type": "object",
+        "properties": {
+          "analysisBasis": {
+            "type": "string"
+          },
+          "decisionSummary": {
+            "type": "string"
+          },
+          "pendingConfirmation": {
+            "type": "string"
+          }
+        }
+      },
+      "Disease": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "risk": {
+            "type": "string"
+          },
+          "subtype": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string"
+          },
+          "basis": {
+            "type": "string"
+          },
+          "weights": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "managementTypes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Option"
+            }
+          },
+          "typeMatches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Match"
+            }
+          },
+          "secondarySubtypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ruleVersion": {
+            "type": "string"
+          }
+        }
+      },
+      "Evidence": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "quote": {
+            "type": "string"
+          }
+        }
+      },
+      "Field": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "basis": {
+            "type": "string"
+          },
+          "expected": {
+            "type": "boolean"
+          },
+          "minimum": {
+            "type": "number"
+          },
+          "maximum": {
+            "type": "number"
+          }
+        }
+      },
+      "GenerateRecommendationsRequest": {
+        "type": "object",
+        "properties": {
+          "archiveId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "disease": {
+            "type": "string"
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "focuses": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "shopId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "teamId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "supplementalRequirements": {
+            "type": "string"
+          },
+          "confirmedManagement": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConfirmedManagement"
+            }
+          }
+        }
+      },
+      "GenerateRecommendationsResponse": {
+        "type": "object",
+        "properties": {
+          "adviceId": {
+            "type": "string"
+          },
+          "retrievalMode": {
+            "type": "string"
+          },
+          "knowledgeReleaseId": {
+            "type": "string"
+          },
+          "recommendations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RecommendationItem"
+            }
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "generationStatus": {
+            "type": "string"
+          },
+          "qualityIssues": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Issue"
+            }
+          },
+          "decisionExplanation": {
+            "$ref": "#/components/schemas/DecisionExplanation"
+          },
+          "requirementResults": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Result"
+            }
+          },
+          "coordinationReport": {
+            "$ref": "#/components/schemas/Report"
+          }
+        }
+      },
+      "Issue": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "references": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Reference"
+            }
+          }
+        }
+      },
+      "Match": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "missing": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Evidence"
+            }
+          }
+        }
+      },
+      "Option": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "condition": {
+            "type": "string"
+          },
+          "initialWeights": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "RecommendationItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "frequency": {
+            "type": "string"
+          },
+          "evidenceCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Action"
+            }
+          },
+          "decompositionPending": {
+            "type": "boolean"
+          },
+          "originalText": {
+            "type": "string"
+          }
+        }
+      },
+      "Reference": {
+        "type": "object",
+        "properties": {
+          "dimension": {
+            "type": "string"
+          },
+          "actionId": {
+            "type": "string"
+          },
+          "textQuote": {
+            "type": "string"
+          },
+          "actionQuote": {
+            "type": "string"
+          }
+        }
+      },
+      "Report": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "inputHash": {
+            "type": "string"
+          },
+          "coverage": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Coverage"
+            }
+          },
+          "issues": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Issue"
+            }
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      },
+      "Result": {
+        "type": "object",
+        "properties": {
+          "workflowId": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "rowVersion": {
+            "type": "string"
+          },
+          "candidate": {
+            "$ref": "#/components/schemas/CandidateRef"
+          },
+          "reviewId": {
+            "type": "string"
+          }
+        }
+      },
+      "ResultGenerateRecommendationsResponse": {
+        "type": "object",
+        "description": "统一 API 响应",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "业务状态码",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "description": "响应消息",
+            "example": "success"
+          },
+          "data": {
+            "$ref": "#/components/schemas/GenerateRecommendationsResponse",
+            "description": "响应数据"
+          }
+        }
+      },
+      "ResultMapStringObject": {
+        "type": "object",
+        "description": "统一 API 响应",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "业务状态码",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "description": "响应消息",
+            "example": "success"
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": {},
+            "description": "响应数据"
+          }
+        }
+      },
+      "TaskQualityStandard": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string"
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Field"
+            }
+          }
+        }
+      }
+    }
+  }
+}

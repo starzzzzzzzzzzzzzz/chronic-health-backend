@@ -21,7 +21,7 @@ public class SecurityConfiguration {
         boolean demo = Arrays.asList(environment.getActiveProfiles()).contains("local")
                 && environment.getProperty("health.demo.enabled", Boolean.class, false);
         if (demo) {
-            http.addFilterBefore(new DemoAuthenticationFilter(environment.getProperty("health.demo.token"), environment.getProperty("health.demo.reviewer-token")), AnonymousAuthenticationFilter.class);
+            http.addFilterBefore(new DemoAuthenticationFilter(environment.getProperty("health.demo.token"), environment.getProperty("health.demo.reviewer-token"), environment.getProperty("health.demo.patient-token")), AnonymousAuthenticationFilter.class);
         }
         boolean docs = Arrays.asList(environment.getActiveProfiles()).contains("local")
                 && environment.getProperty("health.docs.enabled", Boolean.class, false);
@@ -40,10 +40,24 @@ public class SecurityConfiguration {
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(a -> a
                         .requestMatchers(HttpMethod.GET, "/health", "/actuator/health").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/store/care/grant-administration/archives").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/store/care/archives/*/input").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/store/care/drafts/recommendations/generate", "/store/care/drafts/basis/evaluate").authenticated()
                         .requestMatchers(HttpMethod.GET, "/patients", "/patients/**", "/plan-versions/*", "/plan-versions/*/condition-confirmations", "/plan-versions/*/review-context", "/review-submissions/*").authenticated()
                         .requestMatchers(HttpMethod.POST, "/plan-versions/*/condition-confirmations", "/plan-versions/*/review-submissions", "/review-submissions/*/decisions", "/review-submissions/*/withdrawals").authenticated()
                         .requestMatchers(HttpMethod.POST, "/care-plans", "/care-plans/*/versions").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/plan-versions/*").authenticated()
+                        .requestMatchers(HttpMethod.POST,"/plan-versions/*/task-bundles").authenticated()
+                        .requestMatchers(HttpMethod.GET,"/task-bundles/*").authenticated()
+                        .requestMatchers(HttpMethod.PATCH,"/task-bundles/*").authenticated()
+                        .requestMatchers(HttpMethod.GET,"/task-bundles/*/review-context","/schedule-previews/*").authenticated()
+                        .requestMatchers(HttpMethod.POST,"/task-bundles/*/schedule-previews","/task-bundles/*/review-submissions","/task-bundles/*/versions").authenticated()
+                        .requestMatchers(HttpMethod.POST,"/task-bundles/*/publication-previews","/task-bundles/*/publications").authenticated()
+                        .requestMatchers(HttpMethod.GET,"/publications/*","/execution-tasks/*","/task-bundles/*/publication-previews/*").authenticated()
+                        .requestMatchers(HttpMethod.POST,"/execution-tasks/*/check-ins","/check-ins/*/amendments").authenticated()
+                        .requestMatchers(HttpMethod.GET,"/execution-tasks/*/check-ins","/check-ins/*").authenticated()
+                        .requestMatchers(HttpMethod.POST,"/plan-versions/*/generation-jobs","/plan-generation-jobs/*/adoptions").authenticated()
+                        .requestMatchers(HttpMethod.GET,"/plan-versions/*/generation-jobs","/plan-generation-jobs/*").authenticated()
                         .anyRequest().denyAll())
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint((request, response, exception) -> {

@@ -1,8 +1,12 @@
 # 慢病健康管理后端
 
-当前已实现患者资料查询、方案草稿、执行条件确认、一审及已批准方案的新版本调整，支持输入快照、并发修订校验和审计。采用 Spring Boot 4.1.1 与常见的 Controller / Service / Mapper 分层结构。目录说明见 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)，接口约定见 [docs/API-CONTRACT.md](docs/API-CONTRACT.md)。
+当前已实现患者资料、方案草稿（支持可选 DeepSeek AI 候选）、执行条件与一审，以及七维任务派生、排程与二审、事务发布、日任务、基础打卡和追加更正。支持输入快照、并发修订校验和审计；目前仅开放虚构 DEMO 的计完成流程。采用 Spring Boot 4.1.1 与常见的 Controller / Service / Mapper 分层结构。目录说明见 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)，接口约定见 [docs/API-CONTRACT.md](docs/API-CONTRACT.md)。
 
-数据库设计初稿见 [设计总览](docs/database/DATABASE-DESIGN.md)、[表与字段字典](docs/database/TABLE-DICTIONARY.md) 和 [视频页面字段映射](docs/database/VIDEO-FIELD-MAPPING.md)。A 批 12 张表已实现；V4 增加条件确认和审核三表；模拟生成、任务及发布仍待实施。
+数据库设计初稿见 [设计总览](docs/database/DATABASE-DESIGN.md)、[表与字段字典](docs/database/TABLE-DICTIONARY.md) 和 [视频页面字段映射](docs/database/VIDEO-FIELD-MAPPING.md)。实际迁移已到 V11：V2/V3 患者与方案，V4 条件与审核，V5/V6 任务与二审，V7 发布，V8 反馈与独立安全事件，V9 旧接口档案编号映射，V10 AI 生成候选作业，V11 旧建议生成请求的幂等映射。
+
+当前业务全景见 [后端业务说明](docs/business/README.md)（[浏览器阅读版](docs/business/business-overview.html)）：包含业务流程图、数据流图、功能结构图、数据库 ER 图及用例图，以及角色、状态和 41 个接口索引；[ER 分域详图](docs/business/DATABASE-ER.md)覆盖当前 33 张表和 62 条外键，明确区分原生业务能力、旧前端适配与待开发功能。
+
+逐项对齐开发与联调范围见 [业务—功能—子功能协作清单](docs/business/FEATURE-COLLABORATION-CHECKLIST.md)：包含 CRUD 分类、角色、接口、建议页面及实现状态。
 
 第一批“患者资料与方案草稿”的[实施计划](docs/superpowers/plans/2026-10-16-patient-and-plan-drafts.md)已确认并实施；前端对接见 [第一批接口与启动说明](docs/PHASE-A-API.md)。
 
@@ -19,7 +23,12 @@ chronic-health-backend/
 │   ├── db.sh                            数据库启停与检查
 │   ├── run.sh                           启动后端
 │   ├── test-db.sh                       真实数据库测试与打包
-│   └── run-demo.sh                      显式开启本地 DEMO 联调
+│   ├── run-demo.sh                      显式开启本地 DEMO 联调
+│   └── run-demo-web.sh                  启动 Vue 3 本地方案演示页
+├── demo-web/                            连接真实后端的独立演示前端
+│   ├── src/                            患者资料、AI 候选与草稿编辑
+│   ├── local-proxy.mjs                  本地编辑者代理及请求边界
+│   └── tests/                          代理和编辑字段边界测试
 ├── src/main/java/com/healthsystem/
 │   ├── HealthSystemApplication.java     Spring Boot 启动入口
 │   ├── controller/                      接收请求、返回响应
@@ -48,11 +57,13 @@ chronic-health-backend/
     ├── API-CONTRACT.md                  RESTful 接口约定
     ├── PHASE-A-API.md                   第一批前端联调契约
     ├── PHASE-B-API.md                   执行条件与一审接口
+    ├── PHASE-CDE-API.md                 任务、二审、发布、日任务与打卡
     ├── KNIFE4J.md                       接口文档与在线调试
+    ├── FRONTEND-CONTRACT-ALIGNMENT.md    旧前端契约兼容进度
     └── database/                        核心业务数据库设计与字段字典
 ```
 
-业务请求通常依次经过 `Controller → Service → Mapper → MySQL`。患者与方案草稿已具备 Controller、Service 和 Mapper；条件确认与一审见 [第二批接口](docs/PHASE-B-API.md)；生成、排程、二审和发布待后续逐批实现。本地 `.env`、依赖缓存 `.dev/` 和构建产物 `target/` 已忽略，不提交到仓库。
+业务请求通常依次经过 `Controller → Service → Mapper → MySQL`。患者与方案草稿已具备 Controller、Service 和 Mapper；条件确认与一审见 [第二批接口](docs/PHASE-B-API.md)；任务到打卡见 [第三批联调契约](docs/PHASE-CDE-API.md)。本地 `.env`、依赖缓存 `.dev/` 和构建产物 `.dev/build.nosync/`（历史 `target/`） 已忽略，不提交到仓库。
 
 ## 第一批联调
 
@@ -65,12 +76,19 @@ SERVER_PORT=9089 ./scripts/run-demo.sh
 
 Knife4j 文档与在线调试：<http://127.0.0.1:9089/ncd-ai/doc.html>。先在 **Authorize** 填入 `.env.demo` 对应身份的原始 Token，再选择接口的 **调试 → 发送**。使用方法及开关见 [KNIFE4J.md](docs/KNIFE4J.md)。
 
+## 本地模拟前端
+
+后端已按上面的 DEMO 方式启动后，另开终端运行 `./scripts/run-demo-web.sh`，打开 <http://127.0.0.1:9090/>。页面采用 Vue 3，直接调用本机真实后端，可完成“选择虚构患者 → 查看六方面资料 → DeepSeek 生成七维候选 → 核对依据 → 采纳 → 编辑保存”。生成会实际调用已配置的 AI 服务；页面范围止于草稿编辑。
+
+首次启动自动安装前端依赖，需 Node.js 22.12+（或 20.19+）及 npm。目录、操作和验证记录见 [演示工作台说明](docs/DEMO-WORKBENCH.md)。
+
 ## 环境约定
 
 | 组件 | 配置 |
 |---|---|
 | Java | JDK 17；本机复用 Homebrew 17.0.15 |
 | Maven | 本机 3.9.9；项目脚本固定 JDK 17 |
+| Maven 构建产物 | `.dev/build.nosync`，避免同步生成重复文件 |
 | Maven 依赖缓存 | `.dev/m2`，不写入默认用户依赖缓存 |
 | Spring Boot | 4.1.1 |
 | MyBatis-Plus | 3.5.17，Spring Boot 4 starter |
@@ -86,6 +104,8 @@ Knife4j 文档与在线调试：<http://127.0.0.1:9089/ncd-ai/doc.html>。先在
 Java 与 Maven 二进制复用本机安装，未修改全局 shell、JAVA_HOME 或旧数据库。项目不自动升级现有工具。另一台机器需准备 JDK 17、Maven 3.9.9、Docker 和 Compose；可用 `HEALTH_JAVA_HOME` 显式指定 JDK。当前未包含 Maven Wrapper。
 
 ## 日常命令
+
+阿里云开发服务器已部署，公网 API 为 `https://120.26.14.242/ncd-ai`；前端伙伴可直接使用 [云端联调交接说明](docs/FRONTEND-CLOUD-HANDOFF.md)。运维、SSH 隧道、备份和验收记录见 [云端部署说明](docs/ALIYUN-DEPLOYMENT.md)。
 
 ```bash
 ./scripts/init-env.sh        # 首次生成随机密码；已存在时保留
@@ -146,6 +166,23 @@ local 启动自动执行 Flyway，V1 为元数据，V2/V3 为患者与方案草�
 
 2026-10-16 第一批历史验证：28 项测试全部通过（含真实 MySQL 与并发事务）；实际 HTTP 已验证患者查询、资料摘要、草稿创建/编辑/读取及 401/409。
 
-2026-10-16 第二批验证：48 项测试全部通过（含真实 MySQL、权限、并发和回滚）；普通离线构建通过，6 项通过、42 项数据库测试明确跳过。实际 HTTP 24 步覆盖执行条件、一审退回重提、通过、新版本和撤回，以及 401/403/409。联调说明见 [PHASE-B-API.md](docs/PHASE-B-API.md)。正式登录、真实 AI、任务、二审和发布尚未接入。
+2026-10-16 第二批验证：48 项测试全部通过（含真实 MySQL、权限、并发和回滚）；普通离线构建通过，6 项通过、42 项数据库测试明确跳过。实际 HTTP 24 步覆盖执行条件、一审退回重提、通过、新版本和撤回，以及 401/403/409。联调说明见 [PHASE-B-API.md](docs/PHASE-B-API.md)。该历史批次未包含任务；当前进度以文首和第三批契约为准。
 
 2026-10-16 文档接入验证：`./scripts/test-db.sh` 53 项全部通过；普通离线构建通过，6 项通过、47 项数据库测试明确跳过。Knife4j 页面显示当前 14 个操作，浏览器验证未授权 401、原始 Token 授权后患者查询 200；OpenAPI 生成、请求字段和关闭文档/非 local 访问边界均有测试覆盖。使用说明见 [KNIFE4J.md](docs/KNIFE4J.md)。
+
+2026-10-16 第三批验证：真库108/108通过；普通离线构建15项通过、93项真库测试明确跳过。9089真实HTTP30步闭环通过，Knife4j展示32个操作。独立审查的7项边界问题已复现并修复；前端对接见 [第三批契约](docs/PHASE-CDE-API.md)，详细结果见 [验证记录](docs/PHASE-CDE-VALIDATION.md)。目前仍是虚构DEMO计完成流程。
+
+2026-10-17 旧契约适配第一批：新增旧档案选择 GET，使用 `keyword/page/pageSize` 和稳定字符串 `archiveId`；V9 管理兼容编号，现有 32 个操作保留，当前共 33 个。真库 125 项回归通过；后续旧方案与任务入口仍待适配，详情见 [前端契约对齐](docs/FRONTEND-CONTRACT-ALIGNMENT.md)。
+
+
+### DeepSeek AI 方案草稿
+
+可从 `.env.ai.example` 复制模板，填写本机 `.env.ai` 的 `DEEPSEEK_API_KEY`，设置 `DEEPSEEK_MODEL=deepseek-flash` 和 `HEALTH_AI_ENABLED=true`，使用项目脚本启动。后台根据最新虚构患者资料生成候选，结构与来源校验通过后由人工采用到草稿；生成不覆盖人工修改，也不自动审核或发布。
+
+AI 批次新增 4 个操作；随后旧资料与建议入口增加 2 个，管理侧重再增加 2 个，当前共 41 个；请求、状态机、限制和联调方式见 [AI 方案生成](docs/AI-PLAN-GENERATION.md)。用药与中医专业参数绑定暂不由 AI 生成，相关维度保留待确认/关闭状态。旧工作流兼容入口仍需后续适配。
+
+2026-10-18 AI 验证：149项后端测试通过；4轮24次真实生成迭代，最新6例结构通过；原33接口的Apifox场景55步、103断言通过。内容复查与完整链路状态见 [AI验证记录](docs/AI-PLAN-VALIDATION.md)。
+
+2026-10-18 旧前端适配继续推进：已补患者输入和 AI 建议生成入口，真库 160 项回归通过；虚构患者真实 DeepSeek 请求通过，并发同键只创建一个作业，重放结果一致。当前仍未完成旧工作流、双审与任务入口适配，尚无伙伴页面联调通过证据。动态字段、分类状态及旧工作流的限制见 [旧建议接口对齐说明](docs/LEGACY-RECOMMENDATIONS-ALIGNMENT.md)。
+
+2026-10-18 管理侧重批次：已接入病种依据评估与来源绑定，确定性计算七维权重和多病融合，AI 保留人工确认结果；完整回归 169 项通过，真实虚构双病场景完成生成、幂等重放和采用草稿。医学自动判型尚未启用，正式业务规则仍需审核。见 [管理侧重与融合说明](docs/MANAGEMENT-FOCUS-AND-FUSION.md)。

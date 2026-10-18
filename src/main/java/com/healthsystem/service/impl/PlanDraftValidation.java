@@ -51,6 +51,7 @@ public final class PlanDraftValidation {
    focuses.add(new PlanComponents.Focus(identity(f.id(),old==null?null:old.id()),f.diagnosisFactId(),text(f.primarySubtypeCode(),false,64),List.copyOf(secondary),text(f.priorityCode(),false,32),f.dimensionWeights()==null?null:new TreeMap<>(f.dimensionWeights()),f.contributionBps(),text(f.adjustmentReason(),false,20000)));
   }
   if(contributions)check(focuses.stream().allMatch(f->f.contributionBps()!=null)&&contributionTotal==10000,"Contributions must total 10000");
+  if(snapshot.has("managementContext"))ManagementFocusPolicy.requireFrozenChoices(focuses,snapshot.path("managementContext"));
   Map<String,PlanComponents.Module> byModule=modules.stream().collect(Collectors.toMap(PlanComponents.Module::moduleCode,Function.identity()));
   Map<String,PlanComponents.Dimension> byDimension=dimensions.stream().collect(Collectors.toMap(PlanComponents.Dimension::dimensionCode,Function.identity()));
   List<PlanComponents.Item> items=new ArrayList<>();Set<String> ids=new HashSet<>();

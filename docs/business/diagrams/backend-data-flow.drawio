@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" type="device">
+  <diagram id="backend-data-flow" name="02 / 后端数据流图">
+    <mxGraphModel dx="1800" dy="1840" grid="1" gridSize="10" page="1" pageScale="1" pageWidth="1800" pageHeight="1840" background="#FFFFFF" adaptiveColors="auto">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="eyebrow" value="慢病健康管理 · 当前后端业务说明 / 2026-10-18" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=left;verticalAlign=middle;spacing=0;fontSize=18;fontColor=#52647B;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="26" width="1680" height="36" />
+        </mxCell>
+        <mxCell id="title" value="02 / 后端数据流图" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=left;verticalAlign=middle;spacing=0;fontSize=38;fontColor=#172B45;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="70" width="1680" height="65" />
+        </mxCell>
+        <mxCell id="subtitle" value="蓝框＝处理过程；左侧开口框＝逻辑数据存储；深色框＝外部参与方；箭头标注传递的数据。" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=left;verticalAlign=middle;spacing=0;fontSize=19;fontColor=#52647B;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="140" width="1680" height="40" />
+        </mxCell>
+        <mxCell id="footer" value="当前代码快照 · local + DEMO · 39 个接口操作 · 详见同目录业务文档" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=left;verticalAlign=middle;spacing=0;fontSize=16;fontColor=#52647B;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="1795" width="1680" height="28" />
+        </mxCell>
+        <mxCell id="actors" value="&lt;div style=&quot;line-height:1.45;color:#FFFFFF&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;编辑者 / 独立审核者 / 患者&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;各用自己的授权身份；以下是分阶段的数据处理，不表示自动连续执行&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#243F62;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="620" y="200" width="550" height="95" />
+        </mxCell>
+        <mxCell id="p1" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;P1  授权查询与患者资料&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;读取当前有效事实与 profileRevision&lt;br&gt;缺失为未知，保留自述 / 专业确认区别&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="620" y="310" width="550" height="145" />
+        </mxCell>
+        <mxCell id="p2" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;P2  草稿、AI 作业与人工采用&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;每次生成重新冻结 PLAN 输入&lt;br&gt;模型调用在事务外；采用时校验修订&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="620" y="540" width="550" height="145" />
+        </mxCell>
+        <mxCell id="p3" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;P3  执行条件与方案一审&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;冻结方案正文、条件确认、摘要&lt;br&gt;批准 / 退回 / 撤回均保留历史&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="620" y="770" width="550" height="145" />
+        </mxCell>
+        <mxCell id="p4" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;P4  任务派生、排程与二审&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;只派生已审执行条目；另读 TASK 资料&lt;br&gt;保留来源；冻结排程与二审快照&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="620" y="1000" width="550" height="145" />
+        </mxCell>
+        <mxCell id="p5" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;P5  发布与患者日任务&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;按发布清单复制已审 occurrence&lt;br&gt;实例、替代、幂等、事件同一事务&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="620" y="1230" width="550" height="145" />
+        </mxCell>
+        <mxCell id="p6" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;P6  打卡、补记与更正&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;追加反馈历史，更新当前结果&lt;br&gt;异常事件独立保留，不反写原方案&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="620" y="1460" width="550" height="145" />
+        </mxCell>
+        <mxCell id="edge-1" value="分角色请求" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=none;startFill=1;" edge="1" source="actors" target="p1" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-2" value="资料 + 修订" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=none;startFill=1;" edge="1" source="p1" target="p2" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-3" value="已保存方案 + 输入快照" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=none;startFill=1;" edge="1" source="p2" target="p3" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-4" value="一审批准内容 + 来源" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=none;startFill=1;" edge="1" source="p3" target="p4" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-5" value="二审批准 + 排程快照" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=none;startFill=1;" edge="1" source="p4" target="p5" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-6" value="正式实例 + 执行窗口" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=none;startFill=1;" edge="1" source="p5" target="p6" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="d1" value="&lt;b style=&quot;font-size:22px&quot;&gt;D1  当前患者与事实&lt;/b&gt;&lt;br&gt;&lt;br&gt;patient / patient_access_grant&lt;br&gt;health_fact · 当前有效资料&lt;br&gt;legacy_archive_mapping · 档案编号" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;shape=partialRectangle;left=1;right=0;top=1;bottom=1;align=left;spacing=18;fillColor=#E5F4EF;strokeColor=#4D8F80;strokeWidth=2;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="310" width="500" height="145" />
+        </mxCell>
+        <mxCell id="edge-7" value="读取" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=none;startFill=1;" edge="1" source="d1" target="p1" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="d2" value="&lt;b style=&quot;font-size:22px&quot;&gt;D2  方案与 PLAN 输入快照&lt;/b&gt;&lt;br&gt;&lt;br&gt;health_input_snapshot · stage=PLAN&lt;br&gt;care_plan / care_plan_version&lt;br&gt;模块、侧重、维度、条目、依据子表" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;shape=partialRectangle;left=1;right=0;top=1;bottom=1;align=left;spacing=18;fillColor=#E5F4EF;strokeColor=#4D8F80;strokeWidth=2;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="540" width="500" height="145" />
+        </mxCell>
+        <mxCell id="edge-8" value="读写" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=block;startFill=1;" edge="1" source="d2" target="p2" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="d3" value="&lt;b style=&quot;font-size:22px&quot;&gt;D3  条件与一审历史&lt;/b&gt;&lt;br&gt;&lt;br&gt;condition_confirmation&lt;br&gt;review_submission · stage=PLAN&lt;br&gt;review_decision" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;shape=partialRectangle;left=1;right=0;top=1;bottom=1;align=left;spacing=18;fillColor=#E5F4EF;strokeColor=#4D8F80;strokeWidth=2;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="770" width="500" height="145" />
+        </mxCell>
+        <mxCell id="edge-9" value="读写" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=block;startFill=1;" edge="1" source="d3" target="p3" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="d4" value="&lt;b style=&quot;font-size:22px&quot;&gt;D4  任务包、预览与二审&lt;/b&gt;&lt;br&gt;&lt;br&gt;task_bundle / group / variant / source&lt;br&gt;task_template / schedule_preview&lt;br&gt;TASK 输入快照；stage=TASK 审核记录" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;shape=partialRectangle;left=1;right=0;top=1;bottom=1;align=left;spacing=18;fillColor=#E5F4EF;strokeColor=#4D8F80;strokeWidth=2;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="1000" width="500" height="145" />
+        </mxCell>
+        <mxCell id="edge-10" value="读写" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=block;startFill=1;" edge="1" source="d4" target="p4" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="d5" value="&lt;b style=&quot;font-size:22px&quot;&gt;D5  发布与正式任务实例&lt;/b&gt;&lt;br&gt;&lt;br&gt;publication_preview / publication&lt;br&gt;publication_request / execution_task&lt;br&gt;outbox_event · NOT_CONFIGURED" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;shape=partialRectangle;left=1;right=0;top=1;bottom=1;align=left;spacing=18;fillColor=#E5F4EF;strokeColor=#4D8F80;strokeWidth=2;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="1230" width="500" height="145" />
+        </mxCell>
+        <mxCell id="edge-11" value="读写" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=block;startFill=1;" edge="1" source="d5" target="p5" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="d6" value="&lt;b style=&quot;font-size:22px&quot;&gt;D6  反馈、结果与安全事件&lt;/b&gt;&lt;br&gt;&lt;br&gt;task_feedback · 追加历史&lt;br&gt;task_result · 当前汇总&lt;br&gt;task_safety_event · OPEN 事件" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;shape=partialRectangle;left=1;right=0;top=1;bottom=1;align=left;spacing=18;fillColor=#E5F4EF;strokeColor=#4D8F80;strokeWidth=2;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="1460" width="500" height="145" />
+        </mxCell>
+        <mxCell id="edge-12" value="读写" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=block;startFill=1;" edge="1" source="d6" target="p6" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="model" value="&lt;div style=&quot;line-height:1.45;color:#FFFFFF&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;DeepSeek API&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;接收白名单事实投影和生成要求&lt;br&gt;返回结构化 JSON 候选&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#243F62;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1230" y="430" width="510" height="125" />
+        </mxCell>
+        <mxCell id="edge-13" value="JSON" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=block;startFill=1;" edge="1" source="p2" target="model" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="job" value="&lt;b style=&quot;font-size:22px&quot;&gt;D7  AI 候选与重试关联&lt;/b&gt;&lt;br&gt;&lt;br&gt;plan_generation_job&lt;br&gt;状态 / candidate / 规则版本 / 用量&lt;br&gt;legacy_recommendation_request" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;shape=partialRectangle;left=1;right=0;top=1;bottom=1;align=left;spacing=18;fillColor=#E5F4EF;strokeColor=#4D8F80;strokeWidth=2;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1230" y="610" width="510" height="145" />
+        </mxCell>
+        <mxCell id="edge-14" value="读写" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=block;startFill=1;" edge="1" source="p2" target="job" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="snapshot" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;快照不会随实时资料一起改&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;创建草稿、AI 生成、任务派生各留快照&lt;br&gt;采用 AI 才把候选及其快照写入草稿&lt;br&gt;一审与二审另保留送审内容快照&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#FFF3DB;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1230" y="770" width="510" height="145" />
+        </mxCell>
+        <mxCell id="taskread" value="&lt;b style=&quot;font-size:22px&quot;&gt;D1（复用）当前患者资料&lt;/b&gt;&lt;br&gt;&lt;br&gt;任务派生再次读取并形成 TASK 快照&lt;br&gt;变更事实写入 nextCycleReference&lt;br&gt;已审目标与来源保持不变" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;shape=partialRectangle;left=1;right=0;top=1;bottom=1;align=left;spacing=18;fillColor=#E5F4EF;strokeColor=#4D8F80;strokeWidth=2;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1230" y="1000" width="510" height="145" />
+        </mxCell>
+        <mxCell id="edge-15" value="读取" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=none;startFill=1;" edge="1" source="taskread" target="p4" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="outbox" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;发布事件已保存，消息未发送&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;outbox_event = NOT_CONFIGURED&lt;br&gt;没有接入短信、微信或 App 推送&lt;br&gt;前端读取已生效的正式任务&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#FFF3DB;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1230" y="1230" width="510" height="145" />
+        </mxCell>
+        <mxCell id="feedbacknote" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;反馈不是新的患者诊断事实&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;完成比例、实际时效、安全分别记录&lt;br&gt;更正追加新版本，不覆盖旧反馈&lt;br&gt;无自动诊断 / 下周期自动改方案&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#FFF3DB;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1230" y="1460" width="510" height="145" />
+        </mxCell>
+        <mxCell id="shared" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;贯穿写入链路的控制&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;机构与患者授权 + 数据模式隔离；rowVersion 防覆盖，contentRevision / hash 绑定内容；关键业务写入记录 audit_log。&lt;br&gt;这是逻辑数据流图，D4 中审核表复用 D3 的物理表；完整表名与接口索引见业务文档。密钥留在服务端本地环境配置。&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#F1F3F6;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="1680" width="1680" height="100" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

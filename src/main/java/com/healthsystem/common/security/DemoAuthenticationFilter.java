@@ -14,14 +14,20 @@ import java.util.List;
 public final class DemoAuthenticationFilter extends OncePerRequestFilter {
     private final byte[] token;
     private final byte[] reviewerToken;
+    private final byte[] patientToken;
     public DemoAuthenticationFilter(String token) {this(token,null);}
-    public DemoAuthenticationFilter(String token,String reviewerToken) {
+    public DemoAuthenticationFilter(String token,String reviewerToken) {this(token,reviewerToken,null);}
+    public DemoAuthenticationFilter(String token,String reviewerToken,String patientToken) {
         if (token == null || token.length() < 24) throw new IllegalStateException("Local demo token must contain at least 24 characters");
         this.token = token.getBytes(StandardCharsets.UTF_8);
         if(reviewerToken!=null && !reviewerToken.isBlank()) {
             if(reviewerToken.length()<24 || MessageDigest.isEqual(this.token,reviewerToken.getBytes(StandardCharsets.UTF_8)))throw new IllegalStateException("Local reviewer token must be distinct and contain at least 24 characters");
             this.reviewerToken=reviewerToken.getBytes(StandardCharsets.UTF_8);
         } else this.reviewerToken=null;
+        if(patientToken!=null && !patientToken.isBlank()) {
+            this.patientToken=patientToken.getBytes(StandardCharsets.UTF_8);
+            if(patientToken.length()<24 || MessageDigest.isEqual(this.token,this.patientToken) || (this.reviewerToken!=null && MessageDigest.isEqual(this.reviewerToken,this.patientToken)))throw new IllegalStateException("Local patient token must be distinct and contain at least 24 characters");
+        } else this.patientToken=null;
     }
     @Override protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String supplied = request.getHeader("Authorization");
@@ -30,6 +36,7 @@ public final class DemoAuthenticationFilter extends OncePerRequestFilter {
             byte[] provided=supplied.getBytes(StandardCharsets.UTF_8);
             if(MessageDigest.isEqual(token,provided))subject="demo-clinician";
             else if(reviewerToken!=null && MessageDigest.isEqual(reviewerToken,provided))subject="demo-reviewer";
+            else if(patientToken!=null && MessageDigest.isEqual(patientToken,provided))subject="demo-patient";
         }
         if (subject!=null) {
             var principal = new BusinessPrincipal("demo-org", subject, "DEMO");

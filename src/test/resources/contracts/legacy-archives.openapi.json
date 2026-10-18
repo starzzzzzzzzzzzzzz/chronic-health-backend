@@ -1,0 +1,136 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Legacy archive selection contract fixture",
+    "version": "2026-10-17"
+  },
+  "x-source-url": "http://116.178.155.215:18006/ncd-ai/v3/api-docs",
+  "x-source-sha256": "29e81e341b7f887a868888ef43c670a6c45fbd8f7af3efe470149e9829ab8f75",
+  "paths": {
+    "/ncd-ai/store/care/grant-administration/archives": {
+      "get": {
+        "tags": [
+          "care-grant-administration-controller"
+        ],
+        "operationId": "list_3",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultArchivePage"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ResultArchivePage": {
+        "type": "object",
+        "description": "统一 API 响应",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "业务状态码",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "description": "响应消息",
+            "example": "success"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ArchivePage",
+            "description": "响应数据"
+          }
+        }
+      },
+      "ArchivePage": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ManagedArchive"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ManagedArchive": {
+        "type": "object",
+        "properties": {
+          "archiveId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "diseaseTags": {
+            "type": "string"
+          },
+          "age": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      }
+    }
+  }
+}

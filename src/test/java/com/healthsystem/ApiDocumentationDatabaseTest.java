@@ -8,6 +8,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @EnabledIfEnvironmentVariable(named="RUN_DB_TESTS",matches="true")
 class ApiDocumentationDatabaseTest extends DatabaseApiTestSupport {
+    @Test void legacyInputAndRecommendationRoutesExposeOnlyImplementedOperations() throws Exception {
+        var doc=json.readTree(mvc.perform(get("/v3/api-docs/health"))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
+        var paths=doc.path("paths");
+        assertThat(paths.path("/store/care/archives/{archiveId}/input").has("get")).isTrue();
+        var generate=paths.path("/store/care/drafts/recommendations/generate").path("post");
+        assertThat(generate.path("responses").has("200")).isTrue();
+        assertThat(generate.path("responses").has("504")).isTrue();
+        assertThat(generate.path("parameters").toString()).contains("X-Request-Id");
+        assertThat(paths.has("/store/care/coordination/workflows")).isFalse();
+        assertThat(doc.path("components").path("schemas").path("LegacyGenerateRecommendationsRequest")
+                .path("properties").path("archiveId").path("type").asText()).isEqualTo("integer");
+        assertThat(doc.toString()).doesNotContain("test-placeholder-never-sent");
+    }
     @Test void localDocumentationPageAndDiscoveryLoadWithoutUnlockingBusinessEndpoints() throws Exception {
         mvc.perform(get("/doc.html")).andExpect(status().isOk()).andExpect(content().string(org.hamcrest.Matchers.containsString("<html")));
         var config=json.readTree(mvc.perform(get("/v3/api-docs/swagger-config")).andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
@@ -19,12 +33,12 @@ class ApiDocumentationDatabaseTest extends DatabaseApiTestSupport {
     @Test void generatedContractListsCurrentRoutesAndRawAuthorizationHeader() throws Exception {
         var doc=document();
         assertThat(doc.path("openapi").asText()).startsWith("3.0.");
-        assertThat(doc.path("paths").size()).isEqualTo(12);
+        assertThat(doc.path("paths").size()).isEqualTo(36);
         int operations=0;
         for(var path:doc.path("paths")) {
             for(String method:java.util.List.of("get","post","patch"))if(path.has(method))operations++;
         }
-        assertThat(operations).isEqualTo(14); // GET/PATCH and GET/POST share two resource paths.
+        assertThat(operations).isEqualTo(41); // Multiple methods can share one resource path.
         var scheme=doc.path("components").path("securitySchemes").path("AuthorizationToken");
         assertThat(scheme.path("type").asText()).isEqualTo("apiKey");
         assertThat(scheme.path("name").asText()).isEqualTo("Authorization");
@@ -38,11 +52,29 @@ class ApiDocumentationDatabaseTest extends DatabaseApiTestSupport {
         assertThat(doc.path("paths").path("/health").path("get").has("security")).isTrue();
         assertThat(doc.path("paths").path("/health").path("get").path("security").isEmpty()).isTrue();
     }
+    @Test
+    @org.springframework.transaction.annotation.Transactional
+    void patientResponsesAllowUnknownBirthDateInBothPayloadAndContract() throws Exception {
+        String name="nullable-birth-date-"+java.util.UUID.randomUUID();
+        String id=patient("demo-org","DEMO",name,true);
+        var list=json.readTree(mvc.perform(get("/patients").header("Authorization",TOKEN).param("q",name))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
+        assertThat(list.path("data").path("items").size()).isEqualTo(1);
+        assertThat(list.path("data").path("items").get(0).path("birthDate").isNull()).isTrue();
+        var summary=json.readTree(mvc.perform(get("/patients/"+id+"/health-summary").header("Authorization",TOKEN))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
+        assertThat(summary.path("data").path("patient").path("birthDate").isNull()).isTrue();
+        var birthDate=document().path("components").path("schemas").path("PatientSummaryVO")
+                .path("properties").path("birthDate");
+        assertThat(birthDate.path("type").asText()).isEqualTo("string");
+        assertThat(birthDate.path("format").asText()).isEqualTo("date");
+        assertThat(birthDate.path("nullable").asBoolean()).as("unknown birth dates are returned as null").isTrue();
+    }
     @Test void flexibleWorkflowBodiesHaveRealRootFieldsAndExamples() throws Exception {
         var doc=document();
         var item=doc.path("components").path("schemas").path("Item").path("properties");
         assertThat(item.path("references").path("type").asText()).isEqualTo("array");
-        assertThat(doc.path("components").path("schemas").path("FactVO").path("properties").path("value").has("type")).isFalse();
+        assertThat(doc.path("components").path("schemas").path("FactVO").path("properties").path("value").path("type").asText()).isEqualTo("object");
         String[][] cases={{"/plan-versions/{id}","patch","expectedRevision"},{"/plan-versions/{id}/condition-confirmations","post","entries"},{"/plan-versions/{id}/review-submissions","post","expectedRevision"},{"/review-submissions/{id}/decisions","post","decision"},{"/review-submissions/{id}/withdrawals","post","reason"},{"/care-plans/{id}/versions","post","sourceVersionId"}};
         for(var row:cases) {
             var operation=doc.path("paths").path(row[0]).path(row[1]);
@@ -56,7 +88,79 @@ class ApiDocumentationDatabaseTest extends DatabaseApiTestSupport {
             assertThat(operation.path("description").asText()).contains("可复制的请求示例", "```json", row[2]);
         }
     }
+    @Test void taskWorkflowDocumentationHasEditableRootBodiesAndPatientIdentityGuidance() throws Exception {
+        var doc=document();
+        String[][] cases={{"/plan-versions/{id}/task-bundles","post","expectedRevision"},{"/task-bundles/{id}","patch","groups"},{"/task-bundles/{id}/schedule-previews","post","expectedRevision"},{"/task-bundles/{id}/review-submissions","post","schedulePreviewId"},{"/task-bundles/{id}/versions","post","changeReason"},{"/task-bundles/{id}/publication-previews","post","replacementScope"},{"/task-bundles/{id}/publications","post","publicationPreviewId"},{"/execution-tasks/{id}/check-ins","post","completion"},{"/check-ins/{id}/amendments","post","expectedRevision"}};
+        for(var row:cases){var op=doc.path("paths").path(row[0]).path(row[1]);var media=op.path("requestBody").path("content").path("application/json");var schema=media.path("schema");if(schema.has("$ref"))schema=doc.path("components").path("schemas").path(schema.path("$ref").asText().replace("#/components/schemas/",""));assertThat(schema.path("properties").has(row[2])).as(row[0]).isTrue();assertThat(schema.path("properties").has("body")).isFalse();assertThat(media.has("example")).isTrue();assertThat(op.path("description").asText()).contains("可复制的请求示例");}
+        assertThat(doc.path("info").path("description").asText()).contains("HEALTH_DEMO_PATIENT_TOKEN");
+        var response=doc.path("paths").path("/execution-tasks/{id}/check-ins").path("post").path("responses").path("201").path("content").path("application/json").path("schema");
+        assertThat(response.has("$ref")).as("Knife4j needs a named response envelope to render nested feedback fields").isTrue();
+        for(String route:java.util.List.of("/task-bundles/{id}/publications","/execution-tasks/{id}/check-ins","/check-ins/{id}/amendments")){var op=doc.path("paths").path(route).path("post");assertThat(op.path("responses").has("200")).isTrue();assertThat(op.path("parameters").toString()).contains("Idempotency-Key");}
+    }
+    @Test void workflowResponseSchemasDescribeNullableFieldsAndJsonObjects() throws Exception {
+        var schemas=document().path("components").path("schemas");
+        assertThat(schemas.path("Item").path("properties").path("contraindications").path("oneOf").get(2).path("nullable").asBoolean()).isTrue();
+        assertThat(schemas.path("Condition").path("properties").path("record").path("oneOf").size()).isEqualTo(2);
+        assertThat(schemas.path("TaskGroupView").path("properties").path("template").path("additionalProperties").asBoolean()).isTrue();
+        for(String name:java.util.List.of("unit","sourceRef","observedAt","confidence","confirmedBy","confirmedAt"))
+            assertThat(schemas.path("FactVO").path("properties").path(name).path("nullable").asBoolean()).as(name).isTrue();
+        for(String name:java.util.List.of("value","sourceRef"))
+            assertThat(schemas.path("FactVO").path("properties").path(name).path("type").asText()).as(name).isEqualTo("object");
+        assertThat(schemas.path("CarePlanDraftVO").path("properties").path("inputSnapshot").path("type").asText()).isEqualTo("object");
+        assertThat(schemas.path("ReviewSubmissionVO").path("properties").path("closedAt").path("nullable").asBoolean()).isTrue();
+        assertThat(schemas.path("ExecutionView").path("properties").path("scheduledCancellationAt").path("nullable").asBoolean()).isTrue();
+    }
+    @Test void aiGenerationDocumentsAsyncStatusAndNullableCandidate() throws Exception {
+        var doc=document();
+        assertThat(doc.path("paths").path("/plan-versions/{id}/generation-jobs").path("post").path("responses").has("202")).isTrue();
+        var model=doc.path("components").path("schemas").path("PlanGenerationJobVO").path("properties");
+        assertThat(model.path("candidate").path("type").asText()).isEqualTo("object");
+        assertThat(model.path("candidate").path("nullable").asBoolean()).isTrue();
+        assertThat(model.has("rawOutput")).isFalse();
+    }
     JsonNode document() throws Exception {
         return json.readTree(mvc.perform(get("/v3/api-docs/health")).andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
+    }
+    @Test void managementConfirmationDocumentsTypedItemsWeightsAndEvaluationRoute() throws Exception {
+        var doc=document();var schemas=doc.path("components").path("schemas");
+        assertThat(doc.path("paths").has("/store/care/drafts/basis/evaluate")).isTrue();
+        for(String type:java.util.List.of("GeneratePlanRequest","LegacyGenerateRecommendationsRequest")) {
+            var field=schemas.path(type).path("properties").path("confirmedManagement");
+            assertThat(field.path("type").asText()).isEqualTo("array");
+            assertThat(field.path("items").path("$ref").asText()).endsWith("/ConfirmedManagementRequest");
+        }
+        assertThat(schemas.path("ConfirmedManagementRequest").path("properties").path("weights").path("additionalProperties").path("type").asText()).isEqualTo("integer");
+        assertThat(schemas.path("Issue").path("properties").has("fieldPath")).isTrue();
+        assertThat(schemas.path("CoordinationIssue").path("properties").has("kind")).isTrue();
+    }
+
+    @Test void legacyArchiveDocumentationMatchesFrozenQueryAndResponseTypes() throws Exception {
+        var doc=document();
+        var operation=doc.path("paths").path("/store/care/grant-administration/archives").path("get");
+        assertThat(operation.path("responses").has("200")).isTrue();
+        assertThat(operation.path("responses").has("400")).isTrue();
+        assertThat(operation.path("responses").has("409")).isTrue();
+        JsonNode fixture;
+        try(var in=new org.springframework.core.io.ClassPathResource("contracts/legacy-archives.openapi.json").getInputStream()) {
+            fixture=json.readTree(in);
+        }
+        var frozen=fixture.path("paths").path("/ncd-ai/store/care/grant-administration/archives").path("get");
+        for(var parameter:frozen.path("parameters")) {
+            if(!"query".equals(parameter.path("in").asText()))continue;
+            var actual=java.util.stream.StreamSupport.stream(operation.path("parameters").spliterator(),false)
+                    .filter(p->parameter.path("name").equals(p.path("name"))).findFirst().orElseThrow();
+            assertThat(actual.path("schema").path("type")).isEqualTo(parameter.path("schema").path("type"));
+            assertThat(actual.path("schema").path("default")).isEqualTo(parameter.path("schema").path("default"));
+        }
+        var schemas=doc.path("components").path("schemas");
+        for(var names:java.util.Map.of("LegacyManagedArchiveVO","ManagedArchive","LegacyArchivePageVO","ArchivePage").entrySet()) {
+            var schema=schemas.path(names.getKey());
+            for(var property:fixture.path("components").path("schemas").path(names.getValue()).path("properties").properties()) {
+                assertThat(schema.path("properties").path(property.getKey()).path("type")).isEqualTo(property.getValue().path("type"));
+            }
+        }
+        var archive=schemas.path("LegacyManagedArchiveVO");
+        assertThat(archive.path("properties").path("age").path("nullable").asBoolean()).isFalse();
+        for(var required:archive.path("required"))assertThat(required.asText()).isNotEqualTo("age");
     }
 }

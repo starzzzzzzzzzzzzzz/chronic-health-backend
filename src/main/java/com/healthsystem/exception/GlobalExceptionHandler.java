@@ -2,6 +2,8 @@ package com.healthsystem.exception;
 import com.healthsystem.common.api.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.MissingRequestHeaderException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.method.annotation.*;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -16,7 +18,7 @@ public class GlobalExceptionHandler {
     private static final Logger LOG=LoggerFactory.getLogger(GlobalExceptionHandler.class);
     @ExceptionHandler(BusinessException.class)
     ResponseEntity<ApiResponse<Void>> business(BusinessException ex) { return error(ex.status(),ex.getMessage()); }
-    @ExceptionHandler({MethodArgumentNotValidException.class,HandlerMethodValidationException.class,ConstraintViolationException.class,MethodArgumentTypeMismatchException.class,HttpMessageNotReadableException.class})
+    @ExceptionHandler({MethodArgumentNotValidException.class,HandlerMethodValidationException.class,ConstraintViolationException.class,MethodArgumentTypeMismatchException.class,HttpMessageNotReadableException.class,MissingRequestHeaderException.class,MissingServletRequestParameterException.class})
     ResponseEntity<ApiResponse<Void>> invalid(Exception ex) { return error(400,"Invalid request parameters"); }
     @ExceptionHandler(NoResourceFoundException.class)
     ResponseEntity<ApiResponse<Void>> missing(Exception ex) { return error(404,"Resource not found"); }

@@ -21,7 +21,7 @@ abstract class DatabaseApiTestSupport {
  String patient(String org,String mode,String name,boolean grant) {
   String id=UUID.randomUUID().toString();
   db.update("INSERT INTO patient(id,org_id,created_at,created_by,updated_at,row_version,name,sex,status,data_mode,profile_revision) VALUES(?,?,UTC_TIMESTAMP(6),'test',UTC_TIMESTAMP(6),0,?,'UNKNOWN','ACTIVE',?,1)",id,org,name,mode);
-  if(grant) for(String cap:new String[]{"PATIENT_READ","PLAN_EDIT"}) db.update("INSERT INTO patient_access_grant(id,org_id,created_at,created_by,updated_at,row_version,patient_id,subject_id,capability,valid_from) VALUES(?,?,UTC_TIMESTAMP(6),'test',UTC_TIMESTAMP(6),0,?,'demo-clinician',?,UTC_TIMESTAMP(6))",UUID.randomUUID().toString(),org,id,cap);
+  if(grant) for(String cap:new String[]{"PATIENT_READ","PLAN_EDIT"}) db.update("INSERT INTO patient_access_grant(id,org_id,created_at,created_by,updated_at,row_version,patient_id,subject_id,capability,valid_from) VALUES(?,?,UTC_TIMESTAMP(6),'test',UTC_TIMESTAMP(6),0,?,'demo-clinician',?,DATE_SUB(UTC_TIMESTAMP(6),INTERVAL 1 DAY))",UUID.randomUUID().toString(),org,id,cap);
   return id;
  }
  String fact(String patient,String axis,String code,String value,String previous,String conflict) {

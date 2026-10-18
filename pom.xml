@@ -47,7 +47,7 @@
     <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-webmvc-test</artifactId><scope>test</scope></dependency>
     <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-security-test</artifactId><scope>test</scope></dependency>
   </dependencies>
-  <build><plugins><plugin>
+  <build><directory>${project.basedir}/.dev/build.nosync</directory><plugins><plugin>
     <groupId>org.springframework.boot</groupId><artifactId>spring-boot-maven-plugin</artifactId>
   </plugin></plugins></build>
 </project>

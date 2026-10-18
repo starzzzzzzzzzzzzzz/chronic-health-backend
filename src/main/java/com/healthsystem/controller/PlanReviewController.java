@@ -19,7 +19,8 @@ import java.net.URI;
 @RestController
 public class PlanReviewController {
     private final PlanReviewService service;
-    public PlanReviewController(PlanReviewService service){this.service=service;}
+    private final com.healthsystem.service.impl.ReviewWorkflowDispatcher dispatcher;
+    public PlanReviewController(PlanReviewService service,com.healthsystem.service.impl.ReviewWorkflowDispatcher dispatcher){this.service=service;this.dispatcher=dispatcher;}
     @GetMapping("/plan-versions/{id}/review-context")
     @Operation(summary="查询一审资料与阻断项")
  public ApiResponse<PlanReviewContextVO> context(@io.swagger.v3.oas.annotations.Parameter(hidden=true) @AuthenticationPrincipal BusinessPrincipal p,@PathVariable String id){return ApiResponse.success(service.context(p,id));}
@@ -30,19 +31,19 @@ public class PlanReviewController {
  public ResponseEntity<ApiResponse<ReviewSubmissionVO>> submit(@io.swagger.v3.oas.annotations.Parameter(hidden=true) @AuthenticationPrincipal BusinessPrincipal p,@PathVariable String id,@org.springframework.web.bind.annotation.RequestBody ReviewWorkflowRequest body,HttpServletRequest http){return created(service.submit(p,id,body),http,"");}
     @GetMapping("/review-submissions/{id}")
     @Operation(summary="读取本次送审快照与结果")
- public ApiResponse<ReviewSubmissionVO> get(@io.swagger.v3.oas.annotations.Parameter(hidden=true) @AuthenticationPrincipal BusinessPrincipal p,@PathVariable String id){return ApiResponse.success(service.getSubmission(p,id));}
+ public ApiResponse<ReviewSubmissionVO> get(@io.swagger.v3.oas.annotations.Parameter(hidden=true) @AuthenticationPrincipal BusinessPrincipal p,@PathVariable String id){return ApiResponse.success(dispatcher.get(p,id));}
     @PostMapping("/review-submissions/{id}/decisions")
     @Operation(summary="审核通过或退回", description="必须切换为独立审核身份。修订号属于审核提交，禁止提交人自审；RETURN 必须填写 comment。")
  @io.swagger.v3.oas.annotations.parameters.RequestBody(required=true, content=@Content(mediaType="application/json", schema=@Schema(implementation=ApiDocumentationModels.Decision.class), examples=@ExampleObject(name="调用示例", value="{\"expectedRevision\": \"0\", \"decision\": \"APPROVE\", \"comment\": \"已核对目标、依据、禁忌及执行主体\"}")))
  @ResponseStatus(HttpStatus.CREATED)
  public ResponseEntity<ApiResponse<ReviewSubmissionVO>> decide(@io.swagger.v3.oas.annotations.Parameter(hidden=true) @AuthenticationPrincipal BusinessPrincipal p,@PathVariable String id,@org.springframework.web.bind.annotation.RequestBody ReviewWorkflowRequest body,HttpServletRequest http){
-        var result=service.decide(p,id,body);return created(result,http,"");
+        var result=dispatcher.decide(p,id,body);return created(result,http,"");
     }
     @PostMapping("/review-submissions/{id}/withdrawals")
     @Operation(summary="提交人撤回待审方案", description="仅提交人本人可撤回 PENDING 审核。使用审核提交的 rowVersion；历史快照保留。")
  @io.swagger.v3.oas.annotations.parameters.RequestBody(required=true, content=@Content(mediaType="application/json", schema=@Schema(implementation=ApiDocumentationModels.Withdrawal.class), examples=@ExampleObject(name="调用示例", value="{\"expectedRevision\": \"0\", \"reason\": \"补充资料后重新提交\"}")))
  @ResponseStatus(HttpStatus.CREATED)
- public ResponseEntity<ApiResponse<ReviewSubmissionVO>> withdraw(@io.swagger.v3.oas.annotations.Parameter(hidden=true) @AuthenticationPrincipal BusinessPrincipal p,@PathVariable String id,@org.springframework.web.bind.annotation.RequestBody ReviewWorkflowRequest body,HttpServletRequest http){return created(service.withdraw(p,id,body),http,"");}
+ public ResponseEntity<ApiResponse<ReviewSubmissionVO>> withdraw(@io.swagger.v3.oas.annotations.Parameter(hidden=true) @AuthenticationPrincipal BusinessPrincipal p,@PathVariable String id,@org.springframework.web.bind.annotation.RequestBody ReviewWorkflowRequest body,HttpServletRequest http){return created(dispatcher.withdraw(p,id,body),http,"");}
     private ResponseEntity<ApiResponse<ReviewSubmissionVO>> created(ReviewSubmissionVO result,HttpServletRequest http,String suffix){
         return ResponseEntity.created(URI.create(http.getContextPath()+"/review-submissions/"+result.id()+suffix)).body(new ApiResponse<>(201,"success",result));
     }

@@ -1,0 +1,4885 @@
+{
+  "capturedAt": "2026-10-18T12:42:06+08:00",
+  "source": "local MySQL information_schema; no business rows",
+  "migrations": [
+    {
+      "script": "V1__initialize_application_metadata.sql",
+      "success": 1,
+      "version": "1"
+    },
+    {
+      "script": "V2__create_patient_foundation.sql",
+      "success": 1,
+      "version": "2"
+    },
+    {
+      "script": "V3__create_care_plan_drafts.sql",
+      "success": 1,
+      "version": "3"
+    },
+    {
+      "script": "V4__create_conditions_and_plan_reviews.sql",
+      "success": 1,
+      "version": "4"
+    },
+    {
+      "script": "V5__create_task_bundles.sql",
+      "success": 1,
+      "version": "5"
+    },
+    {
+      "script": "V6__enable_task_reviews.sql",
+      "success": 1,
+      "version": "6"
+    },
+    {
+      "script": "V7__create_publications.sql",
+      "success": 1,
+      "version": "7"
+    },
+    {
+      "script": "V8__create_task_feedback.sql",
+      "success": 1,
+      "version": "8"
+    },
+    {
+      "script": "V9__create_legacy_archive_mapping.sql",
+      "success": 1,
+      "version": "9"
+    },
+    {
+      "script": "V10__create_plan_generation_job.sql",
+      "success": 1,
+      "version": "10"
+    },
+    {
+      "script": "V11__legacy_recommendation_requests.sql",
+      "success": 1,
+      "version": "11"
+    }
+  ],
+  "tables": {
+    "app_metadata": {
+      "columns": [
+        {
+          "name": "metadata_key",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "metadata_value",
+          "type": "varchar(255)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp(6)",
+          "extra": "DEFAULT_GENERATED",
+          "comment": "",
+          "default": "CURRENT_TIMESTAMP(6)",
+          "nullable": false
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "metadata_key"
+        ]
+      },
+      "foreignKeys": {},
+      "checks": []
+    },
+    "audit_log": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "actor_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "action",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "target_type",
+          "type": "varchar(32)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "target_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "before_revision",
+          "type": "bigint unsigned",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "after_revision",
+          "type": "bigint unsigned",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "request_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "change_summary_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "occurred_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_scope_id": [
+          "org_id",
+          "id"
+        ]
+      },
+      "foreignKeys": {},
+      "checks": []
+    },
+    "care_plan": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "row_version",
+          "type": "bigint unsigned",
+          "extra": "",
+          "comment": "",
+          "default": "0",
+          "nullable": false
+        },
+        {
+          "name": "patient_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "plan_no",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "current_version_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "status",
+          "type": "varchar(16)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "closed_reason",
+          "type": "varchar(500)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_0": [
+          "org_id",
+          "plan_no"
+        ],
+        "uk_scope_id": [
+          "org_id",
+          "id"
+        ]
+      },
+      "foreignKeys": {
+        "fk_care_plan_current_version_id": {
+          "parent": "care_plan_version",
+          "columns": [
+            "org_id",
+            "current_version_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "fk_care_plan_patient_id": {
+          "parent": "patient",
+          "columns": [
+            "org_id",
+            "patient_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": []
+    },
+    "care_plan_dimension": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "plan_version_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "dimension_code",
+          "type": "varchar(16)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "decision",
+          "type": "varchar(16)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "decision_reason",
+          "type": "text",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "sort_order",
+          "type": "int unsigned",
+          "extra": "",
+          "comment": "",
+          "default": "0",
+          "nullable": false
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_0": [
+          "org_id",
+          "plan_version_id",
+          "dimension_code"
+        ],
+        "uk_scope_id": [
+          "org_id",
+          "id"
+        ]
+      },
+      "foreignKeys": {
+        "fk_care_plan_dimension_plan_version_id": {
+          "parent": "care_plan_version",
+          "columns": [
+            "org_id",
+            "plan_version_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": [
+        {
+          "name": "care_plan_dimension_chk_1",
+          "expression": "(`dimension_code` in (_utf8mb4\\'medication\\',_utf8mb4\\'diet\\',_utf8mb4\\'exercise\\',_utf8mb4\\'routine\\',_utf8mb4\\'monitoring\\',_utf8mb4\\'tcm\\',_utf8mb4\\'other\\'))"
+        },
+        {
+          "name": "care_plan_dimension_chk_2",
+          "expression": "(`decision` in (_utf8mb4\\'ENABLED\\',_utf8mb4\\'CLOSED\\',_utf8mb4\\'PENDING\\'))"
+        },
+        {
+          "name": "care_plan_dimension_chk_3",
+          "expression": "((`decision` = _utf8mb4\\'ENABLED\\') or (`decision_reason` is not null))"
+        }
+      ]
+    },
+    "care_plan_item": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "plan_version_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "dimension_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "title",
+          "type": "varchar(200)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "content",
+          "type": "text",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "execution_goal",
+          "type": "tinyint(1)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "actor_type",
+          "type": "varchar(16)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "contraindications_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "professional_parameters_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "references_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "is_selected",
+          "type": "tinyint(1)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "sort_order",
+          "type": "int unsigned",
+          "extra": "",
+          "comment": "",
+          "default": "0",
+          "nullable": false
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_scope_id": [
+          "org_id",
+          "id"
+        ]
+      },
+      "foreignKeys": {
+        "fk_care_plan_item_dimension_id": {
+          "parent": "care_plan_dimension",
+          "columns": [
+            "org_id",
+            "dimension_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "fk_care_plan_item_plan_version_id": {
+          "parent": "care_plan_version",
+          "columns": [
+            "org_id",
+            "plan_version_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": []
+    },
+    "care_plan_module": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "plan_version_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "module_code",
+          "type": "varchar(8)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "selection_reason",
+          "type": "text",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "basis_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_0": [
+          "org_id",
+          "plan_version_id",
+          "module_code"
+        ],
+        "uk_scope_id": [
+          "org_id",
+          "id"
+        ]
+      },
+      "foreignKeys": {
+        "fk_care_plan_module_plan_version_id": {
+          "parent": "care_plan_version",
+          "columns": [
+            "org_id",
+            "plan_version_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": [
+        {
+          "name": "care_plan_module_chk_1",
+          "expression": "(`module_code` in (_utf8mb4\\'B0\\',_utf8mb4\\'L\\',_utf8mb4\\'R\\',_utf8mb4\\'C\\',_utf8mb4\\'F\\',_utf8mb4\\'A\\'))"
+        }
+      ]
+    },
+    "care_plan_version": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "row_version",
+          "type": "bigint unsigned",
+          "extra": "",
+          "comment": "",
+          "default": "0",
+          "nullable": false
+        },
+        {
+          "name": "plan_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "version_no",
+          "type": "int unsigned",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "based_on_version_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "title",
+          "type": "varchar(200)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "start_date",
+          "type": "date",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "end_date",
+          "type": "date",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "zone_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "primary_goal",
+          "type": "varchar(1000)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "goal_basis_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "supplemental_requirements",
+          "type": "text",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "input_snapshot_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "status",
+          "type": "varchar(24)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "content_hash",
+          "type": "char(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "change_reason",
+          "type": "varchar(1000)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "content_revision",
+          "type": "bigint unsigned",
+          "extra": "",
+          "comment": "",
+          "default": "0",
+          "nullable": false
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_0": [
+          "org_id",
+          "plan_id",
+          "version_no"
+        ],
+        "uk_scope_id": [
+          "org_id",
+          "id"
+        ]
+      },
+      "foreignKeys": {
+        "fk_care_plan_version_based_on_version_id": {
+          "parent": "care_plan_version",
+          "columns": [
+            "org_id",
+            "based_on_version_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "fk_care_plan_version_input_snapshot_id": {
+          "parent": "health_input_snapshot",
+          "columns": [
+            "org_id",
+            "input_snapshot_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "fk_care_plan_version_plan_id": {
+          "parent": "care_plan",
+          "columns": [
+            "org_id",
+            "plan_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": [
+        {
+          "name": "care_plan_version_chk_1",
+          "expression": "(`start_date` <= `end_date`)"
+        },
+        {
+          "name": "care_plan_version_chk_2",
+          "expression": "(`status` in (_utf8mb4\\'DRAFT\\',_utf8mb4\\'IN_REVIEW\\',_utf8mb4\\'APPROVED\\',_utf8mb4\\'SUPERSEDED\\',_utf8mb4\\'CANCELLED\\'))"
+        }
+      ]
+    },
+    "condition_confirmation": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "plan_version_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "task_bundle_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "condition_key",
+          "type": "varchar(100)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "requirement_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "value_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "status",
+          "type": "varchar(24)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "source_fact_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "subject_revision",
+          "type": "bigint unsigned",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "binding_hash",
+          "type": "char(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "confirmed_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "confirmed_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "confirmation_note",
+          "type": "text",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "supersedes_confirmation_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_confirmation_successor": [
+          "org_id",
+          "supersedes_confirmation_id"
+        ],
+        "uk_scope_id": [
+          "org_id",
+          "id"
+        ]
+      },
+      "foreignKeys": {
+        "fk_confirmation_fact": {
+          "parent": "health_fact",
+          "columns": [
+            "org_id",
+            "source_fact_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "fk_confirmation_plan": {
+          "parent": "care_plan_version",
+          "columns": [
+            "org_id",
+            "plan_version_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "fk_confirmation_prior": {
+          "parent": "condition_confirmation",
+          "columns": [
+            "org_id",
+            "supersedes_confirmation_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": [
+        {
+          "name": "condition_confirmation_chk_1",
+          "expression": "((`plan_version_id` is not null) and (`task_bundle_id` is null))"
+        },
+        {
+          "name": "condition_confirmation_chk_2",
+          "expression": "(`status` in (_utf8mb4\\'MISSING\\',_utf8mb4\\'PENDING\\',_utf8mb4\\'CONFIRMED\\',_utf8mb4\\'REJECTED\\'))"
+        },
+        {
+          "name": "condition_confirmation_chk_3",
+          "expression": "((`status` <> _utf8mb4\\'CONFIRMED\\') or ((`value_json` is not null) and (`confirmed_by` is not null) and (`confirmed_at` is not null)))"
+        }
+      ]
+    },
+    "execution_task": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "patient_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "publication_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "task_bundle_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "group_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "variant_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "occurrence_key",
+          "type": "varchar(160)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "dimension_code",
+          "type": "varchar(24)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "execution_date",
+          "type": "date",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "zone_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "slot_key",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "planned_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "opens_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "closes_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "normal_cutoff_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "makeup_cutoff_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "content_snapshot_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "task_class",
+          "type": "varchar(16)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "priority_code",
+          "type": "varchar(8)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "safety_focus",
+          "type": "tinyint(1)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "cancelled_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "replaced_by_publication_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_execution_occurrence": [
+          "org_id",
+          "publication_id",
+          "occurrence_key"
+        ],
+        "uk_execution_scope": [
+          "org_id",
+          "id"
+        ]
+      },
+      "foreignKeys": {
+        "execution_task_ibfk_1": {
+          "parent": "patient",
+          "columns": [
+            "org_id",
+            "patient_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "execution_task_ibfk_2": {
+          "parent": "publication",
+          "columns": [
+            "org_id",
+            "publication_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "execution_task_ibfk_3": {
+          "parent": "task_bundle",
+          "columns": [
+            "org_id",
+            "task_bundle_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "execution_task_ibfk_4": {
+          "parent": "task_group",
+          "columns": [
+            "org_id",
+            "group_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "execution_task_ibfk_5": {
+          "parent": "task_group_variant",
+          "columns": [
+            "org_id",
+            "variant_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "execution_task_ibfk_6": {
+          "parent": "publication",
+          "columns": [
+            "org_id",
+            "replaced_by_publication_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": [
+        {
+          "name": "execution_task_chk_1",
+          "expression": "(`opens_at` < `closes_at`)"
+        },
+        {
+          "name": "execution_task_chk_2",
+          "expression": "(`normal_cutoff_at` >= `closes_at`)"
+        },
+        {
+          "name": "execution_task_chk_3",
+          "expression": "(`task_class` in (_utf8mb4\\'REQUIRED\\',_utf8mb4\\'OPTIONAL\\'))"
+        }
+      ]
+    },
+    "health_fact": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "patient_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "axis_code",
+          "type": "varchar(8)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "fact_code",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "value_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "unit",
+          "type": "varchar(32)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "source_type",
+          "type": "varchar(32)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "source_locator_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "observed_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "confidence",
+          "type": "decimal(5,4)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "confirmation_status",
+          "type": "varchar(32)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "confirmed_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "confirmed_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "supersedes_fact_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "conflict_group_key",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_2": [
+          "org_id",
+          "supersedes_fact_id"
+        ],
+        "uk_scope_id": [
+          "org_id",
+          "id"
+        ]
+      },
+      "foreignKeys": {
+        "fk_health_fact_patient_id": {
+          "parent": "patient",
+          "columns": [
+            "org_id",
+            "patient_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "fk_health_fact_supersedes_fact_id": {
+          "parent": "health_fact",
+          "columns": [
+            "org_id",
+            "supersedes_fact_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": [
+        {
+          "name": "health_fact_chk_1",
+          "expression": "(`axis_code` in (_utf8mb4\\'H\\',_utf8mb4\\'F\\',_utf8mb4\\'B\\',_utf8mb4\\'C\\',_utf8mb4\\'E\\',_utf8mb4\\'G\\'))"
+        },
+        {
+          "name": "health_fact_chk_2",
+          "expression": "((`confidence` is null) or (`confidence` between 0 and 1))"
+        },
+        {
+          "name": "health_fact_chk_3",
+          "expression": "((`supersedes_fact_id` is null) or (`supersedes_fact_id` <> `id`))"
+        }
+      ]
+    },
+    "health_input_snapshot": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "patient_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "stage",
+          "type": "varchar(16)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "profile_revision",
+          "type": "bigint unsigned",
+          "extra": "",
+          "comment": "",
+          "default": "0",
+          "nullable": false
+        },
+        {
+          "name": "captured_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "schema_version",
+          "type": "varchar(32)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "payload_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "payload_hash",
+          "type": "char(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_scope_id": [
+          "org_id",
+          "id"
+        ]
+      },
+      "foreignKeys": {
+        "fk_health_input_snapshot_patient_id": {
+          "parent": "patient",
+          "columns": [
+            "org_id",
+            "patient_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": []
+    },
+    "legacy_archive_mapping": {
+      "columns": [
+        {
+          "name": "archive_id",
+          "type": "bigint",
+          "extra": "auto_increment",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "patient_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "archive_id"
+        ],
+        "uk_legacy_archive_patient": [
+          "org_id",
+          "patient_id"
+        ]
+      },
+      "foreignKeys": {
+        "fk_legacy_archive_patient": {
+          "parent": "patient",
+          "columns": [
+            "org_id",
+            "patient_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": []
+    },
+    "legacy_recommendation_request": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "request_key",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "request_hash",
+          "type": "char(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "generation_job_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_legacy_recommendation_request": [
+          "org_id",
+          "created_by",
+          "request_key"
+        ]
+      },
+      "foreignKeys": {
+        "legacy_recommendation_request_ibfk_1": {
+          "parent": "plan_generation_job",
+          "columns": [
+            "org_id",
+            "generation_job_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": []
+    },
+    "outbox_event": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "publication_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "event_type",
+          "type": "varchar(32)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "status",
+          "type": "varchar(32)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "payload_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_outbox_publication": [
+          "org_id",
+          "publication_id",
+          "event_type"
+        ],
+        "uk_outbox_scope": [
+          "org_id",
+          "id"
+        ]
+      },
+      "foreignKeys": {
+        "outbox_event_ibfk_1": {
+          "parent": "publication",
+          "columns": [
+            "org_id",
+            "publication_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": [
+        {
+          "name": "outbox_event_chk_1",
+          "expression": "(`status` = _utf8mb4\\'NOT_CONFIGURED\\')"
+        }
+      ]
+    },
+    "patient": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "row_version",
+          "type": "bigint unsigned",
+          "extra": "",
+          "comment": "",
+          "default": "0",
+          "nullable": false
+        },
+        {
+          "name": "external_system",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "external_archive_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "name",
+          "type": "varchar(100)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "sex",
+          "type": "varchar(16)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "birth_date",
+          "type": "date",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "team_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "status",
+          "type": "varchar(16)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "data_mode",
+          "type": "varchar(16)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "profile_revision",
+          "type": "bigint unsigned",
+          "extra": "",
+          "comment": "",
+          "default": "0",
+          "nullable": false
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_0": [
+          "org_id",
+          "external_system",
+          "external_archive_id"
+        ],
+        "uk_scope_id": [
+          "org_id",
+          "id"
+        ]
+      },
+      "foreignKeys": {},
+      "checks": [
+        {
+          "name": "patient_chk_1",
+          "expression": "(`sex` in (_utf8mb4\\'MALE\\',_utf8mb4\\'FEMALE\\',_utf8mb4\\'OTHER\\',_utf8mb4\\'UNKNOWN\\'))"
+        },
+        {
+          "name": "patient_chk_2",
+          "expression": "(`status` in (_utf8mb4\\'ACTIVE\\',_utf8mb4\\'INACTIVE\\'))"
+        },
+        {
+          "name": "patient_chk_3",
+          "expression": "(`data_mode` in (_utf8mb4\\'DEMO\\',_utf8mb4\\'REAL\\'))"
+        },
+        {
+          "name": "patient_chk_4",
+          "expression": "((`external_system` is null) = (`external_archive_id` is null))"
+        }
+      ]
+    },
+    "patient_access_grant": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "row_version",
+          "type": "bigint unsigned",
+          "extra": "",
+          "comment": "",
+          "default": "0",
+          "nullable": false
+        },
+        {
+          "name": "patient_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "subject_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "capability",
+          "type": "varchar(32)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "valid_from",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "valid_until",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "revoked_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_0": [
+          "org_id",
+          "patient_id",
+          "subject_id",
+          "capability"
+        ],
+        "uk_scope_id": [
+          "org_id",
+          "id"
+        ]
+      },
+      "foreignKeys": {
+        "fk_patient_access_grant_patient_id": {
+          "parent": "patient",
+          "columns": [
+            "org_id",
+            "patient_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": []
+    },
+    "plan_generation_job": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "patient_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "plan_version_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "input_snapshot_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "base_revision",
+          "type": "bigint unsigned",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "data_mode",
+          "type": "varchar(16)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "idempotency_key",
+          "type": "varchar(128)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "request_hash",
+          "type": "char(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "retry_of_job_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "status",
+          "type": "varchar(24)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "model",
+          "type": "varchar(100)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "prompt_version",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "rule_version",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "system_prompt",
+          "type": "text",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "model_input_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "raw_output",
+          "type": "mediumtext",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "candidate_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "issues_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "usage_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "provider_request_id",
+          "type": "varchar(200)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "error_code",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "started_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "finished_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "applied_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_generation_idempotency": [
+          "org_id",
+          "created_by",
+          "idempotency_key"
+        ],
+        "uk_generation_scope": [
+          "org_id",
+          "id"
+        ]
+      },
+      "foreignKeys": {
+        "plan_generation_job_ibfk_1": {
+          "parent": "patient",
+          "columns": [
+            "org_id",
+            "patient_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "plan_generation_job_ibfk_2": {
+          "parent": "care_plan_version",
+          "columns": [
+            "org_id",
+            "plan_version_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "plan_generation_job_ibfk_3": {
+          "parent": "health_input_snapshot",
+          "columns": [
+            "org_id",
+            "input_snapshot_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": [
+        {
+          "name": "plan_generation_job_chk_1",
+          "expression": "(`data_mode` = _utf8mb4\\'DEMO\\')"
+        },
+        {
+          "name": "plan_generation_job_chk_2",
+          "expression": "(`status` in (_utf8mb4\\'PENDING\\',_utf8mb4\\'RUNNING\\',_utf8mb4\\'SUCCEEDED\\',_utf8mb4\\'REJECTED\\',_utf8mb4\\'FAILED\\',_utf8mb4\\'APPLIED\\'))"
+        }
+      ]
+    },
+    "plan_item_basis": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "plan_item_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "module_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "fact_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "basis_note",
+          "type": "varchar(1000)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_0": [
+          "org_id",
+          "plan_item_id",
+          "module_id",
+          "fact_id"
+        ],
+        "uk_scope_id": [
+          "org_id",
+          "id"
+        ]
+      },
+      "foreignKeys": {
+        "fk_plan_item_basis_fact_id": {
+          "parent": "health_fact",
+          "columns": [
+            "org_id",
+            "fact_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "fk_plan_item_basis_module_id": {
+          "parent": "care_plan_module",
+          "columns": [
+            "org_id",
+            "module_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "fk_plan_item_basis_plan_item_id": {
+          "parent": "care_plan_item",
+          "columns": [
+            "org_id",
+            "plan_item_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": []
+    },
+    "plan_management_focus": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "plan_version_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "diagnosis_fact_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "primary_subtype_code",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "secondary_subtypes_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "priority_code",
+          "type": "varchar(32)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "dimension_weights_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "contribution_bps",
+          "type": "int unsigned",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "adjustment_reason",
+          "type": "text",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_0": [
+          "org_id",
+          "plan_version_id",
+          "diagnosis_fact_id"
+        ],
+        "uk_scope_id": [
+          "org_id",
+          "id"
+        ]
+      },
+      "foreignKeys": {
+        "fk_plan_management_focus_diagnosis_fact_id": {
+          "parent": "health_fact",
+          "columns": [
+            "org_id",
+            "diagnosis_fact_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "fk_plan_management_focus_plan_version_id": {
+          "parent": "care_plan_version",
+          "columns": [
+            "org_id",
+            "plan_version_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": [
+        {
+          "name": "plan_management_focus_chk_1",
+          "expression": "((`contribution_bps` is null) or (`contribution_bps` between 0 and 10000))"
+        }
+      ]
+    },
+    "publication": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "patient_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "task_bundle_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "review_submission_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "schedule_preview_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "publication_preview_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "request_hash",
+          "type": "char(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "effective_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "status",
+          "type": "varchar(16)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "notification_status",
+          "type": "varchar(32)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_publication_bundle": [
+          "org_id",
+          "task_bundle_id"
+        ],
+        "uk_publication_scope": [
+          "org_id",
+          "id"
+        ]
+      },
+      "foreignKeys": {
+        "publication_ibfk_1": {
+          "parent": "patient",
+          "columns": [
+            "org_id",
+            "patient_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "publication_ibfk_2": {
+          "parent": "task_bundle",
+          "columns": [
+            "org_id",
+            "task_bundle_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "publication_ibfk_3": {
+          "parent": "review_submission",
+          "columns": [
+            "org_id",
+            "review_submission_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "publication_ibfk_4": {
+          "parent": "schedule_preview",
+          "columns": [
+            "org_id",
+            "schedule_preview_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "publication_ibfk_5": {
+          "parent": "publication_preview",
+          "columns": [
+            "org_id",
+            "publication_preview_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": [
+        {
+          "name": "publication_chk_1",
+          "expression": "(`status` = _utf8mb4\\'PUBLISHED\\')"
+        },
+        {
+          "name": "publication_chk_2",
+          "expression": "(`notification_status` = _utf8mb4\\'NOT_CONFIGURED\\')"
+        }
+      ]
+    },
+    "publication_preview": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "task_bundle_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "bundle_revision",
+          "type": "bigint unsigned",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "intent_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "manifest_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "preview_hash",
+          "type": "char(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_pub_preview_scope": [
+          "org_id",
+          "id"
+        ]
+      },
+      "foreignKeys": {
+        "publication_preview_ibfk_1": {
+          "parent": "task_bundle",
+          "columns": [
+            "org_id",
+            "task_bundle_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": []
+    },
+    "publication_request": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "publication_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "idempotency_key",
+          "type": "varchar(128)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "request_hash",
+          "type": "char(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_pub_request_key": [
+          "org_id",
+          "idempotency_key"
+        ],
+        "uk_pub_request_scope": [
+          "org_id",
+          "id"
+        ]
+      },
+      "foreignKeys": {
+        "publication_request_ibfk_1": {
+          "parent": "publication",
+          "columns": [
+            "org_id",
+            "publication_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": []
+    },
+    "review_decision": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "submission_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "decision",
+          "type": "varchar(16)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "comment",
+          "type": "text",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "reviewer_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "reviewed_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_scope_id": [
+          "org_id",
+          "id"
+        ],
+        "uk_submission_decision": [
+          "org_id",
+          "submission_id"
+        ]
+      },
+      "foreignKeys": {
+        "fk_decision_submission": {
+          "parent": "review_submission",
+          "columns": [
+            "org_id",
+            "submission_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": [
+        {
+          "name": "review_decision_chk_1",
+          "expression": "(`decision` in (_utf8mb4\\'APPROVE\\',_utf8mb4\\'RETURN\\'))"
+        },
+        {
+          "name": "review_decision_chk_2",
+          "expression": "((`decision` <> _utf8mb4\\'RETURN\\') or ((`comment` is not null) and (char_length(trim(`comment`)) > 0)))"
+        }
+      ]
+    },
+    "review_submission": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "row_version",
+          "type": "bigint unsigned",
+          "extra": "",
+          "comment": "",
+          "default": "0",
+          "nullable": false
+        },
+        {
+          "name": "stage",
+          "type": "varchar(16)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "plan_version_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "task_bundle_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "target_revision",
+          "type": "bigint unsigned",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "content_hash",
+          "type": "char(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "content_snapshot_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "schedule_preview_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "status",
+          "type": "varchar(16)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "submitted_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "submitted_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "closed_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "closed_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "closed_reason",
+          "type": "varchar(1000)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "pending_slot",
+          "type": "tinyint",
+          "extra": "STORED GENERATED",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_pending_plan": [
+          "org_id",
+          "plan_version_id",
+          "pending_slot"
+        ],
+        "uk_pending_task": [
+          "org_id",
+          "task_bundle_id",
+          "pending_slot"
+        ],
+        "uk_scope_id": [
+          "org_id",
+          "id"
+        ]
+      },
+      "foreignKeys": {
+        "fk_review_plan": {
+          "parent": "care_plan_version",
+          "columns": [
+            "org_id",
+            "plan_version_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "fk_review_task_bundle": {
+          "parent": "task_bundle",
+          "columns": [
+            "org_id",
+            "task_bundle_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "fk_review_task_preview": {
+          "parent": "schedule_preview",
+          "columns": [
+            "org_id",
+            "schedule_preview_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": [
+        {
+          "name": "ck_review_stage_target",
+          "expression": "(((`stage` = _utf8mb4\\'PLAN\\') and (`plan_version_id` is not null) and (`task_bundle_id` is null) and (`schedule_preview_id` is null)) or ((`stage` = _utf8mb4\\'TASK\\') and (`plan_version_id` is null) and (`task_bundle_id` is not null) and (`schedule_preview_id` is not null)))"
+        },
+        {
+          "name": "review_submission_chk_2",
+          "expression": "(`status` in (_utf8mb4\\'PENDING\\',_utf8mb4\\'APPROVED\\',_utf8mb4\\'RETURNED\\',_utf8mb4\\'WITHDRAWN\\'))"
+        }
+      ]
+    },
+    "schedule_preview": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "task_bundle_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "bundle_revision",
+          "type": "bigint unsigned",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "content_hash",
+          "type": "char(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "preview_hash",
+          "type": "char(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "rule_version",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "occurrences_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "issues_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_preview_scope": [
+          "org_id",
+          "id"
+        ]
+      },
+      "foreignKeys": {
+        "fk_preview_bundle": {
+          "parent": "task_bundle",
+          "columns": [
+            "org_id",
+            "task_bundle_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": []
+    },
+    "task_bundle": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "patient_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "plan_version_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "source_review_submission_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "source_review_decision_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "source_revision",
+          "type": "bigint unsigned",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "source_plan_hash",
+          "type": "char(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "source_review_hash",
+          "type": "char(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "input_snapshot_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "source_snapshot_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "next_cycle_reference_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "based_on_bundle_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "version_no",
+          "type": "int",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "row_version",
+          "type": "bigint unsigned",
+          "extra": "",
+          "comment": "",
+          "default": "0",
+          "nullable": false
+        },
+        {
+          "name": "content_revision",
+          "type": "bigint unsigned",
+          "extra": "",
+          "comment": "",
+          "default": "0",
+          "nullable": false
+        },
+        {
+          "name": "status",
+          "type": "varchar(16)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "start_date",
+          "type": "date",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "end_date",
+          "type": "date",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "zone_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "generation_mode",
+          "type": "varchar(32)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "content_hash",
+          "type": "char(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "latest_preview_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_bundle_scope": [
+          "org_id",
+          "id"
+        ],
+        "uk_bundle_version": [
+          "org_id",
+          "plan_version_id",
+          "version_no"
+        ]
+      },
+      "foreignKeys": {
+        "fk_bundle_base": {
+          "parent": "task_bundle",
+          "columns": [
+            "org_id",
+            "based_on_bundle_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "fk_bundle_decision": {
+          "parent": "review_decision",
+          "columns": [
+            "org_id",
+            "source_review_decision_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "fk_bundle_input": {
+          "parent": "health_input_snapshot",
+          "columns": [
+            "org_id",
+            "input_snapshot_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "fk_bundle_patient": {
+          "parent": "patient",
+          "columns": [
+            "org_id",
+            "patient_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "fk_bundle_plan": {
+          "parent": "care_plan_version",
+          "columns": [
+            "org_id",
+            "plan_version_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "fk_bundle_preview": {
+          "parent": "schedule_preview",
+          "columns": [
+            "org_id",
+            "latest_preview_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "fk_bundle_review": {
+          "parent": "review_submission",
+          "columns": [
+            "org_id",
+            "source_review_submission_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": [
+        {
+          "name": "task_bundle_chk_1",
+          "expression": "(`status` in (_utf8mb4\\'DRAFT\\',_utf8mb4\\'IN_REVIEW\\',_utf8mb4\\'APPROVED\\',_utf8mb4\\'PUBLISHED\\'))"
+        },
+        {
+          "name": "task_bundle_chk_2",
+          "expression": "(`start_date` <= `end_date`)"
+        },
+        {
+          "name": "task_bundle_chk_3",
+          "expression": "(`version_no` > 0)"
+        }
+      ]
+    },
+    "task_feedback": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "execution_task_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "previous_feedback_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "version_no",
+          "type": "int",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "idempotency_key",
+          "type": "varchar(128)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "request_hash",
+          "type": "char(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "body_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "assessment_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "received_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "submitted_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_feedback_request": [
+          "org_id",
+          "idempotency_key"
+        ],
+        "uk_feedback_scope": [
+          "org_id",
+          "id"
+        ],
+        "uk_feedback_version": [
+          "org_id",
+          "execution_task_id",
+          "version_no"
+        ]
+      },
+      "foreignKeys": {
+        "task_feedback_ibfk_1": {
+          "parent": "execution_task",
+          "columns": [
+            "org_id",
+            "execution_task_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": [
+        {
+          "name": "task_feedback_chk_1",
+          "expression": "(`version_no` > 0)"
+        }
+      ]
+    },
+    "task_group": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "task_bundle_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "dimension_code",
+          "type": "varchar(24)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "actor_type",
+          "type": "varchar(24)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "task_class",
+          "type": "varchar(16)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "priority_code",
+          "type": "varchar(8)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "safety_focus",
+          "type": "tinyint(1)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "evaluation_mode",
+          "type": "varchar(32)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "title",
+          "type": "varchar(200)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "content_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "schedule_rule_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": true
+        },
+        {
+          "name": "sort_order",
+          "type": "int",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_group_scope": [
+          "org_id",
+          "id"
+        ]
+      },
+      "foreignKeys": {
+        "fk_group_bundle": {
+          "parent": "task_bundle",
+          "columns": [
+            "org_id",
+            "task_bundle_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": [
+        {
+          "name": "task_group_chk_1",
+          "expression": "(`dimension_code` in (_utf8mb4\\'medication\\',_utf8mb4\\'diet\\',_utf8mb4\\'exercise\\',_utf8mb4\\'routine\\',_utf8mb4\\'monitoring\\',_utf8mb4\\'tcm\\',_utf8mb4\\'other\\'))"
+        },
+        {
+          "name": "task_group_chk_2",
+          "expression": "(`actor_type` in (_utf8mb4\\'PATIENT\\',_utf8mb4\\'CAREGIVER\\',_utf8mb4\\'PROFESSIONAL\\',_utf8mb4\\'SHARED\\'))"
+        },
+        {
+          "name": "task_group_chk_3",
+          "expression": "(`task_class` in (_utf8mb4\\'REQUIRED\\',_utf8mb4\\'OPTIONAL\\'))"
+        },
+        {
+          "name": "task_group_chk_4",
+          "expression": "(`priority_code` in (_utf8mb4\\'L0\\',_utf8mb4\\'L1\\',_utf8mb4\\'L2\\',_utf8mb4\\'L3\\',_utf8mb4\\'L4\\'))"
+        },
+        {
+          "name": "task_group_chk_5",
+          "expression": "(`evaluation_mode` = _utf8mb4\\'COMPLETION_ONLY\\')"
+        }
+      ]
+    },
+    "task_group_source": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "task_group_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "plan_item_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "fact_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "module_code",
+          "type": "varchar(16)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_group_basis": [
+          "org_id",
+          "task_group_id",
+          "plan_item_id",
+          "fact_id",
+          "module_code"
+        ],
+        "uk_source_scope": [
+          "org_id",
+          "id"
+        ]
+      },
+      "foreignKeys": {
+        "fk_source_fact": {
+          "parent": "health_fact",
+          "columns": [
+            "org_id",
+            "fact_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "fk_source_group": {
+          "parent": "task_group",
+          "columns": [
+            "org_id",
+            "task_group_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "fk_source_item": {
+          "parent": "care_plan_item",
+          "columns": [
+            "org_id",
+            "plan_item_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": []
+    },
+    "task_group_variant": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "task_group_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "variant_key",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "title",
+          "type": "varchar(200)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "content",
+          "type": "text",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "parameters_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "sort_order",
+          "type": "int",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_variant_key": [
+          "org_id",
+          "task_group_id",
+          "variant_key"
+        ],
+        "uk_variant_scope": [
+          "org_id",
+          "id"
+        ]
+      },
+      "foreignKeys": {
+        "fk_variant_group": {
+          "parent": "task_group",
+          "columns": [
+            "org_id",
+            "task_group_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": []
+    },
+    "task_result": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "execution_task_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "current_feedback_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "row_version",
+          "type": "bigint unsigned",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "assessment_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_result_scope": [
+          "org_id",
+          "id"
+        ],
+        "uk_result_task": [
+          "org_id",
+          "execution_task_id"
+        ]
+      },
+      "foreignKeys": {
+        "task_result_ibfk_1": {
+          "parent": "execution_task",
+          "columns": [
+            "org_id",
+            "execution_task_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "task_result_ibfk_2": {
+          "parent": "task_feedback",
+          "columns": [
+            "org_id",
+            "current_feedback_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": []
+    },
+    "task_safety_event": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "execution_task_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "feedback_id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "status",
+          "type": "varchar(16)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "signal_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_safety_feedback": [
+          "org_id",
+          "feedback_id"
+        ],
+        "uk_safety_scope": [
+          "org_id",
+          "id"
+        ]
+      },
+      "foreignKeys": {
+        "task_safety_event_ibfk_1": {
+          "parent": "execution_task",
+          "columns": [
+            "org_id",
+            "execution_task_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        },
+        "task_safety_event_ibfk_2": {
+          "parent": "task_feedback",
+          "columns": [
+            "org_id",
+            "feedback_id"
+          ],
+          "parentColumns": [
+            "org_id",
+            "id"
+          ]
+        }
+      },
+      "checks": [
+        {
+          "name": "task_safety_event_chk_1",
+          "expression": "(`status` = _utf8mb4\\'OPEN\\')"
+        }
+      ]
+    },
+    "task_template": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "char(36)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "org_id",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime(6)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "created_by",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "template_code",
+          "type": "varchar(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "dimension_code",
+          "type": "varchar(24)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "version_no",
+          "type": "int",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "review_status",
+          "type": "varchar(32)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "data_mode",
+          "type": "varchar(16)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "content_json",
+          "type": "json",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        },
+        {
+          "name": "content_hash",
+          "type": "char(64)",
+          "extra": "",
+          "comment": "",
+          "default": null,
+          "nullable": false
+        }
+      ],
+      "uniqueKeys": {
+        "PRIMARY": [
+          "id"
+        ],
+        "uk_template_scope": [
+          "org_id",
+          "id"
+        ],
+        "uk_template_version": [
+          "org_id",
+          "template_code",
+          "version_no"
+        ]
+      },
+      "foreignKeys": {},
+      "checks": [
+        {
+          "name": "task_template_chk_1",
+          "expression": "(`dimension_code` in (_utf8mb4\\'medication\\',_utf8mb4\\'diet\\',_utf8mb4\\'exercise\\',_utf8mb4\\'routine\\',_utf8mb4\\'monitoring\\',_utf8mb4\\'tcm\\',_utf8mb4\\'other\\'))"
+        },
+        {
+          "name": "task_template_chk_2",
+          "expression": "(`data_mode` in (_utf8mb4\\'DEMO\\',_utf8mb4\\'REAL\\'))"
+        },
+        {
+          "name": "task_template_chk_3",
+          "expression": "(`review_status` in (_utf8mb4\\'DEMO_ONLY\\',_utf8mb4\\'MEDICALLY_APPROVED\\',_utf8mb4\\'DISABLED\\'))"
+        },
+        {
+          "name": "task_template_chk_4",
+          "expression": "(`version_no` > 0)"
+        }
+      ]
+    }
+  }
+}
