@@ -16,6 +16,7 @@
 | [数据库 ER 总览](diagrams/backend-database-er.drawio.png) | 核心实体、主外键与关系基数 | [draw.io 源文件](diagrams/backend-database-er.drawio) |
 | [用例图](diagrams/backend-use-cases.drawio.png) | 各参与者能完成哪些业务目标 | [draw.io 源文件](diagrams/backend-use-cases.drawio) |
 | [四个分域 ER 详图与结构索引](DATABASE-ER.md) | 全部 33 张表、62 条物理外键和唯一约束 | 各详图均提供 draw.io 源文件 |
+| [业务功能协作清单](FEATURE-COLLABORATION-CHECKLIST.md) | 47 项子功能的 CRUD、角色、接口、建议页面与联调状态 | Markdown 清单 |
 | [41 个接口索引](API-INDEX.md) | 业务节点对应哪个接口 | 由本次运行中的 OpenAPI 核对 |
 | [浏览器阅读版](business-overview.html) | 连续查看说明、五张主图、四张 ER 详图及接口附录 | 由本 Markdown 及附录生成 |
 

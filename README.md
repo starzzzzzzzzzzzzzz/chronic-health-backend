@@ -6,6 +6,8 @@
 
 当前业务全景见 [后端业务说明](docs/business/README.md)（[浏览器阅读版](docs/business/business-overview.html)）：包含业务流程图、数据流图、功能结构图、数据库 ER 图及用例图，以及角色、状态和 41 个接口索引；[ER 分域详图](docs/business/DATABASE-ER.md)覆盖当前 33 张表和 62 条外键，明确区分原生业务能力、旧前端适配与待开发功能。
 
+逐项对齐开发与联调范围见 [业务—功能—子功能协作清单](docs/business/FEATURE-COLLABORATION-CHECKLIST.md)：包含 CRUD 分类、角色、接口、建议页面及实现状态。
+
 第一批“患者资料与方案草稿”的[实施计划](docs/superpowers/plans/2026-10-16-patient-and-plan-drafts.md)已确认并实施；前端对接见 [第一批接口与启动说明](docs/PHASE-A-API.md)。
 
 ## 项目目录
