@@ -1,0 +1,287 @@
+{
+  "version": "management-doc-v1",
+  "source": "慢病管理补充文档-终版 4.3.1—4.3.3、4.4",
+  "activation": "DEMO_REVIEW_REQUIRED",
+  "subtypes": [
+    {
+      "disease": "糖尿病",
+      "name": "肥胖/腹型肥胖驱动型",
+      "weights": {
+        "medication": 10,
+        "diet": 25,
+        "exercise": 25,
+        "routine": 10,
+        "monitoring": 20,
+        "tcm": 5,
+        "other": 5
+      },
+      "focus": "减重、饮食替换和阶梯运动"
+    },
+    {
+      "disease": "糖尿病",
+      "name": "餐后高血糖/外周胰岛素抵抗型",
+      "weights": {
+        "medication": 15,
+        "diet": 20,
+        "exercise": 20,
+        "routine": 5,
+        "monitoring": 30,
+        "tcm": 5,
+        "other": 5
+      },
+      "focus": "餐后监测和活动"
+    },
+    {
+      "disease": "糖尿病",
+      "name": "行为代谢失调型",
+      "weights": {
+        "medication": 5,
+        "diet": 20,
+        "exercise": 20,
+        "routine": 25,
+        "monitoring": 20,
+        "tcm": 5,
+        "other": 5
+      },
+      "focus": "熬夜、久坐和饮食行为"
+    },
+    {
+      "disease": "糖尿病",
+      "name": "β细胞功能衰退型",
+      "weights": {
+        "medication": 25,
+        "diet": 15,
+        "exercise": 10,
+        "routine": 5,
+        "monitoring": 35,
+        "tcm": 5,
+        "other": 5
+      },
+      "focus": "用药和血糖趋势"
+    },
+    {
+      "disease": "糖尿病",
+      "name": "混合型（高危进展）",
+      "weights": {
+        "medication": 20,
+        "diet": 20,
+        "exercise": 15,
+        "routine": 10,
+        "monitoring": 25,
+        "tcm": 5,
+        "other": 5
+      },
+      "focus": "多因子并行管理"
+    },
+    {
+      "disease": "糖尿病",
+      "name": "并发症进展型",
+      "weights": {
+        "medication": 25,
+        "diet": 15,
+        "exercise": 10,
+        "routine": 5,
+        "monitoring": 30,
+        "tcm": 5,
+        "other": 10
+      },
+      "focus": "并发症筛查和协同"
+    },
+    {
+      "disease": "糖尿病",
+      "name": "早期可逆/逆转潜力型",
+      "weights": {
+        "medication": 10,
+        "diet": 25,
+        "exercise": 25,
+        "routine": 10,
+        "monitoring": 20,
+        "tcm": 5,
+        "other": 5
+      },
+      "focus": "生活方式和阶段复核"
+    },
+    {
+      "disease": "高血压",
+      "name": "盐敏感型",
+      "weights": {
+        "medication": 20,
+        "diet": 25,
+        "exercise": 10,
+        "routine": 10,
+        "monitoring": 25,
+        "tcm": 5,
+        "other": 5
+      },
+      "focus": "限盐、用药和血压"
+    },
+    {
+      "disease": "高血压",
+      "name": "肥胖/代谢型",
+      "weights": {
+        "medication": 15,
+        "diet": 20,
+        "exercise": 25,
+        "routine": 10,
+        "monitoring": 20,
+        "tcm": 5,
+        "other": 5
+      },
+      "focus": "减重和运动"
+    },
+    {
+      "disease": "高血压",
+      "name": "交感神经/压力型",
+      "weights": {
+        "medication": 15,
+        "diet": 10,
+        "exercise": 15,
+        "routine": 25,
+        "monitoring": 25,
+        "tcm": 5,
+        "other": 5
+      },
+      "focus": "压力、睡眠和心率"
+    },
+    {
+      "disease": "高血压",
+      "name": "晨峰型",
+      "weights": {
+        "medication": 25,
+        "diet": 10,
+        "exercise": 10,
+        "routine": 15,
+        "monitoring": 30,
+        "tcm": 5,
+        "other": 5
+      },
+      "focus": "晨起监测和时点"
+    },
+    {
+      "disease": "高血压",
+      "name": "靶器官损害型",
+      "weights": {
+        "medication": 25,
+        "diet": 10,
+        "exercise": 10,
+        "routine": 5,
+        "monitoring": 30,
+        "tcm": 5,
+        "other": 15
+      },
+      "focus": "筛查和多学科协同"
+    },
+    {
+      "disease": "高血压",
+      "name": "老年单纯收缩期型",
+      "weights": {
+        "medication": 25,
+        "diet": 15,
+        "exercise": 10,
+        "routine": 10,
+        "monitoring": 30,
+        "tcm": 5,
+        "other": 5
+      },
+      "focus": "平稳管理和防跌倒"
+    },
+    {
+      "disease": "高血压",
+      "name": "继发性高血压线索型",
+      "weights": {
+        "medication": 20,
+        "diet": 10,
+        "exercise": 10,
+        "routine": 10,
+        "monitoring": 30,
+        "tcm": 5,
+        "other": 15
+      },
+      "focus": "病因线索和转诊"
+    },
+    {
+      "disease": "失能照护",
+      "name": "营养/肌肉衰减型",
+      "weights": {
+        "medication": 10,
+        "diet": 25,
+        "exercise": 10,
+        "routine": 5,
+        "monitoring": 15,
+        "tcm": 25,
+        "other": 10
+      },
+      "focus": "营养和肌力"
+    },
+    {
+      "disease": "失能照护",
+      "name": "长期卧床并发症型",
+      "weights": {
+        "medication": 15,
+        "diet": 15,
+        "exercise": 5,
+        "routine": 5,
+        "monitoring": 20,
+        "tcm": 30,
+        "other": 10
+      },
+      "focus": "翻身、压疮和感染"
+    },
+    {
+      "disease": "失能照护",
+      "name": "认知障碍型",
+      "weights": {
+        "medication": 15,
+        "diet": 10,
+        "exercise": 5,
+        "routine": 10,
+        "monitoring": 15,
+        "tcm": 20,
+        "other": 25
+      },
+      "focus": "认知、防走失和环境"
+    },
+    {
+      "disease": "失能照护",
+      "name": "卒中偏瘫型",
+      "weights": {
+        "medication": 15,
+        "diet": 15,
+        "exercise": 5,
+        "routine": 5,
+        "monitoring": 15,
+        "tcm": 35,
+        "other": 10
+      },
+      "focus": "偏瘫、吞咽和言语康复"
+    },
+    {
+      "disease": "失能照护",
+      "name": "多病共存型",
+      "weights": {
+        "medication": 25,
+        "diet": 15,
+        "exercise": 5,
+        "routine": 5,
+        "monitoring": 25,
+        "tcm": 15,
+        "other": 10
+      },
+      "focus": "用药整合和监测"
+    },
+    {
+      "disease": "失能照护",
+      "name": "骨折/骨关节型",
+      "weights": {
+        "medication": 10,
+        "diet": 15,
+        "exercise": 10,
+        "routine": 5,
+        "monitoring": 15,
+        "tcm": 35,
+        "other": 10
+      },
+      "focus": "防跌倒和功能恢复"
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" type="device">
+  <diagram id="backend-business-flow" name="01 / 后端业务流程图">
+    <mxGraphModel dx="1800" dy="1480" grid="1" gridSize="10" page="1" pageScale="1" pageWidth="1800" pageHeight="1480" background="#FFFFFF" adaptiveColors="auto">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="eyebrow" value="慢病健康管理 · 当前后端业务说明 / 2026-10-18" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=left;verticalAlign=middle;spacing=0;fontSize=18;fontColor=#52647B;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="26" width="1680" height="36" />
+        </mxCell>
+        <mxCell id="title" value="01 / 后端业务流程图" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=left;verticalAlign=middle;spacing=0;fontSize=38;fontColor=#172B45;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="70" width="1680" height="65" />
+        </mxCell>
+        <mxCell id="subtitle" value="沿箭头阅读：第一行从左向右，第二行从右向左，第三行从左向右。节点内标明操作角色。" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=left;verticalAlign=middle;spacing=0;fontSize=19;fontColor=#52647B;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="140" width="1680" height="40" />
+        </mxCell>
+        <mxCell id="footer" value="当前代码快照 · local + DEMO · 39 个接口操作 · 详见同目录业务文档" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=left;verticalAlign=middle;spacing=0;fontSize=16;fontColor=#52647B;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="1435" width="1680" height="28" />
+        </mxCell>
+        <mxCell id="phase1" value="A  形成方案：资料与依据先固定，AI 候选由人工采用" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=left;verticalAlign=middle;spacing=0;fontSize=22;fontColor=#172B45;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="195" width="1660" height="32" />
+        </mxCell>
+        <mxCell id="patient" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;01 选择患者 / 读资料&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;编辑者 · 授权范围内&lt;br&gt;六方面画像、来源与缺项&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="225" width="300" height="145" />
+        </mxCell>
+        <mxCell id="draft" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;02 建立周期草稿&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;编辑者 · 目标 / 周期&lt;br&gt;冻结 PLAN 输入快照&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="400" y="225" width="300" height="145" />
+        </mxCell>
+        <mxCell id="ai" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;03 形成候选内容&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;AI 作业生成 → 校验候选&lt;br&gt;也可直接手工编写草稿&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="740" y="225" width="300" height="145" />
+        </mxCell>
+        <mxCell id="edit" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;04 采用 / 编辑方案&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;编辑者 · AI 成功不自动采用&lt;br&gt;主目标、模块、七维建议&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1080" y="225" width="300" height="145" />
+        </mxCell>
+        <mxCell id="condition" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;05 确认执行条件&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;核实主体、环境和必要来源&lt;br&gt;改正文后须重新确认&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1420" y="225" width="300" height="145" />
+        </mxCell>
+        <mxCell id="planreview" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;06 方案一审&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;独立审核者 · 禁止自审&lt;br&gt;冻结方案和条件确认&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#E5F4EF;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1420" y="555" width="300" height="145" />
+        </mxCell>
+        <mxCell id="generate" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;07 派生七维任务包&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;后端 · 确定性规则拆解&lt;br&gt;仅从已审、选中的执行条目&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1080" y="555" width="300" height="145" />
+        </mxCell>
+        <mxCell id="schedule" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;08 确认任务 / 排程&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;编辑者 · 主体 / 时段 / 负担&lt;br&gt;生成无阻断的排程预览&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="740" y="555" width="300" height="145" />
+        </mxCell>
+        <mxCell id="taskreview" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;09 任务二审&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;独立审核者 · 禁止自审&lt;br&gt;冻结任务包与排程预览&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#E5F4EF;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="400" y="555" width="300" height="145" />
+        </mxCell>
+        <mxCell id="pubpreview" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;10 核对发布衔接&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;发布者 · 新建 / 保留 / 替代&lt;br&gt;NONE 或 ALL_FUTURE&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="555" width="300" height="145" />
+        </mxCell>
+        <mxCell id="publish" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;11 事务发布&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;后端 · 复制已审排程实例&lt;br&gt;按幂等键去重，失败回滚&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#E5F4EF;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="885" width="300" height="145" />
+        </mxCell>
+        <mxCell id="today" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;12 查询日任务&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;患者身份 · 仅已生效任务&lt;br&gt;保留原任务的冻结内容&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="400" y="885" width="300" height="145" />
+        </mxCell>
+        <mxCell id="feedback" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;13 打卡 / 补记 / 更正&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;患者身份 · 一键完成或反馈&lt;br&gt;历史追加，遵守执行窗口&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="740" y="885" width="300" height="145" />
+        </mxCell>
+        <mxCell id="assess" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;14 保存并评估反馈&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;后端 · 完成 / 时效 / 安全&lt;br&gt;异常或停止执行建立事件&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1080" y="885" width="300" height="145" />
+        </mxCell>
+        <mxCell id="result" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;15 展示当前结果&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;完成、时效和安全分开呈现&lt;br&gt;计完成模式，无质量分数&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#E5F4EF;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1420" y="885" width="300" height="145" />
+        </mxCell>
+        <mxCell id="edge-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=none;startFill=1;" edge="1" source="patient" target="draft" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=none;startFill=1;" edge="1" source="draft" target="ai" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=none;startFill=1;" edge="1" source="ai" target="edit" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=none;startFill=1;" edge="1" source="edit" target="condition" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=none;startFill=1;" edge="1" source="condition" target="planreview" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-6" value="通过" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=none;startFill=1;" edge="1" source="planreview" target="generate" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=none;startFill=1;" edge="1" source="generate" target="schedule" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=none;startFill=1;" edge="1" source="schedule" target="taskreview" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-9" value="通过" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=none;startFill=1;" edge="1" source="taskreview" target="pubpreview" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=none;startFill=1;" edge="1" source="pubpreview" target="publish" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=none;startFill=1;" edge="1" source="publish" target="today" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=none;startFill=1;" edge="1" source="today" target="feedback" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=none;startFill=1;" edge="1" source="feedback" target="assess" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontFamily=PingFang SC;fontSize=16;fontColor=#172B45;labelBackgroundColor=#FFFFFF;strokeColor=#72869D;strokeWidth=2;endArrow=block;endFill=1;startArrow=none;startFill=1;" edge="1" source="assess" target="result" parent="1">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="phase2" value="B  批准与编排：先审方案，再生成任务；二审通过后才能发布" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=left;verticalAlign=middle;spacing=0;fontSize=22;fontColor=#172B45;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="510" width="1660" height="32" />
+        </mxCell>
+        <mxCell id="phase3" value="C  发布后执行：正式任务实例承载打卡，反馈不反写已审方案" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=left;verticalAlign=middle;spacing=0;fontSize=22;fontColor=#172B45;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="400" y="840" width="1320" height="32" />
+        </mxCell>
+        <mxCell id="review-return" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;退回 / 撤回与后续修改&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;一审退回或撤回 → 方案草稿；二审 → 任务草稿&lt;br&gt;重新修改、核实、预览并另建送审记录&lt;br&gt;已批准内容需建新版本，不继承审核结论&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#FFF3DB;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="1125" width="520" height="175" />
+        </mxCell>
+        <mxCell id="seven-dimensions" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;七维按需启用&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;用药 / 饮食 / 运动 / 起居 / 监测 / 中医 / 其他&lt;br&gt;不强求七维都有任务；AI 成功仍需人工核对&lt;br&gt;缺必要依据、条件或模板时阻断后续操作&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#FFF3DB;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="620" y="1125" width="520" height="175" />
+        </mxCell>
+        <mxCell id="safety" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;独立保留安全事件&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;异常或 STOPPED → OPEN 安全事件&lt;br&gt;后续改报完成也不会自动清除该事件&lt;br&gt;处置 / 关闭流程尚未接入&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#FFF3DB;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1180" y="1125" width="540" height="175" />
+        </mxCell>
+        <mxCell id="boundary" value="&lt;div style=&quot;line-height:1.45;color:#172B45&quot;&gt;&lt;b style=&quot;font-size:23px&quot;&gt;当前交付边界&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:9px&quot;&gt;上述为原生后端主线；旧前端仅接入档案列表、患者输入、AI 建议三个兼容入口。真实登录、消息送达、质量评分及完整旧工作流待接入。&lt;/div&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=1;arcSize=8;align=left;verticalAlign=middle;spacing=20;fillColor=#F1F3F6;strokeColor=#72869D;strokeWidth=1.2;fontSize=18;dashed=1;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="1340" width="1660" height="80" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

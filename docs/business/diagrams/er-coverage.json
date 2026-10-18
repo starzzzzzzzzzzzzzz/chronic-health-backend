@@ -1,0 +1,150 @@
+{
+  "tables": 33,
+  "foreignKeys": 62,
+  "domains": [
+    {
+      "slug": "er-01-patients-plans",
+      "owned": [
+        "patient",
+        "patient_access_grant",
+        "health_fact",
+        "health_input_snapshot",
+        "legacy_archive_mapping",
+        "care_plan",
+        "care_plan_version",
+        "care_plan_module",
+        "plan_management_focus",
+        "care_plan_dimension",
+        "care_plan_item",
+        "plan_item_basis"
+      ],
+      "references": [],
+      "foreignKeys": [
+        "fk_patient_access_grant_patient_id",
+        "fk_health_fact_patient_id",
+        "fk_health_fact_supersedes_fact_id",
+        "fk_health_input_snapshot_patient_id",
+        "fk_legacy_archive_patient",
+        "fk_care_plan_current_version_id",
+        "fk_care_plan_patient_id",
+        "fk_care_plan_version_based_on_version_id",
+        "fk_care_plan_version_input_snapshot_id",
+        "fk_care_plan_version_plan_id",
+        "fk_care_plan_module_plan_version_id",
+        "fk_plan_management_focus_diagnosis_fact_id",
+        "fk_plan_management_focus_plan_version_id",
+        "fk_care_plan_dimension_plan_version_id",
+        "fk_care_plan_item_dimension_id",
+        "fk_care_plan_item_plan_version_id",
+        "fk_plan_item_basis_fact_id",
+        "fk_plan_item_basis_module_id",
+        "fk_plan_item_basis_plan_item_id"
+      ]
+    },
+    {
+      "slug": "er-02-reviews-tasks",
+      "owned": [
+        "condition_confirmation",
+        "review_submission",
+        "review_decision",
+        "task_template",
+        "task_bundle",
+        "task_group",
+        "task_group_variant",
+        "task_group_source",
+        "schedule_preview"
+      ],
+      "references": [
+        "care_plan_item",
+        "care_plan_version",
+        "health_fact",
+        "health_input_snapshot",
+        "patient"
+      ],
+      "foreignKeys": [
+        "fk_confirmation_fact",
+        "fk_confirmation_plan",
+        "fk_confirmation_prior",
+        "fk_review_plan",
+        "fk_review_task_bundle",
+        "fk_review_task_preview",
+        "fk_decision_submission",
+        "fk_bundle_base",
+        "fk_bundle_decision",
+        "fk_bundle_input",
+        "fk_bundle_patient",
+        "fk_bundle_plan",
+        "fk_bundle_preview",
+        "fk_bundle_review",
+        "fk_group_bundle",
+        "fk_variant_group",
+        "fk_source_fact",
+        "fk_source_group",
+        "fk_source_item",
+        "fk_preview_bundle"
+      ]
+    },
+    {
+      "slug": "er-03-publication-feedback",
+      "owned": [
+        "publication_preview",
+        "publication",
+        "publication_request",
+        "execution_task",
+        "outbox_event",
+        "task_feedback",
+        "task_result",
+        "task_safety_event"
+      ],
+      "references": [
+        "patient",
+        "review_submission",
+        "schedule_preview",
+        "task_bundle",
+        "task_group",
+        "task_group_variant"
+      ],
+      "foreignKeys": [
+        "publication_preview_ibfk_1",
+        "publication_ibfk_1",
+        "publication_ibfk_2",
+        "publication_ibfk_3",
+        "publication_ibfk_4",
+        "publication_ibfk_5",
+        "publication_request_ibfk_1",
+        "execution_task_ibfk_1",
+        "execution_task_ibfk_2",
+        "execution_task_ibfk_3",
+        "execution_task_ibfk_4",
+        "execution_task_ibfk_5",
+        "execution_task_ibfk_6",
+        "outbox_event_ibfk_1",
+        "task_feedback_ibfk_1",
+        "task_result_ibfk_1",
+        "task_result_ibfk_2",
+        "task_safety_event_ibfk_1",
+        "task_safety_event_ibfk_2"
+      ]
+    },
+    {
+      "slug": "er-04-ai-support",
+      "owned": [
+        "plan_generation_job",
+        "legacy_recommendation_request",
+        "audit_log",
+        "app_metadata"
+      ],
+      "references": [
+        "care_plan_version",
+        "health_input_snapshot",
+        "patient"
+      ],
+      "foreignKeys": [
+        "plan_generation_job_ibfk_1",
+        "plan_generation_job_ibfk_2",
+        "plan_generation_job_ibfk_3",
+        "legacy_recommendation_request_ibfk_1"
+      ]
+    }
+  ]
+}

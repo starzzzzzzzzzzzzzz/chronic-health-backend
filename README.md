@@ -1,8 +1,10 @@
 # 慢病健康管理后端
 
-当前已实现患者资料、方案草稿、执行条件与一审，以及七维任务派生、排程与二审、事务发布、日任务、基础打卡和追加更正。支持输入快照、并发修订校验和审计；目前仅开放虚构 DEMO 的计完成流程。采用 Spring Boot 4.1.1 与常见的 Controller / Service / Mapper 分层结构。目录说明见 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)，接口约定见 [docs/API-CONTRACT.md](docs/API-CONTRACT.md)。
+当前已实现患者资料、方案草稿（支持可选 DeepSeek AI 候选）、执行条件与一审，以及七维任务派生、排程与二审、事务发布、日任务、基础打卡和追加更正。支持输入快照、并发修订校验和审计；目前仅开放虚构 DEMO 的计完成流程。采用 Spring Boot 4.1.1 与常见的 Controller / Service / Mapper 分层结构。目录说明见 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)，接口约定见 [docs/API-CONTRACT.md](docs/API-CONTRACT.md)。
 
-数据库设计初稿见 [设计总览](docs/database/DATABASE-DESIGN.md)、[表与字段字典](docs/database/TABLE-DICTIONARY.md) 和 [视频页面字段映射](docs/database/VIDEO-FIELD-MAPPING.md)。实际迁移已到 V9：V2/V3 患者与方案，V4 条件与审核，V5/V6 任务与二审，V7 发布，V8 反馈与独立安全事件，V9 旧接口档案编号映射。
+数据库设计初稿见 [设计总览](docs/database/DATABASE-DESIGN.md)、[表与字段字典](docs/database/TABLE-DICTIONARY.md) 和 [视频页面字段映射](docs/database/VIDEO-FIELD-MAPPING.md)。实际迁移已到 V11：V2/V3 患者与方案，V4 条件与审核，V5/V6 任务与二审，V7 发布，V8 反馈与独立安全事件，V9 旧接口档案编号映射，V10 AI 生成候选作业，V11 旧建议生成请求的幂等映射。
+
+当前业务全景见 [后端业务说明](docs/business/README.md)（[浏览器阅读版](docs/business/business-overview.html)）：包含业务流程图、数据流图、功能结构图、数据库 ER 图及用例图，以及角色、状态和 41 个接口索引；[ER 分域详图](docs/business/DATABASE-ER.md)覆盖当前 33 张表和 62 条外键，明确区分原生业务能力、旧前端适配与待开发功能。
 
 第一批“患者资料与方案草稿”的[实施计划](docs/superpowers/plans/2026-10-16-patient-and-plan-drafts.md)已确认并实施；前端对接见 [第一批接口与启动说明](docs/PHASE-A-API.md)。
 
@@ -19,7 +21,12 @@ chronic-health-backend/
 │   ├── db.sh                            数据库启停与检查
 │   ├── run.sh                           启动后端
 │   ├── test-db.sh                       真实数据库测试与打包
-│   └── run-demo.sh                      显式开启本地 DEMO 联调
+│   ├── run-demo.sh                      显式开启本地 DEMO 联调
+│   └── run-demo-web.sh                  启动 Vue 3 本地方案演示页
+├── demo-web/                            连接真实后端的独立演示前端
+│   ├── src/                            患者资料、AI 候选与草稿编辑
+│   ├── local-proxy.mjs                  本地编辑者代理及请求边界
+│   └── tests/                          代理和编辑字段边界测试
 ├── src/main/java/com/healthsystem/
 │   ├── HealthSystemApplication.java     Spring Boot 启动入口
 │   ├── controller/                      接收请求、返回响应
@@ -66,6 +73,12 @@ SERVER_PORT=9089 ./scripts/run-demo.sh
 基址为 `http://127.0.0.1:9089/ncd-ai`。本地随机凭证存于 `.env.demo`，使用原始 Authorization Token。仅 local + 显式 DEMO 开关接受该身份；原 run.sh 默认不开启。示例资料均为虚构，详见 [接口说明与请求示例](docs/PHASE-A-API.md)。
 
 Knife4j 文档与在线调试：<http://127.0.0.1:9089/ncd-ai/doc.html>。先在 **Authorize** 填入 `.env.demo` 对应身份的原始 Token，再选择接口的 **调试 → 发送**。使用方法及开关见 [KNIFE4J.md](docs/KNIFE4J.md)。
+
+## 本地模拟前端
+
+后端已按上面的 DEMO 方式启动后，另开终端运行 `./scripts/run-demo-web.sh`，打开 <http://127.0.0.1:9090/>。页面采用 Vue 3，直接调用本机真实后端，可完成“选择虚构患者 → 查看六方面资料 → DeepSeek 生成七维候选 → 核对依据 → 采纳 → 编辑保存”。生成会实际调用已配置的 AI 服务；页面范围止于草稿编辑。
+
+首次启动自动安装前端依赖，需 Node.js 22.12+（或 20.19+）及 npm。目录、操作和验证记录见 [演示工作台说明](docs/DEMO-WORKBENCH.md)。
 
 ## 环境约定
 
@@ -156,3 +169,16 @@ local 启动自动执行 Flyway，V1 为元数据，V2/V3 为患者与方案草�
 2026-10-16 第三批验证：真库108/108通过；普通离线构建15项通过、93项真库测试明确跳过。9089真实HTTP30步闭环通过，Knife4j展示32个操作。独立审查的7项边界问题已复现并修复；前端对接见 [第三批契约](docs/PHASE-CDE-API.md)，详细结果见 [验证记录](docs/PHASE-CDE-VALIDATION.md)。目前仍是虚构DEMO计完成流程。
 
 2026-10-17 旧契约适配第一批：新增旧档案选择 GET，使用 `keyword/page/pageSize` 和稳定字符串 `archiveId`；V9 管理兼容编号，现有 32 个操作保留，当前共 33 个。真库 125 项回归通过；后续旧方案与任务入口仍待适配，详情见 [前端契约对齐](docs/FRONTEND-CONTRACT-ALIGNMENT.md)。
+
+
+### DeepSeek AI 方案草稿
+
+可从 `.env.ai.example` 复制模板，填写本机 `.env.ai` 的 `DEEPSEEK_API_KEY`，设置 `DEEPSEEK_MODEL=deepseek-flash` 和 `HEALTH_AI_ENABLED=true`，使用项目脚本启动。后台根据最新虚构患者资料生成候选，结构与来源校验通过后由人工采用到草稿；生成不覆盖人工修改，也不自动审核或发布。
+
+AI 批次新增 4 个操作；随后旧资料与建议入口增加 2 个，管理侧重再增加 2 个，当前共 41 个；请求、状态机、限制和联调方式见 [AI 方案生成](docs/AI-PLAN-GENERATION.md)。用药与中医专业参数绑定暂不由 AI 生成，相关维度保留待确认/关闭状态。旧工作流兼容入口仍需后续适配。
+
+2026-10-18 AI 验证：149项后端测试通过；4轮24次真实生成迭代，最新6例结构通过；原33接口的Apifox场景55步、103断言通过。内容复查与完整链路状态见 [AI验证记录](docs/AI-PLAN-VALIDATION.md)。
+
+2026-10-18 旧前端适配继续推进：已补患者输入和 AI 建议生成入口，真库 160 项回归通过；虚构患者真实 DeepSeek 请求通过，并发同键只创建一个作业，重放结果一致。当前仍未完成旧工作流、双审与任务入口适配，尚无伙伴页面联调通过证据。动态字段、分类状态及旧工作流的限制见 [旧建议接口对齐说明](docs/LEGACY-RECOMMENDATIONS-ALIGNMENT.md)。
+
+2026-10-18 管理侧重批次：已接入病种依据评估与来源绑定，确定性计算七维权重和多病融合，AI 保留人工确认结果；完整回归 169 项通过，真实虚构双病场景完成生成、幂等重放和采用草稿。医学自动判型尚未启用，正式业务规则仍需审核。见 [管理侧重与融合说明](docs/MANAGEMENT-FOCUS-AND-FUSION.md)。

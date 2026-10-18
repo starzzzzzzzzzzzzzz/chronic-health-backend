@@ -7,6 +7,12 @@ if [[ ! -f "$ROOT/.env" ]]; then
 fi
 # .env 是本机 init-env.sh 生成的可信 shell 配置；不加载外部来源文件。
 source "$ROOT/.env"
+# Optional trusted local AI configuration. Never print its contents.
+if [[ -f "$ROOT/.env.ai" ]]; then
+  source "$ROOT/.env.ai"
+  export DEEPSEEK_API_KEY DEEPSEEK_BASE_URL DEEPSEEK_MODEL
+fi
+export HEALTH_AI_ENABLED="${HEALTH_AI_ENABLED:-false}"
 export DB_URL="${DB_URL:-jdbc:mysql://127.0.0.1:${MYSQL_PORT:-13306}/chronic_health?connectionTimeZone=Asia/Shanghai}"
 export DB_USERNAME="${DB_USERNAME:-health_app}"
 export DB_PASSWORD="${DB_PASSWORD:-$MYSQL_PASSWORD}"

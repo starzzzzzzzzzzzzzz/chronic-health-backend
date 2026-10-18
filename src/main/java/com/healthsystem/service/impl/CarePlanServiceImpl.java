@@ -60,7 +60,16 @@ public class CarePlanServiceImpl implements CarePlanService {
    if(goal.has("factIds")){check(goal.get("factIds").isArray(),"Invalid goal fact references");var ids=new HashSet<String>();for(var f:JsonValues.read(input.getPayloadJson()).path("facts"))ids.add(f.path("id").asText());for(var f:goal.get("factIds"))check(f.isString()&&ids.contains(f.asText()),"Goal fact not in input snapshot");}
    v.setGoalBasisJson(goal.isNull()?null:JsonValues.write(goal));
   }
-  var content=normalize(previous,patch,JsonValues.read(input.getPayloadJson()));String oldHash=v.getContentHash(),hash=PlanDraftHash.hash(v,content,input);
+  var frozen=JsonValues.read(input.getPayloadJson());
+  var content=normalize(previous,patch,frozen);
+  if(frozen.has("managementContext")) {
+   var goal=JsonValues.read(v.getGoalBasisJson());
+   var bound=(tools.jackson.databind.node.ObjectNode)(goal.isObject()?goal.deepCopy():JsonValues.tree(Map.of()));
+   bound.set("managementContext",frozen.path("managementContext").deepCopy());
+   bound.set("coordinationReport",JsonValues.tree(ManagementCoordinationPolicy.report(JsonValues.tree(content.items()),frozen.path("managementContext"))));
+   v.setGoalBasisJson(JsonValues.write(bound));
+  }
+  String oldHash=v.getContentHash(),hash=PlanDraftHash.hash(v,content,input);
   boolean contentChanged=!hash.equals(oldHash);
   if(!contentChanged&&Objects.equals(oldReason,v.getChangeReason()))return view(plan,v,previous,input);
   LocalDateTime now=LocalDateTime.now(Clock.systemUTC());if(contentChanged)store.replace(principal,v,content,now);

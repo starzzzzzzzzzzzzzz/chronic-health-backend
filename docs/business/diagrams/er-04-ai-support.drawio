@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" type="device">
+  <diagram id="er-04-ai-support" name="AI 与支撑 · 物理 ER 详图">
+    <mxGraphModel dx="2058.0" dy="1224.51" grid="1" gridSize="10" page="1" pageScale="1" pageWidth="2058.0" pageHeight="1224.51" background="#FFFFFF" adaptiveColors="auto">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="eyebrow" value="慢病健康管理 · 当前后端业务说明 / 2026-10-18" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=left;verticalAlign=middle;spacing=0;fontSize=18;fontColor=#52647B;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="26" width="1938.0" height="36" />
+        </mxCell>
+        <mxCell id="title" value="AI 与支撑 · 物理 ER 详图" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=left;verticalAlign=middle;spacing=0;fontSize=30;fontColor=#172B45;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="70" width="1938.0" height="65" />
+        </mxCell>
+        <mxCell id="subtitle" value="物理 ER · 乌鸦脚表示基数 · 非标识外键以虚线连接 · 每张表仅展示关系字段与部分业务字段" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=left;verticalAlign=middle;spacing=0;fontSize=19;fontColor=#52647B;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="140" width="1938.0" height="40" />
+        </mxCell>
+        <mxCell id="footer" value="当前代码快照 · local + DEMO · 39 个接口操作 · 详见同目录业务文档" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=left;verticalAlign=middle;spacing=0;fontSize=16;fontColor=#52647B;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="1179.51" width="1938.0" height="28" />
+        </mxCell>
+        <mxCell id="plan_generation_job" value="&lt;div style=&quot;font-family:PingFang SC,Arial;line-height:1.3&quot;&gt;&lt;div style=&quot;font-size:18px;margin-bottom:3px&quot;&gt;&lt;b&gt;AI 生成作业&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:15px;margin-bottom:12px&quot;&gt;plan_generation_job&lt;/div&gt;&lt;table style=&quot;border-collapse:collapse;width:100%;font-size:14px;line-height:26px&quot;&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;org_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(64)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;patient_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;plan_version_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;input_snapshot_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;retry_of_job_id ?&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;status&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(24)&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=0;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.3;spacing=14;align=left;verticalAlign=top;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="457.0" y="502.26" width="350" height="310" />
+        </mxCell>
+        <mxCell id="legacy_recommendation_request" value="&lt;div style=&quot;font-family:PingFang SC,Arial;line-height:1.3&quot;&gt;&lt;div style=&quot;font-size:18px;margin-bottom:3px&quot;&gt;&lt;b&gt;旧建议幂等记录&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:15px;margin-bottom:12px&quot;&gt;legacy_recommendation_request&lt;/div&gt;&lt;table style=&quot;border-collapse:collapse;width:100%;font-size:14px;line-height:26px&quot;&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;org_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(64)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;request_key&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(64)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;generation_job_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=0;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.3;spacing=14;align=left;verticalAlign=top;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="457.0" y="884.51" width="350" height="220" />
+        </mxCell>
+        <mxCell id="audit_log" value="&lt;div style=&quot;font-family:PingFang SC,Arial;line-height:1.3&quot;&gt;&lt;div style=&quot;font-size:18px;margin-bottom:3px&quot;&gt;&lt;b&gt;审计日志&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:15px;margin-bottom:12px&quot;&gt;audit_log&lt;/div&gt;&lt;table style=&quot;border-collapse:collapse;width:100%;font-size:14px;line-height:26px&quot;&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;org_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(64)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;target_type&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(32)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;target_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=0;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.3;spacing=14;align=left;verticalAlign=top;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1251.0" y="210.0" width="350" height="220" />
+        </mxCell>
+        <mxCell id="app_metadata" value="&lt;div style=&quot;font-family:PingFang SC,Arial;line-height:1.3&quot;&gt;&lt;div style=&quot;font-size:18px;margin-bottom:3px&quot;&gt;&lt;b&gt;应用元数据&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:15px;margin-bottom:12px&quot;&gt;app_metadata&lt;/div&gt;&lt;table style=&quot;border-collapse:collapse;width:100%;font-size:14px;line-height:26px&quot;&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;metadata_key&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(64)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;metadata_value&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(255)&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=0;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.3;spacing=14;align=left;verticalAlign=top;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1648.0" y="240.0" width="350" height="160" />
+        </mxCell>
+        <mxCell id="care_plan_version" value="&lt;div style=&quot;font-family:PingFang SC,Arial;line-height:1.3&quot;&gt;&lt;div style=&quot;font-size:18px;margin-bottom:3px&quot;&gt;&lt;b&gt;引用 · 方案版本&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:15px;margin-bottom:12px&quot;&gt;care_plan_version&lt;/div&gt;&lt;table style=&quot;border-collapse:collapse;width:100%;font-size:14px;line-height:26px&quot;&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=0;fillColor=#F1F3F6;strokeColor=#72869D;strokeWidth=1.3;spacing=14;align=left;verticalAlign=top;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60.0" y="255.0" width="350" height="130" />
+        </mxCell>
+        <mxCell id="health_input_snapshot" value="&lt;div style=&quot;font-family:PingFang SC,Arial;line-height:1.3&quot;&gt;&lt;div style=&quot;font-size:18px;margin-bottom:3px&quot;&gt;&lt;b&gt;引用 · 输入快照&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:15px;margin-bottom:12px&quot;&gt;health_input_snapshot&lt;/div&gt;&lt;table style=&quot;border-collapse:collapse;width:100%;font-size:14px;line-height:26px&quot;&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=0;fillColor=#F1F3F6;strokeColor=#72869D;strokeWidth=1.3;spacing=14;align=left;verticalAlign=top;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="457.0" y="255.0" width="350" height="130" />
+        </mxCell>
+        <mxCell id="patient" value="&lt;div style=&quot;font-family:PingFang SC,Arial;line-height:1.3&quot;&gt;&lt;div style=&quot;font-size:18px;margin-bottom:3px&quot;&gt;&lt;b&gt;引用 · 患者&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:15px;margin-bottom:12px&quot;&gt;patient&lt;/div&gt;&lt;table style=&quot;border-collapse:collapse;width:100%;font-size:14px;line-height:26px&quot;&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=0;fillColor=#F1F3F6;strokeColor=#72869D;strokeWidth=1.3;spacing=14;align=left;verticalAlign=top;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="854.0" y="255.0" width="350" height="130" />
+        </mxCell>
+        <mxCell id="relation-0" parent="1" edge="1" source="patient" target="plan_generation_job" style="html=1;rounded=0;dashed=1;dashPattern=5 4;startArrow=ERmandOne;endArrow=ERzeroToMany;startSize=14;endSize=14;strokeColor=#72869D;strokeWidth=1.5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="913.6" y="418.45" />
+              <mxPoint x="863.76" y="460.54" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label-0" value="patient_id" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=12;fontFamily=Arial;fillColor=none;labelBackgroundColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="850.27" y="453.13" width="60.5" height="26" />
+        </mxCell>
+        <mxCell id="relation-1" parent="1" edge="1" source="care_plan_version" target="plan_generation_job" style="html=1;rounded=0;dashed=1;dashPattern=5 4;startArrow=ERmandOne;endArrow=ERzeroToMany;startSize=14;endSize=14;strokeColor=#72869D;strokeWidth=1.5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="350.4" y="418.45" />
+              <mxPoint x="400.24" y="460.54" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label-1" value="plan_version_id" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=12;fontFamily=Arial;fillColor=none;labelBackgroundColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="405.73" y="453.13" width="93.5" height="26" />
+        </mxCell>
+        <mxCell id="relation-2" parent="1" edge="1" source="health_input_snapshot" target="plan_generation_job" style="html=1;rounded=0;dashed=1;dashPattern=5 4;startArrow=ERmandOne;endArrow=ERzeroToMany;startSize=14;endSize=14;strokeColor=#72869D;strokeWidth=1.5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="632.0" y="415.79" />
+              <mxPoint x="632.0" y="453.85" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label-2" value="input_snapshot_id" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=12;fontFamily=Arial;fillColor=none;labelBackgroundColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="627.995" y="453.13" width="106.25" height="26" />
+        </mxCell>
+        <mxCell id="relation-3" parent="1" edge="1" source="plan_generation_job" target="legacy_recommendation_request" style="html=1;rounded=0;dashed=1;dashPattern=5 4;startArrow=ERmandOne;endArrow=ERzeroToMany;startSize=14;endSize=14;strokeColor=#72869D;strokeWidth=1.5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="632.0" y="833.27" />
+              <mxPoint x="632.0" y="854.17" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label-3" value="generation_job_id" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=12;fontFamily=Arial;fillColor=none;labelBackgroundColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="627.995" y="835.38" width="104.75" height="26" />
+        </mxCell>
+        <mxCell id="legend" value="PK = 主键；FK = 外键成员；? = 允许 NULL；|| = 恰好 1；○| = 0 或 1；○&amp;lt; = 0 到多。" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=left;verticalAlign=middle;spacing=0;fontSize=17;fontColor=#52647B;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="1119.51" width="1938.0" height="28" />
+        </mxCell>
+        <mxCell id="scope" value="复合外键还包含 org_id；引用框为其他分域的同一张表。虚线均为实际外键，业务引用不画成外键。" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=left;verticalAlign=middle;spacing=0;fontSize=17;fontColor=#52647B;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="1152.51" width="1938.0" height="28" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

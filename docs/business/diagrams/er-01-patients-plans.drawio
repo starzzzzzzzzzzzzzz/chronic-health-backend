@@ -1,0 +1,297 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" type="device">
+  <diagram id="er-01-patients-plans" name="资料与方案 · 物理 ER 详图">
+    <mxGraphModel dx="1656.0" dy="2487.0" grid="1" gridSize="10" page="1" pageScale="1" pageWidth="1656.0" pageHeight="2487.0" background="#FFFFFF" adaptiveColors="auto">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="eyebrow" value="慢病健康管理 · 当前后端业务说明 / 2026-10-18" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=left;verticalAlign=middle;spacing=0;fontSize=18;fontColor=#52647B;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="26" width="1536.0" height="36" />
+        </mxCell>
+        <mxCell id="title" value="资料与方案 · 物理 ER 详图" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=left;verticalAlign=middle;spacing=0;fontSize=30;fontColor=#172B45;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="70" width="1536.0" height="65" />
+        </mxCell>
+        <mxCell id="subtitle" value="物理 ER · 乌鸦脚表示基数 · 非标识外键以虚线连接 · 每张表仅展示关系字段与部分业务字段" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=left;verticalAlign=middle;spacing=0;fontSize=19;fontColor=#52647B;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="140" width="1536.0" height="40" />
+        </mxCell>
+        <mxCell id="footer" value="当前代码快照 · local + DEMO · 39 个接口操作 · 详见同目录业务文档" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=left;verticalAlign=middle;spacing=0;fontSize=16;fontColor=#52647B;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="2442.0" width="1536.0" height="28" />
+        </mxCell>
+        <mxCell id="patient" value="&lt;div style=&quot;font-family:PingFang SC,Arial;line-height:1.3&quot;&gt;&lt;div style=&quot;font-size:18px;margin-bottom:3px&quot;&gt;&lt;b&gt;患者&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:15px;margin-bottom:12px&quot;&gt;patient&lt;/div&gt;&lt;table style=&quot;border-collapse:collapse;width:100%;font-size:14px;line-height:26px&quot;&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;org_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(64)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;name&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(100)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;profile_revision&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;bigint&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=0;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.3;spacing=14;align=left;verticalAlign=top;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="603.0" y="210.0" width="350" height="220" />
+        </mxCell>
+        <mxCell id="patient_access_grant" value="&lt;div style=&quot;font-family:PingFang SC,Arial;line-height:1.3&quot;&gt;&lt;div style=&quot;font-size:18px;margin-bottom:3px&quot;&gt;&lt;b&gt;患者能力授权&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:15px;margin-bottom:12px&quot;&gt;patient_access_grant&lt;/div&gt;&lt;table style=&quot;border-collapse:collapse;width:100%;font-size:14px;line-height:26px&quot;&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;org_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(64)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;patient_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;subject_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(64)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;capability&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(32)&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=0;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.3;spacing=14;align=left;verticalAlign=top;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60.0" y="502.20000000000005" width="350" height="250" />
+        </mxCell>
+        <mxCell id="health_fact" value="&lt;div style=&quot;font-family:PingFang SC,Arial;line-height:1.3&quot;&gt;&lt;div style=&quot;font-size:18px;margin-bottom:3px&quot;&gt;&lt;b&gt;患者事实&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:15px;margin-bottom:12px&quot;&gt;health_fact&lt;/div&gt;&lt;table style=&quot;border-collapse:collapse;width:100%;font-size:14px;line-height:26px&quot;&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;org_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(64)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;patient_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;axis_code&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(8)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;confirmation_status&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(32)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;supersedes_fact_id ?&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=0;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.3;spacing=14;align=left;verticalAlign=top;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="140.0" y="839.5" width="350" height="280" />
+        </mxCell>
+        <mxCell id="health_input_snapshot" value="&lt;div style=&quot;font-family:PingFang SC,Arial;line-height:1.3&quot;&gt;&lt;div style=&quot;font-size:18px;margin-bottom:3px&quot;&gt;&lt;b&gt;输入快照&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:15px;margin-bottom:12px&quot;&gt;health_input_snapshot&lt;/div&gt;&lt;table style=&quot;border-collapse:collapse;width:100%;font-size:14px;line-height:26px&quot;&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;org_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(64)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;patient_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;stage&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(16)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;profile_revision&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;bigint&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=0;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.3;spacing=14;align=left;verticalAlign=top;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="603.0" y="502.20000000000005" width="350" height="250" />
+        </mxCell>
+        <mxCell id="legacy_archive_mapping" value="&lt;div style=&quot;font-family:PingFang SC,Arial;line-height:1.3&quot;&gt;&lt;div style=&quot;font-size:18px;margin-bottom:3px&quot;&gt;&lt;b&gt;旧档案编号映射&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:15px;margin-bottom:12px&quot;&gt;legacy_archive_mapping&lt;/div&gt;&lt;table style=&quot;border-collapse:collapse;width:100%;font-size:14px;line-height:26px&quot;&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;archive_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;bigint&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;org_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(64)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;patient_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=0;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.3;spacing=14;align=left;verticalAlign=top;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1000.0" y="532.2" width="350" height="190" />
+        </mxCell>
+        <mxCell id="care_plan" value="&lt;div style=&quot;font-family:PingFang SC,Arial;line-height:1.3&quot;&gt;&lt;div style=&quot;font-size:18px;margin-bottom:3px&quot;&gt;&lt;b&gt;方案家族&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:15px;margin-bottom:12px&quot;&gt;care_plan&lt;/div&gt;&lt;table style=&quot;border-collapse:collapse;width:100%;font-size:14px;line-height:26px&quot;&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;org_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(64)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;patient_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;plan_no&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(64)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;current_version_id ?&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;status&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(16)&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=0;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.3;spacing=14;align=left;verticalAlign=top;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1246.0" y="1206.7" width="350" height="280" />
+        </mxCell>
+        <mxCell id="care_plan_version" value="&lt;div style=&quot;font-family:PingFang SC,Arial;line-height:1.3&quot;&gt;&lt;div style=&quot;font-size:18px;margin-bottom:3px&quot;&gt;&lt;b&gt;方案版本&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:15px;margin-bottom:12px&quot;&gt;care_plan_version&lt;/div&gt;&lt;table style=&quot;border-collapse:collapse;width:100%;font-size:14px;line-height:26px&quot;&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;org_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(64)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;plan_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;version_no&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;int&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;based_on_version_id ?&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;input_snapshot_id ?&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;status&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(24)&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=0;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.3;spacing=14;align=left;verticalAlign=top;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="670.0" y="824.5" width="350" height="310" />
+        </mxCell>
+        <mxCell id="care_plan_module" value="&lt;div style=&quot;font-family:PingFang SC,Arial;line-height:1.3&quot;&gt;&lt;div style=&quot;font-size:18px;margin-bottom:3px&quot;&gt;&lt;b&gt;方案模块&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:15px;margin-bottom:12px&quot;&gt;care_plan_module&lt;/div&gt;&lt;table style=&quot;border-collapse:collapse;width:100%;font-size:14px;line-height:26px&quot;&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;org_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(64)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;plan_version_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;module_code&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(8)&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=0;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.3;spacing=14;align=left;verticalAlign=top;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="408.0" y="1515.75" width="350" height="220" />
+        </mxCell>
+        <mxCell id="plan_management_focus" value="&lt;div style=&quot;font-family:PingFang SC,Arial;line-height:1.3&quot;&gt;&lt;div style=&quot;font-size:18px;margin-bottom:3px&quot;&gt;&lt;b&gt;管理侧重&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:15px;margin-bottom:12px&quot;&gt;plan_management_focus&lt;/div&gt;&lt;table style=&quot;border-collapse:collapse;width:100%;font-size:14px;line-height:26px&quot;&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;org_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(64)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;plan_version_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;diagnosis_fact_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;primary_subtype_code ?&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(64)&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=0;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.3;spacing=14;align=left;verticalAlign=top;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="178.0" y="1221.7" width="350" height="250" />
+        </mxCell>
+        <mxCell id="care_plan_dimension" value="&lt;div style=&quot;font-family:PingFang SC,Arial;line-height:1.3&quot;&gt;&lt;div style=&quot;font-size:18px;margin-bottom:3px&quot;&gt;&lt;b&gt;七维决策&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:15px;margin-bottom:12px&quot;&gt;care_plan_dimension&lt;/div&gt;&lt;table style=&quot;border-collapse:collapse;width:100%;font-size:14px;line-height:26px&quot;&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;org_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(64)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;plan_version_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;dimension_code&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(16)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;decision&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(16)&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=0;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.3;spacing=14;align=left;verticalAlign=top;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="670.0" y="1221.7" width="350" height="250" />
+        </mxCell>
+        <mxCell id="care_plan_item" value="&lt;div style=&quot;font-family:PingFang SC,Arial;line-height:1.3&quot;&gt;&lt;div style=&quot;font-size:18px;margin-bottom:3px&quot;&gt;&lt;b&gt;方案条目&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:15px;margin-bottom:12px&quot;&gt;care_plan_item&lt;/div&gt;&lt;table style=&quot;border-collapse:collapse;width:100%;font-size:14px;line-height:26px&quot;&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;org_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(64)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;plan_version_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;dimension_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;execution_goal&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;tinyint(1)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;is_selected&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;tinyint(1)&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=0;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.3;spacing=14;align=left;verticalAlign=top;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="682.0" y="1764.75" width="350" height="280" />
+        </mxCell>
+        <mxCell id="plan_item_basis" value="&lt;div style=&quot;font-family:PingFang SC,Arial;line-height:1.3&quot;&gt;&lt;div style=&quot;font-size:18px;margin-bottom:3px&quot;&gt;&lt;b&gt;条目依据&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;font-size:15px;margin-bottom:12px&quot;&gt;plan_item_basis&lt;/div&gt;&lt;table style=&quot;border-collapse:collapse;width:100%;font-size:14px;line-height:26px&quot;&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;org_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;varchar(64)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;plan_item_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;module_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;border-top:1px solid #D5DFEA;padding-right:8px&quot;&gt;fact_id&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;padding-right:10px;color:#255D9C&quot;&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;border-top:1px solid #D5DFEA;text-align:right;color:#52647B&quot;&gt;char(36)&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;rounded=0;fillColor=#EAF1FF;strokeColor=#72869D;strokeWidth=1.3;spacing=14;align=left;verticalAlign=top;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="404.0" y="2117.0" width="350" height="250" />
+        </mxCell>
+        <mxCell id="relation-0" parent="1" edge="1" source="patient" target="patient_access_grant" style="html=1;rounded=0;dashed=1;dashPattern=5 4;startArrow=ERmandOne;endArrow=ERzeroToMany;startSize=14;endSize=14;strokeColor=#72869D;strokeWidth=1.5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="510.44" y="423.13" />
+              <mxPoint x="416.5" y="459.0" />
+              <mxPoint x="400.21" y="474.01" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label-0" value="patient_id" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=12;fontFamily=Arial;fillColor=none;labelBackgroundColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="412.5" y="453.0999999999999" width="60.5" height="26" />
+        </mxCell>
+        <mxCell id="relation-1" parent="1" edge="1" source="patient" target="health_fact" style="html=1;rounded=0;dashed=1;dashPattern=5 4;startArrow=ERmandOne;endArrow=ERzeroToMany;startSize=14;endSize=14;strokeColor=#72869D;strokeWidth=1.5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="573.96" y="468.63" />
+              <mxPoint x="527.5" y="502.25" />
+              <mxPoint x="433.0" y="752.24" />
+              <mxPoint x="414.69" y="787.34" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label-1" value="patient_id" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=12;fontFamily=Arial;fillColor=none;labelBackgroundColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="523.5" y="614.2" width="60.5" height="26" />
+        </mxCell>
+        <mxCell id="relation-2" parent="1" edge="1" source="health_fact" target="health_fact" style="html=1;rounded=0;dashed=1;dashPattern=5 4;startArrow=ERzeroToOne;endArrow=ERzeroToOne;startSize=14;endSize=14;strokeColor=#72869D;strokeWidth=1.5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="518.09" y="951.44" />
+              <mxPoint x="537.0" y="962.42" />
+              <mxPoint x="537.0" y="979.5" />
+              <mxPoint x="537.0" y="994.37" />
+              <mxPoint x="522.65" y="1004.62" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label-2" value="supersedes_fact_id" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=12;fontFamily=Arial;fillColor=none;labelBackgroundColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="532.995" y="966.5" width="112.25" height="26" />
+        </mxCell>
+        <mxCell id="relation-3" parent="1" edge="1" source="patient" target="health_input_snapshot" style="html=1;rounded=0;dashed=1;dashPattern=5 4;startArrow=ERmandOne;endArrow=ERzeroToMany;startSize=14;endSize=14;strokeColor=#72869D;strokeWidth=1.5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="778.0" y="450.16" />
+              <mxPoint x="778.0" y="471.06" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label-3" value="patient_id" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=12;fontFamily=Arial;fillColor=none;labelBackgroundColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="774.0" y="453.0999999999999" width="60.5" height="26" />
+        </mxCell>
+        <mxCell id="relation-4" parent="1" edge="1" source="patient" target="legacy_archive_mapping" style="html=1;rounded=0;dashed=1;dashPattern=5 4;startArrow=ERmandOne;endArrow=ERzeroToOne;startSize=14;endSize=14;strokeColor=#72869D;strokeWidth=1.5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="960.67" y="461.45" />
+              <mxPoint x="1004.54" y="495.18" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label-4" value="patient_id" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=12;fontFamily=Arial;fillColor=none;labelBackgroundColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="960.6" y="453.0999999999999" width="60.5" height="26" />
+        </mxCell>
+        <mxCell id="relation-5" parent="1" edge="1" source="care_plan_version" target="care_plan" style="html=1;rounded=0;dashed=1;dashPattern=5 4;startArrow=ERzeroToOne;endArrow=ERzeroToMany;startSize=14;endSize=14;strokeColor=#72869D;strokeWidth=1.5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1084.64" y="1128.16" />
+              <mxPoint x="1142.0" y="1163.5" />
+              <mxPoint x="1211.0" y="1206.75" />
+              <mxPoint x="1221.12" y="1213.45" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label-5" value="current_version_id" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=12;fontFamily=Arial;fillColor=none;labelBackgroundColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1160.3" y="1157.6" width="107.0" height="26" />
+        </mxCell>
+        <mxCell id="relation-6" parent="1" edge="1" source="patient" target="care_plan" style="html=1;rounded=0;dashed=1;dashPattern=5 4;startArrow=ERmandOne;endArrow=ERzeroToMany;startSize=14;endSize=14;strokeColor=#72869D;strokeWidth=1.5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1128.81" y="427.86" />
+              <mxPoint x="1373.0" y="502.25" />
+              <mxPoint x="1398.7" y="953.82" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label-6" value="patient_id" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=12;fontFamily=Arial;fillColor=none;labelBackgroundColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1385.35" y="775.4000000000001" width="60.5" height="26" />
+        </mxCell>
+        <mxCell id="relation-7" parent="1" edge="1" source="care_plan_version" target="care_plan_version" style="html=1;rounded=0;dashed=1;dashPattern=5 4;startArrow=ERzeroToOne;endArrow=ERzeroToMany;startSize=14;endSize=14;strokeColor=#72869D;strokeWidth=1.5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1048.09" y="951.44" />
+              <mxPoint x="1067.0" y="962.42" />
+              <mxPoint x="1067.0" y="979.5" />
+              <mxPoint x="1067.0" y="994.37" />
+              <mxPoint x="1052.65" y="1004.62" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label-7" value="based_on_version_id" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=12;fontFamily=Arial;fillColor=none;labelBackgroundColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1062.95" y="966.5" width="123.5" height="26" />
+        </mxCell>
+        <mxCell id="relation-8" parent="1" edge="1" source="health_input_snapshot" target="care_plan_version" style="html=1;rounded=0;dashed=1;dashPattern=5 4;startArrow=ERzeroToOne;endArrow=ERzeroToMany;startSize=14;endSize=14;strokeColor=#72869D;strokeWidth=1.5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="805.61" y="772.57" />
+              <mxPoint x="809.59" y="793.38" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label-8" value="input_snapshot_id" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=12;fontFamily=Arial;fillColor=none;labelBackgroundColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="805.495" y="775.4000000000001" width="106.25" height="26" />
+        </mxCell>
+        <mxCell id="relation-9" parent="1" edge="1" source="care_plan" target="care_plan_version" style="html=1;rounded=0;dashed=1;dashPattern=5 4;startArrow=ERmandOne;endArrow=ERzeroToMany;startSize=14;endSize=14;strokeColor=#72869D;strokeWidth=1.5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1288.72" y="1181.74" />
+              <mxPoint x="1274.0" y="1163.5" />
+              <mxPoint x="1145.99" y="1108.89" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label-9" value="plan_id" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=12;fontFamily=Arial;fillColor=none;labelBackgroundColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1280.125" y="1157.6" width="47.75" height="26" />
+        </mxCell>
+        <mxCell id="relation-10" parent="1" edge="1" source="care_plan_version" target="care_plan_module" style="html=1;rounded=0;dashed=1;dashPattern=5 4;startArrow=ERmandOne;endArrow=ERzeroToMany;startSize=14;endSize=14;strokeColor=#72869D;strokeWidth=1.5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="674.99" y="1174.76" />
+              <mxPoint x="647.0" y="1206.75" />
+              <mxPoint x="620.22" y="1381.65" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label-10" value="plan_version_id" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=12;fontFamily=Arial;fillColor=none;labelBackgroundColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="678.84" y="1157.6" width="93.5" height="26" />
+        </mxCell>
+        <mxCell id="relation-11" parent="1" edge="1" source="health_fact" target="plan_management_focus" style="html=1;rounded=0;dashed=1;dashPattern=5 4;startArrow=ERmandOne;endArrow=ERzeroToMany;startSize=14;endSize=14;strokeColor=#72869D;strokeWidth=1.5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="309.83" y="1144.95" />
+              <mxPoint x="309.25" y="1163.5" />
+              <mxPoint x="309.25" y="1177.75" />
+              <mxPoint x="312.85" y="1191.59" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label-11" value="diagnosis_fact_id" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=12;fontFamily=Arial;fillColor=none;labelBackgroundColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="305.245" y="1157.6" width="101.75" height="26" />
+        </mxCell>
+        <mxCell id="relation-12" parent="1" edge="1" source="care_plan_version" target="plan_management_focus" style="html=1;rounded=0;dashed=1;dashPattern=5 4;startArrow=ERmandOne;endArrow=ERzeroToMany;startSize=14;endSize=14;strokeColor=#72869D;strokeWidth=1.5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="649.47" y="1124.57" />
+              <mxPoint x="636.0" y="1134.5" />
+              <mxPoint x="455.5" y="1163.5" />
+              <mxPoint x="443.6" y="1184.66" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label-12" value="plan_version_id" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=12;fontFamily=Arial;fillColor=none;labelBackgroundColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="451.5" y="1157.6" width="93.5" height="26" />
+        </mxCell>
+        <mxCell id="relation-13" parent="1" edge="1" source="care_plan_version" target="care_plan_dimension" style="html=1;rounded=0;dashed=1;dashPattern=5 4;startArrow=ERmandOne;endArrow=ERzeroToMany;startSize=14;endSize=14;strokeColor=#72869D;strokeWidth=1.5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="845.0" y="1160.28" />
+              <mxPoint x="845.0" y="1186.44" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label-13" value="plan_version_id" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=12;fontFamily=Arial;fillColor=none;labelBackgroundColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="841.0" y="1157.6" width="93.5" height="26" />
+        </mxCell>
+        <mxCell id="relation-14" parent="1" edge="1" source="care_plan_dimension" target="care_plan_item" style="html=1;rounded=0;dashed=1;dashPattern=5 4;startArrow=ERmandOne;endArrow=ERzeroToMany;startSize=14;endSize=14;strokeColor=#72869D;strokeWidth=1.5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="849.49" y="1555.63" />
+              <mxPoint x="851.87" y="1665.97" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label-14" value="dimension_id" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=12;fontFamily=Arial;fillColor=none;labelBackgroundColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="849.12" y="1612.75" width="80.0" height="26" />
+        </mxCell>
+        <mxCell id="relation-15" parent="1" edge="1" source="care_plan_version" target="care_plan_item" style="html=1;rounded=0;dashed=1;dashPattern=5 4;startArrow=ERmandOne;endArrow=ERzeroToMany;startSize=14;endSize=14;strokeColor=#72869D;strokeWidth=1.5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1015.01" y="1174.76" />
+              <mxPoint x="1043.0" y="1206.75" />
+              <mxPoint x="1043.0" y="1486.75" />
+              <mxPoint x="936.0" y="1735.75" />
+              <mxPoint x="932.44" y="1743.31" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label-15" value="plan_version_id" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=12;fontFamily=Arial;fillColor=none;labelBackgroundColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1038.95" y="1333.7" width="93.5" height="26" />
+        </mxCell>
+        <mxCell id="relation-16" parent="1" edge="1" source="health_fact" target="plan_item_basis" style="html=1;rounded=0;dashed=1;dashPattern=5 4;startArrow=ERmandOne;endArrow=ERzeroToMany;startSize=14;endSize=14;strokeColor=#72869D;strokeWidth=1.5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="183.48" y="1166.48" />
+              <mxPoint x="155.0" y="1206.75" />
+              <mxPoint x="155.0" y="1486.75" />
+              <mxPoint x="382.51" y="1891.47" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label-16" value="fact_id" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=12;fontFamily=Arial;fillColor=none;labelBackgroundColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="290.91499999999996" y="1612.75" width="43.25" height="26" />
+        </mxCell>
+        <mxCell id="relation-17" parent="1" edge="1" source="care_plan_module" target="plan_item_basis" style="html=1;rounded=0;dashed=1;dashPattern=5 4;startArrow=ERmandOne;endArrow=ERzeroToMany;startSize=14;endSize=14;strokeColor=#72869D;strokeWidth=1.5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="581.61" y="1839.73" />
+              <mxPoint x="580.6" y="1995.34" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label-17" value="module_id" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=12;fontFamily=Arial;fillColor=none;labelBackgroundColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="578.065" y="1891.75" width="64.25" height="26" />
+        </mxCell>
+        <mxCell id="relation-18" parent="1" edge="1" source="care_plan_item" target="plan_item_basis" style="html=1;rounded=0;dashed=1;dashPattern=5 4;startArrow=ERmandOne;endArrow=ERzeroToMany;startSize=14;endSize=14;strokeColor=#72869D;strokeWidth=1.5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="724.06" y="2066.07" />
+              <mxPoint x="706.09" y="2087.74" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label-18" value="plan_item_id" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=12;fontFamily=Arial;fillColor=none;labelBackgroundColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="705.66" y="2067.88" width="77.0" height="26" />
+        </mxCell>
+        <mxCell id="legend" value="PK = 主键；FK = 外键成员；? = 允许 NULL；|| = 恰好 1；○| = 0 或 1；○&amp;lt; = 0 到多。" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=left;verticalAlign=middle;spacing=0;fontSize=17;fontColor=#52647B;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="2382.0" width="1536.0" height="28" />
+        </mxCell>
+        <mxCell id="scope" value="复合外键还包含 org_id；引用框为其他分域的同一张表。虚线均为实际外键，业务引用不画成外键。" style="html=1;fontFamily=PingFang SC;fontColor=#172B45;whiteSpace=wrap;text;align=left;verticalAlign=middle;spacing=0;fontSize=17;fontColor=#52647B;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="2415.0" width="1536.0" height="28" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

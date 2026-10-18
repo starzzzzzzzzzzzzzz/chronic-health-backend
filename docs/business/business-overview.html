@@ -1,0 +1,1554 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>慢病健康管理 · 后端业务说明</title><style>
+:root{color-scheme:light;--ink:#172b45;--muted:#60718a;--line:#dbe3ec;--accent:#255d9c}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:84px}body{margin:0;background:#f5f7fa;color:var(--ink);font:16px/1.85 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+header{position:sticky;top:0;z-index:2;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;background:#172b45;color:white;border-bottom:1px solid #314761}
+header small{margin-left:15px;color:#bbcadb}button{cursor:pointer;font:inherit}header button{background:transparent;color:white;border:1px solid #74869b;padding:4px 15px;border-radius:5px}
+.shell{display:grid;grid-template-columns:224px minmax(0,1200px);gap:32px;max-width:1500px;margin:auto;padding:40px 28px}
+aside{position:sticky;top:96px;align-self:start;font-size:14px}aside strong{display:block;font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:16px}
+aside a{display:block;padding:9px 12px;border-left:2px solid transparent;text-decoration:none;color:var(--muted);line-height:1.65}aside a:hover{color:var(--accent);background:#eaf0f8;border-color:var(--accent)}
+.status{margin-top:26px;padding:16px;background:#e8f3ee;border:1px solid #c5ded2;border-radius:8px;font-size:13px;color:#2d6450}.status b{display:block}
+main{background:white;border:1px solid var(--line);border-radius:12px;padding:42px 50px;min-width:0;box-shadow:0 8px 30px #182e4910}h1{font-size:34px;line-height:1.4;margin:0 0 14px;letter-spacing:-.6px}h2{font-size:25px;line-height:1.5;margin:54px 0 20px;border-top:1px solid var(--line);padding-top:30px}h3{font-size:19px;margin:32px 0 14px}p{margin:14px 0}a{color:var(--accent);text-underline-offset:3px}strong{font-weight:650}code{font:13px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;background:#edf1f6;border-radius:3px;padding:2px 4px;overflow-wrap:anywhere}li{margin:8px 0}ul,ol{padding-left:25px}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:7px;margin:20px 0}table{width:100%;border-collapse:collapse;font-size:14px;line-height:1.8}th{background:#edf2f8;text-align:left;font-weight:650;white-space:nowrap}td,th{padding:12px 14px;vertical-align:top;border-bottom:1px solid var(--line)}tr:last-child td{border-bottom:0}td code{font-size:12px}tr:nth-child(even) td{background:#fafbfd}
+figure{margin:24px 0;background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden}.diagram{width:100%;padding:10px;border:0;background:white;display:block;cursor:zoom-in}.diagram img{display:block;width:100%;height:auto}figcaption{background:#f5f7fa;color:var(--muted);font-size:13px;text-align:center;padding:10px}
+dialog{width:96vw;max-width:none;height:94vh;max-height:none;border:0;border-radius:10px;padding:0;background:#e9eef4;box-shadow:0 20px 90px #0005}dialog::backdrop{background:#13243cc9}.viewer-bar{height:62px;display:flex;align-items:center;gap:12px;justify-content:flex-end;padding:10px 18px;background:white;border-bottom:1px solid var(--line)}.viewer-bar strong{margin-right:auto;font-size:16px}.viewer-bar button{padding:3px 15px;background:#edf2f8;color:var(--ink);border:1px solid var(--line);border-radius:5px}.canvas{height:calc(100% - 62px);overflow:auto;padding:20px}.canvas img{display:block;max-width:100%;height:auto;margin:auto;background:white}.canvas.original img{max-width:none;margin:0}
+@media(max-width:1000px){.shell{display:block;padding:20px}aside{position:static;margin-bottom:22px}aside a{display:inline-block}aside .status{display:none}main{padding:28px}header{padding:0 20px}header small{display:none}}
+@media print{header,aside,dialog,figcaption{display:none!important}.shell{display:block;margin:0;padding:0}body{background:white;font-size:11pt}main{border:0;box-shadow:none;padding:0}h1{font-size:24pt}h2{font-size:17pt;break-after:avoid}h3{break-after:avoid}figure{break-inside:avoid}table{font-size:9pt}.table-wrap{overflow:visible}a{color:inherit;text-decoration:none}.diagram{padding:0}figure img{max-height:24cm;object-fit:contain}td,th{padding:7px}code{font-size:8pt}}
+</style></head><body id="top"><header><div><b>HEALTH / 后端业务说明</b><small>实现快照 · 2026-10-18</small></div><button id="print">打印 / 保存 PDF</button></header>
+<div class="shell"><aside><strong>阅读导航</strong><a href="#section-1">1. 阅读入口与当前范围</a><a href="#section-2">2. 参与角色与业务对象</a><a href="#section-3">3. 业务流程</a><a href="#section-4">4. 数据流与保存边界</a><a href="#section-5">5. 功能结构与接口分组</a><a href="#section-6">6. 数据库 ER 图</a><a href="#section-7">7. 用例图与参与边界</a><a href="#section-8">8. 与伙伴前端的对齐边界</a><a href="#section-9">9. 当前未完成的业务能力</a><a href="#section-10">10. 开发定位与文档维护</a><a href="#api-index">附录 / 接口索引</a><a href="#database-er">附录 / ER 分域详图</a><div class="status"><b>当前范围 · DEMO</b>41 个接口操作<br>5 张主图 + 4 张 ER 详图<br>33 张表 · 62 条外键<br>旧前端全链路仍待适配</div></aside><main><h1>慢病健康管理后端业务说明</h1>
+<p><strong>版本：2026-10-18 · 当前实现快照</strong></p>
+<p>本系统当前围绕演示视频的核心业务，支持“患者资料 → 方案形成 → 一审 → 七维任务与排程 → 二审 → 发布 → 日任务与打卡”。AI 用于生成方案候选；任务由已审方案按确定性规则派生。当前运行和验证范围为本地、显式开启的 DEMO 与虚构患者。</p>
+<p>这份文档供开发成员、前端伙伴和项目负责人对齐业务使用。实现依据为当前 Controller/Service、Flyway V1—V11 和本机 OpenAPI；业务术语沿用<a href="../database/VIDEO-FIELD-MAPPING.md">视频字段映射</a>及<a href="../AI-PLAN-GENERATION.md">AI 规则整理</a>。它描述已经实现的后端，不把完整需求清单等同于已交付范围。</p>
+<h2 id="section-1">1. 阅读入口与当前范围</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>材料</th>
+<th>解决的问题</th>
+<th>可编辑源文件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="diagrams/backend-business-flow.drawio.png">业务流程图</a></td>
+<td>谁在什么时候做什么；审核关口在哪里</td>
+<td><a href="diagrams/backend-business-flow.drawio">draw.io 源文件</a></td>
+</tr>
+<tr>
+<td><a href="diagrams/backend-data-flow.drawio.png">数据流图</a></td>
+<td>资料从哪里来，何时冻结，落到哪些表</td>
+<td><a href="diagrams/backend-data-flow.drawio">draw.io 源文件</a></td>
+</tr>
+<tr>
+<td><a href="diagrams/backend-function-map.drawio.png">功能结构图</a></td>
+<td>当前后端有哪些功能，如何分组</td>
+<td><a href="diagrams/backend-function-map.drawio">draw.io 源文件</a></td>
+</tr>
+<tr>
+<td><a href="diagrams/backend-database-er.drawio.png">数据库 ER 总览</a></td>
+<td>核心实体、主外键与关系基数</td>
+<td><a href="diagrams/backend-database-er.drawio">draw.io 源文件</a></td>
+</tr>
+<tr>
+<td><a href="diagrams/backend-use-cases.drawio.png">用例图</a></td>
+<td>各参与者能完成哪些业务目标</td>
+<td><a href="diagrams/backend-use-cases.drawio">draw.io 源文件</a></td>
+</tr>
+<tr>
+<td><a href="#database-er">四个分域 ER 详图与结构索引</a></td>
+<td>全部 33 张表、62 条物理外键和唯一约束</td>
+<td>各详图均提供 draw.io 源文件</td>
+</tr>
+<tr>
+<td><a href="#api-index">41 个接口索引</a></td>
+<td>业务节点对应哪个接口</td>
+<td>由本次运行中的 OpenAPI 核对</td>
+</tr>
+<tr>
+<td><a href="#top">浏览器阅读版</a></td>
+<td>连续查看说明、五张主图、四张 ER 详图及接口附录</td>
+<td>由本 Markdown 及附录生成</td>
+</tr>
+</tbody>
+</table></div>
+<p>本次核对：<strong>36 个路径、41 个接口操作、33 张项目定义表</strong>。表数量包含 <code>app_metadata</code> 和审计表，不包含 Flyway 自身的历史表。原生主线已实现；旧前端已有档案列表、患者输入、依据评估和 AI 建议四个兼容入口，尚不能只替换服务器地址就接通全部页面。</p>
+<p>最近一轮 <code>./scripts/test-db.sh -o</code> 为 <strong>169 项通过、零失败/错误/跳过</strong>；新增侧重绑定与双病融合已做真实 DeepSeek 验证。详见<a href="../MANAGEMENT-FOCUS-AND-FUSION.md">管理侧重与融合</a>。图形保留此前主流程结构，未单独展开本批侧重确认节点；本批未新增表，ER 结构不变。</p>
+<h2 id="section-2">2. 参与角色与业务对象</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>角色</th>
+<th>当前可做的事</th>
+<th>主要约束</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>方案编辑者 / 管理人员</td>
+<td>查询授权患者，建立和编辑草稿，采用 AI 候选，确认执行条件，编排任务、发布</td>
+<td>能力按患者授权；普通编辑身份不能代用患者打卡身份</td>
+</tr>
+<tr>
+<td>独立审核者</td>
+<td>一审检查方案，二审检查任务与排程，通过或退回</td>
+<td>提交人不能审核自己提交的内容；审核记录冻结并留痕</td>
+</tr>
+<tr>
+<td>患者身份</td>
+<td>查询自己的正式日任务，打卡、补记和追加更正</td>
+<td>仅限有效授权、已生效且允许反馈的任务；不提供方案编辑权限</td>
+</tr>
+<tr>
+<td>后台规则与 AI 作业</td>
+<td>快照、结构与来源校验、候选生成、任务派生、排程、反馈评估</td>
+<td>AI 不自动采纳、审批或发布；结构校验不等于内容已经通过专业审核</td>
+</tr>
+</tbody>
+</table></div>
+<p>以上是业务职责。当前通过三个本地 DEMO 身份及患者能力授权模拟，尚无正式账号注册、登录和组织管理流程。方案条目的 <code>actorType</code> 可以是本人、照护者、专业人员或共同执行，它描述“谁执行这件事”，不等同于已经实现相应角色的完整客户端。</p>
+<p><strong>三组分类不能混为一谈：</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>分类</th>
+<th>内容</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>六方面画像</td>
+<td>H 健康阶段、F 功能、B 生活方式、C 照护、E 执行条件、G 当前问题</td>
+<td>整理患者资料与缺失信息</td>
+</tr>
+<tr>
+<td>六类方案模块</td>
+<td>B0 基础生活、L 习惯改善、R 风险复核、C 已确认慢病、F 功能照护、A 支持协同</td>
+<td>解释本周期为什么采用这些管理措施</td>
+</tr>
+<tr>
+<td>七维建议与任务</td>
+<td>用药、饮食、运动、起居、监测、中医、其他</td>
+<td>组织建议和后续执行任务；按需启用，不要求全部生成任务</td>
+</tr>
+</tbody>
+</table></div>
+<p>**关键对象也分层保存：**患者事实是输入；方案是“本周期要做什么及其依据”；任务包是“已审建议如何执行”；排程预览是候选执行清单；正式任务实例是“某天某个时段的一次执行”；打卡记录是这次执行的反馈。</p>
+<h2 id="section-3">3. 业务流程</h2>
+<figure><button class="diagram" data-src="diagrams/backend-business-flow.drawio.png" data-caption="当前后端业务流程" aria-label="放大当前后端业务流程"><img src="diagrams/backend-business-flow.drawio.png" alt="当前后端业务流程" /></button><figcaption>当前后端业务流程 · 点击放大，可切换原尺寸查看</figcaption></figure>
+<h3>3.1 选患者并形成方案</h3>
+<ol>
+<li>在授权患者列表选择患者，读取六方面摘要、事实来源、确认状态、缺项和冲突。未知资料保持未知，自述不会自动转为专业确认。</li>
+<li>建立周期草稿，保存标题、日期、时区等信息，冻结一份 PLAN 输入快照。也可以打开已有草稿继续编辑。</li>
+<li>若使用 AI，提交带修订号和幂等键的生成作业。服务端再次读取最新资料并单独冻结输入，再由后台调用 DeepSeek；生成过程不修改已有草稿。</li>
+<li>页面读取生成状态与候选。结构及引用校验成功后，编辑者明确采用，再编辑主目标、模块、管理侧重和七维建议。若生成期间草稿已经被别人修改，采用返回冲突，避免覆盖手工修改。</li>
+<li>也可手工形成方案内容，直接进入后续确认与审核，不以 AI 为必经条件。</li>
+</ol>
+<p>AI 候选保存在 <code>plan_generation_job</code>；人工采用才把该候选及其输入快照写入方案版本。<strong>生成成功、人工采用、一审通过是三个不同事件。</strong></p>
+<h3>3.2 核实条件并完成一审</h3>
+<p>有执行目标的已选条目，需要核实执行主体与环境。用药条目还需绑定快照中已专业确认的已有医嘱；中医执行缺少医学审核模板时阻断。正文变化会使旧确认失效，不能沿用不匹配的确认结果。</p>
+<p>送审前检查主目标与事实依据、模块、七维决策、已选条目、必要条件及来源。存在阻断问题时不能送审。成功送审后，冻结方案与条件清单，独立审核者决定通过或退回。</p>
+<p>一审通过后，方案版本只读。退回或提交人撤回后，回到草稿修改，旧送审内容和意见保留。已批准后需要调整，建立新版本并重新走审核，不能覆盖原结论。</p>
+<h3>3.3 从方案派生任务并完成二审</h3>
+<p>只选取当前有效已批准方案中满足“已选择、具有执行目标、所属维度已启用”的条目。后台按确定性规则建立任务组，保留原方案条目、模块、事实、主体和模板版本。</p>
+<p>任务生成时再次读取当前资料，保存 TASK 快照。相比原方案输入出现的变更事实进入 <code>nextCycleReference</code>，作为下一周期参考，不直接修改本次已审目标和原始来源。</p>
+<p>编辑者核实任务执行细节，配置允许调整的时段、必做/自选、优先级和说明，再生成排程预览。原始医学内容、来源和主体不可通过任务编辑任意替换。预览检查执行窗口、数量与负担、模板、来源及规则限制；有阻断则先修改。</p>
+<p>二审冻结任务包及当前排程预览。退回或撤回回到任务草稿；批准后的调整需要新任务包版本、新预览和重新二审。<strong>方案一审检查“做什么及依据”，任务二审检查“怎么执行及排程”。</strong></p>
+<h3>3.4 发布、执行和反馈</h3>
+<p>发布前明确生效时间及版本衔接，预览新建、保留、替代清单。正式发布在同一事务复制二审冻结排程中的实例，同时保存发布记录、未来任务替代、幂等记录、事件和审计。发布不重新调用 AI，也不重新推导一套排程。</p>
+<p>生效后患者可以查询日任务和详情。打卡可一键自述完成，也可反馈部分完成、未做、停止执行、实际执行时间和备注。服务器区分正常提交与补记；更正追加新版本，保留旧记录。</p>
+<p>反馈分别形成完成情况、执行时效、反馈完整性和安全状态。当前为 <code>COMPLETION_ONLY</code>，质量状态为 <code>NOT_APPLICABLE</code>，没有质量分数。异常或停止执行产生独立 <code>OPEN</code> 安全事件；后来改报完成不会自动解除。安全处置、事件关闭和护士工单闭环仍待实现。</p>
+<h3>3.5 关键状态及退回路径</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>对象</th>
+<th>当前正常状态路径</th>
+<th>失败、退回或修改路径</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AI 生成作业</td>
+<td><code>PENDING → RUNNING → SUCCEEDED → APPLIED</code></td>
+<td>校验不通过 <code>REJECTED</code>；调用失败 <code>FAILED</code>；明确重试建立新作业</td>
+</tr>
+<tr>
+<td>方案版本</td>
+<td><code>DRAFT → IN_REVIEW → APPROVED</code></td>
+<td>退回 / 撤回回到 <code>DRAFT</code>；批准后调整建立新版本</td>
+</tr>
+<tr>
+<td>任务包</td>
+<td><code>DRAFT → IN_REVIEW → APPROVED → PUBLISHED</code></td>
+<td>退回 / 撤回回到 <code>DRAFT</code>；已批准后调整建立新包并重新审核</td>
+</tr>
+<tr>
+<td>一次送审记录</td>
+<td><code>PENDING → APPROVED</code></td>
+<td>或终结为 <code>RETURNED / WITHDRAWN</code>；重新送审另建记录</td>
+</tr>
+<tr>
+<td>安全事件</td>
+<td>反馈触发后为 <code>OPEN</code></td>
+<td>当前没有关闭接口，不因后续更正而清除</td>
+</tr>
+</tbody>
+</table></div>
+<p>表中只列当前已开放业务路径，不把数据库预留状态视为已经实现的功能。</p>
+<h2 id="section-4">4. 数据流与保存边界</h2>
+<figure><button class="diagram" data-src="diagrams/backend-data-flow.drawio.png" data-caption="当前后端数据流" aria-label="放大当前后端数据流"><img src="diagrams/backend-data-flow.drawio.png" alt="当前后端数据流" /></button><figcaption>当前后端数据流 · 点击放大，可切换原尺寸查看</figcaption></figure>
+<h3>4.1 从实时资料到不可变执行依据</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>时点</th>
+<th>输入</th>
+<th>保存结果</th>
+<th>后续是否跟随实时资料变化</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>查询患者摘要</td>
+<td>当前有效患者事实与授权</td>
+<td>仅返回摘要，不因 GET 创建快照</td>
+<td>再次查询可得到更新资料</td>
+</tr>
+<tr>
+<td>创建方案草稿</td>
+<td>当前患者摘要、周期信息</td>
+<td>方案身份、版本、PLAN 快照</td>
+<td>原快照固定</td>
+</tr>
+<tr>
+<td>提交 AI 作业</td>
+<td>最新资料、补充要求、当前目标与周期</td>
+<td>新 PLAN 快照、模型输入、提示词/规则版本、作业记录</td>
+<td>候选与本次输入绑定，不静默重算</td>
+</tr>
+<tr>
+<td>人工采用 AI</td>
+<td>校验通过的候选、匹配的草稿修订</td>
+<td>草稿内容和快照引用更新，作业记为 APPLIED</td>
+<td>后续编辑须经过修订校验</td>
+</tr>
+<tr>
+<td>方案一审</td>
+<td>已保存方案与有效条件确认</td>
+<td>PLAN 阶段送审快照、摘要、审核决定</td>
+<td>冻结，历史保留</td>
+</tr>
+<tr>
+<td>派生任务</td>
+<td>已审方案 + 最新患者摘要</td>
+<td>任务包、TASK 快照、来源关联、变更事实参考</td>
+<td>保留已审目标和来源</td>
+</tr>
+<tr>
+<td>排程与二审</td>
+<td>任务编排、模板和执行规则</td>
+<td>完整 occurrences、摘要、TASK 阶段送审快照</td>
+<td>修改编排后需新预览、重审</td>
+</tr>
+<tr>
+<td>发布</td>
+<td>二审通过内容与发布衔接清单</td>
+<td>正式任务实例及冻结执行窗口</td>
+<td>不随新草稿自动变化；替代另有明确规则</td>
+</tr>
+<tr>
+<td>打卡与更正</td>
+<td>正式任务实例、患者反馈、接收时间</td>
+<td>不可变反馈、当前汇总、安全事件</td>
+<td>追加版本，不覆盖历史，不自动反写诊断事实</td>
+</tr>
+</tbody>
+</table></div>
+<h3>4.2 逻辑数据存储对应的真实表</h3>
+<p>图中 D1—D7 是阅读用的逻辑分组，不是另外创建的数据库。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>分组</th>
+<th>真实表</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D1 患者资料与范围</td>
+<td><code>patient</code>、<code>patient_access_grant</code>、<code>health_fact</code>、<code>legacy_archive_mapping</code></td>
+<td>患者、能力授权、当前事实、旧数字档案别名</td>
+</tr>
+<tr>
+<td>D2 方案与输入</td>
+<td><code>health_input_snapshot</code>、<code>care_plan</code>、<code>care_plan_version</code>、<code>care_plan_module</code>、<code>plan_management_focus</code>、<code>care_plan_dimension</code>、<code>care_plan_item</code>、<code>plan_item_basis</code></td>
+<td>方案版本、输入快照及模块/侧重/七维条目/事实依据</td>
+</tr>
+<tr>
+<td>D3 条件与审核</td>
+<td><code>condition_confirmation</code>、<code>review_submission</code>、<code>review_decision</code></td>
+<td>条件核实、送审冻结与决定；审核表供 PLAN/TASK 两阶段共用</td>
+</tr>
+<tr>
+<td>D4 任务与排程</td>
+<td><code>task_template</code>、<code>task_bundle</code>、<code>task_group</code>、<code>task_group_variant</code>、<code>task_group_source</code>、<code>schedule_preview</code></td>
+<td>任务模板、包、组、候选动作、来源及排程快照</td>
+</tr>
+<tr>
+<td>D5 发布与正式实例</td>
+<td><code>publication_preview</code>、<code>publication</code>、<code>publication_request</code>、<code>execution_task</code>、<code>outbox_event</code></td>
+<td>衔接清单、发布幂等、正式实例及待接消息通道的事件</td>
+</tr>
+<tr>
+<td>D6 执行反馈</td>
+<td><code>task_feedback</code>、<code>task_result</code>、<code>task_safety_event</code></td>
+<td>不可变反馈、当前结果及独立安全事件</td>
+</tr>
+<tr>
+<td>D7 AI 与旧请求关联</td>
+<td><code>plan_generation_job</code>、<code>legacy_recommendation_request</code></td>
+<td>候选、状态、模型用量和同键请求复用</td>
+</tr>
+<tr>
+<td>公共存储</td>
+<td><code>audit_log</code>、<code>app_metadata</code></td>
+<td>关键业务变更审计及应用元数据</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>health_input_snapshot</code> 同时保存 PLAN 和 TASK 阶段输入；D4 中二审记录复用 D3 的审核表。图中的重复展示不代表重复建表。</p>
+<h3>4.3 AI 外部传输边界</h3>
+<p>模型密钥只在服务端环境配置中使用。后端向 DeepSeek 发送白名单投影的事实内容、来源类别、确认状态、时间、缺项与冲突，以及目标、周期和生成要求；不主动发送姓名、患者主键、联系方式等字段。自由文本仍可能包含身份信息，因此当前仅允许虚构 DEMO，不能把字段投影称作通用脱敏能力。</p>
+<p>系统保存生成输入、原始输出、校验后候选、提示词与规则版本和用量，用于追溯。面向前端的生成详情不返回密钥、系统提示词或原始模型文本。模型调用在数据库事务之外执行；返回的原始内容留档，通过校验后才保存为可采用的候选，校验不通过则记录拒绝状态。</p>
+<h3>4.4 前端必须区分的编号和修订</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>指向什么</th>
+<th>注意事项</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>patientId / archiveId</code></td>
+<td>原生患者 UUID / 旧契约数字档案别名</td>
+<td>两者映射后才能使用；旧大整数保持字符串，不转 Number</td>
+</tr>
+<tr>
+<td><code>planId / versionId</code></td>
+<td>同一方案家族 / 某个具体版本</td>
+<td>审核和任务来源绑定具体版本，不只绑定家族</td>
+</tr>
+<tr>
+<td><code>generationJobId / adviceId</code></td>
+<td>本机 AI 作业 / 旧建议入口返回的同一作业编号</td>
+<td>不把它当作 workflowId；人工采用仍是独立动作</td>
+</tr>
+<tr>
+<td><code>taskBundleId / executionTaskId</code></td>
+<td>任务编排版本 / 某天某时段的正式实例</td>
+<td>前者用于编辑与审核，后者用于打卡</td>
+</tr>
+<tr>
+<td><code>reviewSubmissionId</code></td>
+<td>一次 PLAN 或 TASK 送审</td>
+<td>审核决定使用该提交自己的 rowVersion</td>
+</tr>
+<tr>
+<td><code>profileRevision</code></td>
+<td>患者资料修订</td>
+<td>创建草稿、生成 AI 时检查资料是否变化</td>
+</tr>
+<tr>
+<td><code>rowVersion / contentRevision / hash</code></td>
+<td>资源修订 / 正文修订 / 内容摘要</td>
+<td>防止覆盖、旧确认或旧预览误用；不同资源的修订不能混用</td>
+</tr>
+</tbody>
+</table></div>
+<p>原生 AI、发布、打卡使用 <code>Idempotency-Key</code>；旧同步建议入口使用 <code>X-Request-Id</code> 关联重复请求。相同键与相同正文复用结果，改正文复用同键则冲突；重试也要重新检查有效授权。</p>
+<h2 id="section-5">5. 功能结构与接口分组</h2>
+<figure><button class="diagram" data-src="diagrams/backend-function-map.drawio.png" data-caption="当前后端功能结构" aria-label="放大当前后端功能结构"><img src="diagrams/backend-function-map.drawio.png" alt="当前后端功能结构" /></button><figcaption>当前后端功能结构 · 点击放大，可切换原尺寸查看</figcaption></figure>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>功能分组</th>
+<th>接口数</th>
+<th>当前包含</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>资料与方案</td>
+<td>15</td>
+<td>患者及管理依据 3、草稿与版本 4、AI 候选 4、旧契约兼容 4</td>
+</tr>
+<tr>
+<td>审核与任务</td>
+<td>15</td>
+<td>条件确认 2、一审与共用审核 5、任务包 3、排程与二审 5</td>
+</tr>
+<tr>
+<td>发布与反馈</td>
+<td>10</td>
+<td>发布 4、日任务 2、打卡与更正 4</td>
+</tr>
+<tr>
+<td>基础运行</td>
+<td>1</td>
+<td>服务健康检查；认证、审计、文档等横切能力不重复计操作数</td>
+</tr>
+<tr>
+<td>合计</td>
+<td>41</td>
+<td>从当前业务 OpenAPI 中按 HTTP 方法 + 路径计数</td>
+</tr>
+</tbody>
+</table></div>
+<p>同一个审核读取、决策、撤回入口按 <code>stage</code> 服务于一审和二审，所以没有为二审再重复增加三项接口。文档页面、OpenAPI 自身、Actuator 和模拟前端页面不纳入上述 41 个业务文档操作。</p>
+<h2 id="section-6">6. 数据库 ER 图</h2>
+<figure><button class="diagram" data-src="diagrams/backend-database-er.drawio.png" data-caption="当前后端数据库核心ER总览" aria-label="放大当前后端数据库核心ER总览"><img src="diagrams/backend-database-er.drawio.png" alt="当前后端数据库核心ER总览" /></button><figcaption>当前后端数据库核心ER总览 · 点击放大，可切换原尺寸查看</figcaption></figure>
+<p>总览选择 13 张核心表，展示“患者 → 方案家族/版本 → 任务包 → 发布 → 正式日任务 → 反馈/当前结果”，并关联输入快照、AI 作业和两阶段共用审核记录。它是一张实体关系图，连线表示数据库外键，不代表操作先后。</p>
+<p>已按本机 V1—V11 生效结构核对全部 <strong>33 张表、62 条物理外键</strong>。详细图分为资料与方案、确认审核与任务、发布与反馈、AI 与支撑四个域，见 <a href="#database-er">ER 图与关系说明</a>。主键、复合外键、零或一/一对多，以及版本指针和历史归属均分别标明。</p>
+<p>图中虚线是实际存在的非标识外键；没有外键的重试来源、反馈更正指针和审计目标只在字段及说明中标注。当前无组织表、账号表，不因出现 <code>org_id</code> 或操作人编号就补画实体。</p>
+<h2 id="section-7">7. 用例图与参与边界</h2>
+<figure><button class="diagram" data-src="diagrams/backend-use-cases.drawio.png" data-caption="当前后端用例图" aria-label="放大当前后端用例图"><img src="diagrams/backend-use-cases.drawio.png" alt="当前后端用例图" /></button><figcaption>当前后端用例图 · 点击放大，可切换原尺寸查看</figcaption></figure>
+<p>用例图围绕用户目标绘制，实线只表示参与关系，不表示先后顺序。一次用例可能调用多个接口；41 个接口不需要逐个拆成用例椭圆。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>参与者</th>
+<th>图中业务目标</th>
+<th>对应能力 / 约束</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>方案编辑者 / 管理人员</td>
+<td>查询资料、编辑或形成新版本、请求及采用 AI 候选、确认条件、送审/撤回、派生编排任务、预览与发布</td>
+<td><code>PATIENT_READ</code>、<code>PLAN_EDIT</code>、<code>PLAN_CONFIRM</code>、<code>TASK_READ</code>、<code>TASK_EDIT</code>、<code>TASK_PUBLISH</code>；用药来源确认另需 <code>PLAN_CONFIRM_PROFESSIONAL</code></td>
+</tr>
+<tr>
+<td>独立审核者</td>
+<td>查看冻结方案或任务排程，完成一审/二审的通过或退回</td>
+<td><code>PLAN_REVIEW</code> / <code>TASK_REVIEW</code> 及对应读取能力；禁止审核本人提交</td>
+</tr>
+<tr>
+<td>患者</td>
+<td>查询本人的日任务和详情，打卡、补记、更正及读取反馈</td>
+<td><code>TASK_READ</code>、<code>TASK_FEEDBACK</code>；按患者授权和任务窗口限制</td>
+</tr>
+<tr>
+<td>外部 DeepSeek API</td>
+<td>参与方案候选生成</td>
+<td>只与后端 AI 作业通信；不参与人工采用、审核或发布</td>
+</tr>
+</tbody>
+</table></div>
+<p>这里的角色是当前业务职责与 DEMO 授权组合；不等同于已经实现正式角色管理。正式管理员、完整照护者/专业人员客户端、自动医学审批和消息推送尚未纳入用例图。</p>
+<h2 id="section-8">8. 与伙伴前端的对齐边界</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>旧文档能力</th>
+<th>当前情况</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>授权档案列表</td>
+<td>已适配：<code>GET /store/care/grant-administration/archives</code></td>
+</tr>
+<tr>
+<td>患者输入</td>
+<td>已适配入口：<code>GET /store/care/archives/{archiveId}/input</code>；旧规范为动态对象，页面具体取值待核对</td>
+</tr>
+<tr>
+<td>AI 方案建议</td>
+<td>已适配入口：<code>POST /store/care/drafts/recommendations/generate</code>；返回真实候选，分类与状态字符串仍需页面确认</td>
+</tr>
+<tr>
+<td>非空 <code>confirmedManagement</code></td>
+<td>已接入：须原样回传依据评估的 evaluation/sourceHash；人工确认侧重，后端计算融合</td>
+</tr>
+<tr>
+<td>数字组织编号映射</td>
+<td>未配置；本机 DEMO 不等于旧服务器账号范围</td>
+</tr>
+<tr>
+<td>旧工作流、条件确认、动作拆解、审核、发布和反馈入口</td>
+<td>尚未完整适配；相应原生业务能力不能等同于旧路由已可调用</td>
+</tr>
+</tbody>
+</table></div>
+<p>旧建议入口目前创建暂定 7 天的内部草稿、提交 AI 作业并等待候选；<code>actions=[]</code>、<code>decompositionPending=true</code> 表示动作尚未通过旧入口拆解。不会自动采纳、送审、发布，也不把内部方案版本伪装成旧工作流编号。详见<a href="../FRONTEND-CONTRACT-ALIGNMENT.md">前端契约对齐</a>。</p>
+<h2 id="section-9">9. 当前未完成的业务能力</h2>
+<ul>
+<li>伙伴旧工作流全链路适配与完整页面联调；医学自动判型规则启用及更完整的多病语义冲突校验。</li>
+<li>正式身份登录、组织与成员管理、真实患者接入；患者建档及资料维护尚无正式对外写入接口。</li>
+<li>文献检索与来源核验、医学审核内容库、药物/中医等完整专业参数和模板接入。</li>
+<li>完整质量评分、依从性统计报表；当前完成比例不等于质量合格。</li>
+<li>语音、图片、设备数据接入，以及短信、微信、App 等真实通知送达。</li>
+<li>安全事件处置/关闭、护士工单及随访服务闭环；反馈不会自动生成下一周期方案。</li>
+</ul>
+<p>这些能力可以作为后续开发项，不计入本版“已实现”的主线。涉及视频目标的下一步优先完成旧工作流与管理侧重衔接，再推进前后端联合验证。</p>
+<h2 id="section-10">10. 开发定位与文档维护</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>业务</th>
+<th>主要代码位置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>患者范围与摘要</td>
+<td><code>PatientServiceImpl</code>、<code>LegacyArchiveResolver</code>、<code>LegacyCareInputService</code></td>
+</tr>
+<tr>
+<td>方案编辑与校验</td>
+<td><code>CarePlanServiceImpl</code>、<code>PlanDraftValidation</code>、<code>PlanVersionServiceImpl</code></td>
+</tr>
+<tr>
+<td>AI 生成与采用</td>
+<td><code>PlanGenerationService</code>、<code>PlanGenerationWorker</code>、<code>DeepSeekPlanClient</code>、<code>AiPlanPolicy</code></td>
+</tr>
+<tr>
+<td>条件确认和一审</td>
+<td><code>ConditionConfirmationServiceImpl</code>、<code>PlanReviewServiceImpl</code>、<code>PlanReviewSupport</code></td>
+</tr>
+<tr>
+<td>任务派生和二审</td>
+<td><code>TaskGenerationService</code>、<code>TaskScheduleService</code>、<code>TaskReviewService</code></td>
+</tr>
+<tr>
+<td>发布和反馈</td>
+<td><code>TaskPublicationService</code>、<code>TaskFeedbackService</code>、<code>TaskFeedbackPolicy</code></td>
+</tr>
+<tr>
+<td>数据结构</td>
+<td><code>src/main/resources/db/migration/V1…V11</code>；历史迁移不覆盖修改</td>
+</tr>
+</tbody>
+</table></div>
+<p>以上服务均位于 <code>src/main/java/com/healthsystem/service/impl/</code>。接口按 Controller 定位，完整条目见 <a href="#api-index">API 索引</a>。原始阶段文档中的“后续实现”是当时批次的历史描述，当前进度以本版和最新专项验证记录为准。</p>
+<p>图稿可直接在 draw.io 编辑；PNG 内也嵌入了可编辑图数据。<code>diagrams/build_diagrams.py</code> 生成业务流、数据流、功能图；<code>diagrams/build_er_use_cases.py</code> 根据结构快照生成 ER 图和用例图，维护方式见 <a href="#database-er">ER 附录</a>。若直接修改 draw.io 图稿，后续不要运行旧生成器覆盖手工布局，应先同步相应修改。浏览器阅读版由 <code>build_reading_page.py</code> 根据本文件、接口索引及 ER 附录生成。</p>
+<p>本次只新增文档、图稿和文档生成脚本，并在项目 README 增加入口。未修改业务逻辑、数据库迁移或运行环境。</p>
+<p>文档检查：五张主图和四张 ER 详图均已逐张查看；draw.io XML、PNG 内嵌可编辑图数据、文档本地链接、阅读版导航锚点及接口索引检查通过。ER 覆盖清单与结构快照核对为 33 张表、62 条外键。此轮只核查文档与图稿，没有重新运行后端测试或付费 AI 调用。</p>
+<h1>后端接口索引</h1>
+<p>日期：2026-10-18（管理侧重批次）。来源：本机运行服务的 <code>/ncd-ai/v3/api-docs/health</code>。共 36 个路径、41 个操作，均省略 <code>/ncd-ai</code> 前缀。原生能力与旧兼容入口并存，不表示全部旧路由已适配。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>序号</th>
+<th>分组</th>
+<th>方法</th>
+<th>路径</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>01 患者资料</td>
+<td><code>GET</code></td>
+<td><code>/patients</code></td>
+<td>查询授权患者列表</td>
+</tr>
+<tr>
+<td>2</td>
+<td>01 患者资料</td>
+<td><code>GET</code></td>
+<td><code>/patients/{id}/health-summary</code></td>
+<td>读取患者六方面健康摘要</td>
+</tr>
+<tr>
+<td>3</td>
+<td>02 方案草稿</td>
+<td><code>GET</code></td>
+<td><code>/plan-versions/{id}</code></td>
+<td>读取方案版本</td>
+</tr>
+<tr>
+<td>4</td>
+<td>02 方案草稿</td>
+<td><code>PATCH</code></td>
+<td><code>/plan-versions/{id}</code></td>
+<td>编辑方案草稿</td>
+</tr>
+<tr>
+<td>5</td>
+<td>02 方案草稿</td>
+<td><code>POST</code></td>
+<td><code>/care-plans</code></td>
+<td>新建方案草稿</td>
+</tr>
+<tr>
+<td>6</td>
+<td>03 执行条件</td>
+<td><code>GET</code></td>
+<td><code>/plan-versions/{id}/condition-confirmations</code></td>
+<td>查询执行条件及确认历史</td>
+</tr>
+<tr>
+<td>7</td>
+<td>03 执行条件</td>
+<td><code>POST</code></td>
+<td><code>/plan-versions/{id}/condition-confirmations</code></td>
+<td>追加执行条件确认</td>
+</tr>
+<tr>
+<td>8</td>
+<td>04 方案一审</td>
+<td><code>GET</code></td>
+<td><code>/plan-versions/{id}/review-context</code></td>
+<td>查询一审资料与阻断项</td>
+</tr>
+<tr>
+<td>9</td>
+<td>04 方案一审</td>
+<td><code>GET</code></td>
+<td><code>/review-submissions/{id}</code></td>
+<td>读取本次送审快照与结果</td>
+</tr>
+<tr>
+<td>10</td>
+<td>04 方案一审</td>
+<td><code>POST</code></td>
+<td><code>/plan-versions/{id}/review-submissions</code></td>
+<td>提交方案一审</td>
+</tr>
+<tr>
+<td>11</td>
+<td>04 方案一审</td>
+<td><code>POST</code></td>
+<td><code>/review-submissions/{id}/decisions</code></td>
+<td>审核通过或退回</td>
+</tr>
+<tr>
+<td>12</td>
+<td>04 方案一审</td>
+<td><code>POST</code></td>
+<td><code>/review-submissions/{id}/withdrawals</code></td>
+<td>提交人撤回待审方案</td>
+</tr>
+<tr>
+<td>13</td>
+<td>05 方案版本</td>
+<td><code>POST</code></td>
+<td><code>/care-plans/{id}/versions</code></td>
+<td>从已批准方案建立新草稿版本</td>
+</tr>
+<tr>
+<td>14</td>
+<td>06 运行状态</td>
+<td><code>GET</code></td>
+<td><code>/health</code></td>
+<td>检查服务存活</td>
+</tr>
+<tr>
+<td>15</td>
+<td>07 七维任务包</td>
+<td><code>GET</code></td>
+<td><code>/task-bundles/{id}</code></td>
+<td>读取任务包与来源</td>
+</tr>
+<tr>
+<td>16</td>
+<td>07 七维任务包</td>
+<td><code>PATCH</code></td>
+<td><code>/task-bundles/{id}</code></td>
+<td>编辑任务执行编排</td>
+</tr>
+<tr>
+<td>17</td>
+<td>07 七维任务包</td>
+<td><code>POST</code></td>
+<td><code>/plan-versions/{id}/task-bundles</code></td>
+<td>从已审方案派生七维任务草稿</td>
+</tr>
+<tr>
+<td>18</td>
+<td>08 排程与任务二审</td>
+<td><code>GET</code></td>
+<td><code>/schedule-previews/{id}</code></td>
+<td>读取冻结排程与阻断项</td>
+</tr>
+<tr>
+<td>19</td>
+<td>08 排程与任务二审</td>
+<td><code>GET</code></td>
+<td><code>/task-bundles/{id}/review-context</code></td>
+<td>查询任务二审资料与历史</td>
+</tr>
+<tr>
+<td>20</td>
+<td>08 排程与任务二审</td>
+<td><code>POST</code></td>
+<td><code>/task-bundles/{id}/review-submissions</code></td>
+<td>提交任务二审</td>
+</tr>
+<tr>
+<td>21</td>
+<td>08 排程与任务二审</td>
+<td><code>POST</code></td>
+<td><code>/task-bundles/{id}/schedule-previews</code></td>
+<td>生成确定周期排程预览</td>
+</tr>
+<tr>
+<td>22</td>
+<td>08 排程与任务二审</td>
+<td><code>POST</code></td>
+<td><code>/task-bundles/{id}/versions</code></td>
+<td>从已批准任务包建立新草稿版本</td>
+</tr>
+<tr>
+<td>23</td>
+<td>09 发布与日任务</td>
+<td><code>GET</code></td>
+<td><code>/execution-tasks/{id}</code></td>
+<td>查询正式任务及冻结执行窗口</td>
+</tr>
+<tr>
+<td>24</td>
+<td>09 发布与日任务</td>
+<td><code>GET</code></td>
+<td><code>/patients/{id}/execution-tasks</code></td>
+<td>查询指定患者正式日任务</td>
+</tr>
+<tr>
+<td>25</td>
+<td>09 发布与日任务</td>
+<td><code>GET</code></td>
+<td><code>/publications/{id}</code></td>
+<td>查询发布结果与通知配置状态</td>
+</tr>
+<tr>
+<td>26</td>
+<td>09 发布与日任务</td>
+<td><code>GET</code></td>
+<td><code>/task-bundles/{id}/publication-previews/{previewId}</code></td>
+<td>读取冻结发布衔接清单</td>
+</tr>
+<tr>
+<td>27</td>
+<td>09 发布与日任务</td>
+<td><code>POST</code></td>
+<td><code>/task-bundles/{id}/publication-previews</code></td>
+<td>核对发布与未来版本衔接清单</td>
+</tr>
+<tr>
+<td>28</td>
+<td>09 发布与日任务</td>
+<td><code>POST</code></td>
+<td><code>/task-bundles/{id}/publications</code></td>
+<td>按指定预览事务发布任务</td>
+</tr>
+<tr>
+<td>29</td>
+<td>10 打卡与补记</td>
+<td><code>GET</code></td>
+<td><code>/check-ins/{id}</code></td>
+<td>读取一条不可变反馈</td>
+</tr>
+<tr>
+<td>30</td>
+<td>10 打卡与补记</td>
+<td><code>GET</code></td>
+<td><code>/execution-tasks/{id}/check-ins</code></td>
+<td>查询任务全部反馈版本</td>
+</tr>
+<tr>
+<td>31</td>
+<td>10 打卡与补记</td>
+<td><code>POST</code></td>
+<td><code>/check-ins/{id}/amendments</code></td>
+<td>追加反馈更正</td>
+</tr>
+<tr>
+<td>32</td>
+<td>10 打卡与补记</td>
+<td><code>POST</code></td>
+<td><code>/execution-tasks/{id}/check-ins</code></td>
+<td>一键完成或提交基础反馈</td>
+</tr>
+<tr>
+<td>33</td>
+<td>11 AI 方案候选</td>
+<td><code>GET</code></td>
+<td><code>/plan-generation-jobs/{id}</code></td>
+<td>读取生成进度与候选</td>
+</tr>
+<tr>
+<td>34</td>
+<td>11 AI 方案候选</td>
+<td><code>GET</code></td>
+<td><code>/plan-versions/{id}/generation-jobs</code></td>
+<td>查询最近 20 次生成历史</td>
+</tr>
+<tr>
+<td>35</td>
+<td>11 AI 方案候选</td>
+<td><code>POST</code></td>
+<td><code>/plan-generation-jobs/{id}/adoptions</code></td>
+<td>采用候选到草稿</td>
+</tr>
+<tr>
+<td>36</td>
+<td>11 AI 方案候选</td>
+<td><code>POST</code></td>
+<td><code>/plan-versions/{id}/generation-jobs</code></td>
+<td>提交 AI 方案生成</td>
+</tr>
+<tr>
+<td>37</td>
+<td>11 旧接口兼容：档案选择</td>
+<td><code>GET</code></td>
+<td><code>/store/care/grant-administration/archives</code></td>
+<td>按前端旧契约查询授权档案列表</td>
+</tr>
+<tr>
+<td>38</td>
+<td>12 旧接口兼容：资料与建议</td>
+<td><code>GET</code></td>
+<td><code>/store/care/archives/{archiveId}/input</code></td>
+<td>按旧档案编号读取患者输入</td>
+</tr>
+<tr>
+<td>39</td>
+<td>12 旧接口兼容：资料与建议</td>
+<td><code>POST</code></td>
+<td><code>/store/care/drafts/recommendations/generate</code></td>
+<td>按旧契约生成 AI 方案建议</td>
+</tr>
+<tr>
+<td>40</td>
+<td>14 病种管理侧重与来源</td>
+<td><code>GET</code></td>
+<td><code>/patients/{id}/management-basis</code></td>
+<td>读取患者病种管理依据</td>
+</tr>
+<tr>
+<td>41</td>
+<td>14 病种管理侧重与来源</td>
+<td><code>POST</code></td>
+<td><code>/store/care/drafts/basis/evaluate</code></td>
+<td>按旧契约读取病种管理依据</td>
+</tr>
+</tbody>
+</table></div>
+<p>源定义 SHA-256：<code>03aaf6fe6363030d82c3b99ec05f1c578ed830bac91d4cbf3706a3227e05edfd</code>，对应本次取回的文档快照 <code>.dev/qa/management-openapi.json</code>。</p>
+<h2 id="database-er">附录 / 数据库 ER 图与关系说明</h2>
+<p><strong>2026-10-18 · Flyway V1—V11 · 33 张业务及支撑表 · 62 条物理外键</strong></p>
+<p>本版按本机 MySQL <code>information_schema</code> 的列、主键、唯一键、外键和 CHECK 约束绘制，并与迁移脚本核对。只读取了结构元数据，没有导出患者记录、账号凭证或模型密钥。完整列定义保存在 <a href="database-schema.snapshot.json">结构快照</a>。</p>
+<p>先看 <a href="diagrams/backend-database-er.drawio.png">核心 ER 总览</a>（<a href="diagrams/backend-database-er.drawio">可编辑源文件</a>），再按业务域查下面的详图。总览选取 13 张表和主要外键；四张详图共同覆盖全部 33 张表、62 条外键，每条外键按其子表所属分域收录一次。</p>
+<h3>1. 图例与读法</h3>
+<ul>
+<li><code>PK</code>：主键；<code>FK</code>：实际外键的成员列。唯一约束另见末尾的约束索引，不能因为某一列参与联合唯一键，就把该列单独看成唯一。</li>
+<li>字段后的 <code>?</code> 表示允许 NULL；没有 <code>?</code> 表示必须有值。<code>condition_confirmation.plan_version_id</code> 虽然列定义可空，CHECK 要求有值，图中按有效约束展示为必填。</li>
+<li>乌鸦脚基数：<code>||</code> 为恰好一个，<code>○|</code> 为零或一个，<code>○&lt;</code> 为零到多个。读法例如“一个患者可有零到多个方案；每个方案必须属于一个患者”。</li>
+<li>虚线表示<strong>实际存在的非标识外键</strong>：子记录有自己的独立主键，父键不组成子记录主键。虚线不表示“猜测关系”或“未实现关系”。</li>
+<li>蓝色框为本域实体；灰色“引用”框为其他域同一张表的简略展示，不是重复建表。引用框只展示主键。</li>
+<li>连线文字显示业务外键列，省略共同的 <code>org_id</code>；实际外键均以 <code>(org_id, xxx_id)</code> 指向父表 <code>(org_id, id)</code>。总览为简洁省略 <code>org_id</code> 字段，详图保留。</li>
+<li>图中只列主键、外键成员与部分关键业务字段。完整字段、联合唯一键和 CHECK 以结构快照及迁移文件为准。</li>
+</ul>
+<h3>2. 资料与方案（12 张表）</h3>
+<figure><button class="diagram" data-src="diagrams/er-01-patients-plans.drawio.png" data-caption="资料与方案物理 ER 详图" aria-label="放大资料与方案物理 ER 详图"><img src="diagrams/er-01-patients-plans.drawio.png" alt="资料与方案物理 ER 详图" /></button><figcaption>资料与方案物理 ER 详图 · 点击放大，可切换原尺寸查看</figcaption></figure>
+<p><a href="diagrams/er-01-patients-plans.drawio">编辑此图</a></p>
+<p>患者事实、输入快照、方案家族和方案版本分别保存。方案版本下有模块、管理侧重、七维决策与条目；<code>plan_item_basis</code> 将一个条目具体绑定到模块和事实，保留依据来源。</p>
+<p><code>care_plan.current_version_id</code> 是当前版本指针；<code>care_plan_version.plan_id</code> 才是所有历史版本归属方案的关系，两条关系并不冲突。<code>based_on_version_id</code> 保留版本派生来源。数据库外键主要保证同组织的记录存在，“确属该方案的版本”等业务一致性仍需要服务层校验。</p>
+<h3>3. 确认、审核与任务（9 张本域表）</h3>
+<figure><button class="diagram" data-src="diagrams/er-02-reviews-tasks.drawio.png" data-caption="确认审核与任务物理 ER 详图" aria-label="放大确认审核与任务物理 ER 详图"><img src="diagrams/er-02-reviews-tasks.drawio.png" alt="确认审核与任务物理 ER 详图" /></button><figcaption>确认审核与任务物理 ER 详图 · 点击放大，可切换原尺寸查看</figcaption></figure>
+<p><a href="diagrams/er-02-reviews-tasks.drawio">编辑此图</a></p>
+<p>一审和二审复用 <code>review_submission</code> / <code>review_decision</code>。<code>stage=PLAN</code> 时必须绑定方案版本，任务及排程字段为空；<code>stage=TASK</code> 时必须绑定任务包与排程预览，方案版本字段为空。这是 CHECK 限制，不是同时审核两个对象。</p>
+<p>每个方案版本或任务包可以有多次历史送审；<code>pending_slot</code> 联合唯一键只限制“同时至多一个待审”，并不把整个历史关系变成一对一。一条送审最多有一个正式审核决定；撤回可以没有审核决定。</p>
+<p>任务包绑定一审提交、批准决定及 TASK 输入快照。<code>task_group_source</code> 保存每个任务组的方案条目与事实来源；任务组下可有多个变体。<code>task_bundle.latest_preview_id</code> 是最新排程指针，<code>schedule_preview.task_bundle_id</code> 保留全部预览归属。</p>
+<p><code>task_template</code> 是当前已有的模板表，但没有其他表通过物理外键指向它，因此保持为独立实体。模板选择和版本校验由任务生成与排程逻辑处理，不能在 ER 图里补造外键。</p>
+<h3>4. 发布与反馈（8 张本域表）</h3>
+<figure><button class="diagram" data-src="diagrams/er-03-publication-feedback.drawio.png" data-caption="发布与反馈物理 ER 详图" aria-label="放大发布与反馈物理 ER 详图"><img src="diagrams/er-03-publication-feedback.drawio.png" alt="发布与反馈物理 ER 详图" /></button><figcaption>发布与反馈物理 ER 详图 · 点击放大，可切换原尺寸查看</figcaption></figure>
+<p><a href="diagrams/er-03-publication-feedback.drawio">编辑此图</a></p>
+<p>发布记录绑定已审核任务包、二审记录、冻结排程和发布预览。每个任务包最多一条发布记录；发布幂等请求单独保存。正式日任务记录具体日期、窗口、内容快照及后续替代发布关系。</p>
+<p>一次日任务可有多条反馈历史，但最多一条当前结果。当前结果通过 <code>current_feedback_id</code> 指向用于本次评估的反馈；这是“当前指针”和“全部历史”的区别。异常反馈可产生安全事件，每条反馈最多一条事件，当前仍为 OPEN 待处置。</p>
+<p><code>outbox_event</code> 已落库，但真实消息通道尚未接通；存在事件表不等于已经实现短信或微信送达。</p>
+<h3>5. AI 与支撑（4 张本域表）</h3>
+<figure><button class="diagram" data-src="diagrams/er-04-ai-support.drawio.png" data-caption="AI与支撑物理 ER 详图" aria-label="放大AI与支撑物理 ER 详图"><img src="diagrams/er-04-ai-support.drawio.png" alt="AI与支撑物理 ER 详图" /></button><figcaption>AI与支撑物理 ER 详图 · 点击放大，可切换原尺寸查看</figcaption></figure>
+<p><a href="diagrams/er-04-ai-support.drawio">编辑此图</a></p>
+<p>AI 作业绑定患者、目标方案版本和输入快照，保存候选、校验结果、状态、用量及提示词/规则版本。旧建议接口的幂等记录关联同一作业。生成成功不会直接替换草稿，人工采用才写入方案版本。</p>
+<p><code>audit_log</code> 按目标类型和目标编号记录操作，属于多态引用，没有指向所有业务表的物理外键；<code>app_metadata</code> 保存应用标记。图中两者独立展示。</p>
+<h3>6. 容易误读的关系</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>关系 / 字段</th>
+<th>当前约束与含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>患者 → 旧档案编号</td>
+<td><code>UNIQUE(org_id, patient_id)</code>，一个患者至多一个本系统旧档案别名</td>
+</tr>
+<tr>
+<td>旧事实 → 新事实</td>
+<td><code>supersedes_fact_id</code> 有真实自外键及联合唯一键，一条旧事实至多一个直接替代者</td>
+</tr>
+<tr>
+<td>旧条件确认 → 新确认</td>
+<td><code>supersedes_confirmation_id</code> 同样有真实自外键和唯一约束</td>
+</tr>
+<tr>
+<td>方案版本 → 子版本 / 任务包 → 子任务包</td>
+<td>存在自外键，但没有“每个父版本只允许一个后继”的唯一约束，因此可为一对多</td>
+</tr>
+<tr>
+<td>送审 → 决定 / 任务包 → 发布 / 日任务 → 当前结果</td>
+<td>均由子表的联合唯一键保证零或一，不画成一对多</td>
+</tr>
+<tr>
+<td><code>task_feedback.previous_feedback_id</code></td>
+<td>用于追加更正的业务引用；当前无物理外键，不画自外键</td>
+</tr>
+<tr>
+<td><code>plan_generation_job.retry_of_job_id</code></td>
+<td>重试来源的业务引用；当前无物理外键，不画自外键</td>
+</tr>
+<tr>
+<td><code>condition_confirmation.task_bundle_id</code></td>
+<td>预留列，当前 CHECK 要求为空；没有外键，也不是当前任务条件确认功能</td>
+</tr>
+<tr>
+<td><code>task_group_source.module_code</code></td>
+<td>保存来源模块代码，并非指向 <code>care_plan_module</code> 的物理外键</td>
+</tr>
+<tr>
+<td><code>org_id</code>、<code>created_by</code>、<code>subject_id</code>、<code>reviewer_id</code></td>
+<td>组织范围或操作主体标识；当前没有组织表、账号表，不补画虚构实体或关联</td>
+</tr>
+</tbody>
+</table></div>
+<p>是否“可为空”和是否“可以执行业务动作”不同。例如方案版本的输入快照在列定义上可空，并不意味着未满足资料、条件或审核校验的对象可以发布。</p>
+<h3>7. 结构索引</h3>
+<p>以下索引由同一份结构快照生成，列出全部表的主键、实际外键数量，以及外键的准确列映射。<code>org_id</code> 范围唯一键不意味着组织表存在。表数量不含 <code>flyway_schema_history</code>。</p>
+<h4>7.1 全部表与唯一键</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>表</th>
+<th>主键</th>
+<th>外键数</th>
+<th>主要联合唯一键（省略范围键 org_id + id）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>患者 <code>patient</code></td>
+<td><code>id</code></td>
+<td>0</td>
+<td><code>org_id, external_system, external_archive_id</code></td>
+</tr>
+<tr>
+<td>患者能力授权 <code>patient_access_grant</code></td>
+<td><code>id</code></td>
+<td>1</td>
+<td><code>org_id, patient_id, subject_id, capability</code></td>
+</tr>
+<tr>
+<td>患者事实 <code>health_fact</code></td>
+<td><code>id</code></td>
+<td>2</td>
+<td><code>org_id, supersedes_fact_id</code></td>
+</tr>
+<tr>
+<td>输入快照 <code>health_input_snapshot</code></td>
+<td><code>id</code></td>
+<td>1</td>
+<td>—</td>
+</tr>
+<tr>
+<td>旧档案编号映射 <code>legacy_archive_mapping</code></td>
+<td><code>archive_id</code></td>
+<td>1</td>
+<td><code>org_id, patient_id</code></td>
+</tr>
+<tr>
+<td>方案家族 <code>care_plan</code></td>
+<td><code>id</code></td>
+<td>2</td>
+<td><code>org_id, plan_no</code></td>
+</tr>
+<tr>
+<td>方案版本 <code>care_plan_version</code></td>
+<td><code>id</code></td>
+<td>3</td>
+<td><code>org_id, plan_id, version_no</code></td>
+</tr>
+<tr>
+<td>方案模块 <code>care_plan_module</code></td>
+<td><code>id</code></td>
+<td>1</td>
+<td><code>org_id, plan_version_id, module_code</code></td>
+</tr>
+<tr>
+<td>管理侧重 <code>plan_management_focus</code></td>
+<td><code>id</code></td>
+<td>2</td>
+<td><code>org_id, plan_version_id, diagnosis_fact_id</code></td>
+</tr>
+<tr>
+<td>七维决策 <code>care_plan_dimension</code></td>
+<td><code>id</code></td>
+<td>1</td>
+<td><code>org_id, plan_version_id, dimension_code</code></td>
+</tr>
+<tr>
+<td>方案条目 <code>care_plan_item</code></td>
+<td><code>id</code></td>
+<td>2</td>
+<td>—</td>
+</tr>
+<tr>
+<td>条目依据 <code>plan_item_basis</code></td>
+<td><code>id</code></td>
+<td>3</td>
+<td><code>org_id, plan_item_id, module_id, fact_id</code></td>
+</tr>
+<tr>
+<td>执行条件确认 <code>condition_confirmation</code></td>
+<td><code>id</code></td>
+<td>3</td>
+<td><code>org_id, supersedes_confirmation_id</code></td>
+</tr>
+<tr>
+<td>送审记录 <code>review_submission</code></td>
+<td><code>id</code></td>
+<td>3</td>
+<td><code>org_id, plan_version_id, pending_slot</code>；<code>org_id, task_bundle_id, pending_slot</code></td>
+</tr>
+<tr>
+<td>审核决定 <code>review_decision</code></td>
+<td><code>id</code></td>
+<td>1</td>
+<td><code>org_id, submission_id</code></td>
+</tr>
+<tr>
+<td>任务模板 <code>task_template</code></td>
+<td><code>id</code></td>
+<td>0</td>
+<td><code>org_id, template_code, version_no</code></td>
+</tr>
+<tr>
+<td>任务包版本 <code>task_bundle</code></td>
+<td><code>id</code></td>
+<td>7</td>
+<td><code>org_id, plan_version_id, version_no</code></td>
+</tr>
+<tr>
+<td>任务组 <code>task_group</code></td>
+<td><code>id</code></td>
+<td>1</td>
+<td>—</td>
+</tr>
+<tr>
+<td>任务变体 <code>task_group_variant</code></td>
+<td><code>id</code></td>
+<td>1</td>
+<td><code>org_id, task_group_id, variant_key</code></td>
+</tr>
+<tr>
+<td>任务来源 <code>task_group_source</code></td>
+<td><code>id</code></td>
+<td>3</td>
+<td><code>org_id, task_group_id, plan_item_id, fact_id, module_code</code></td>
+</tr>
+<tr>
+<td>排程预览 <code>schedule_preview</code></td>
+<td><code>id</code></td>
+<td>1</td>
+<td>—</td>
+</tr>
+<tr>
+<td>发布预览 <code>publication_preview</code></td>
+<td><code>id</code></td>
+<td>1</td>
+<td>—</td>
+</tr>
+<tr>
+<td>发布记录 <code>publication</code></td>
+<td><code>id</code></td>
+<td>5</td>
+<td><code>org_id, task_bundle_id</code></td>
+</tr>
+<tr>
+<td>发布幂等记录 <code>publication_request</code></td>
+<td><code>id</code></td>
+<td>1</td>
+<td><code>org_id, idempotency_key</code></td>
+</tr>
+<tr>
+<td>正式日任务 <code>execution_task</code></td>
+<td><code>id</code></td>
+<td>6</td>
+<td><code>org_id, publication_id, occurrence_key</code></td>
+</tr>
+<tr>
+<td>待通知事件 <code>outbox_event</code></td>
+<td><code>id</code></td>
+<td>1</td>
+<td><code>org_id, publication_id, event_type</code></td>
+</tr>
+<tr>
+<td>反馈历史 <code>task_feedback</code></td>
+<td><code>id</code></td>
+<td>1</td>
+<td><code>org_id, idempotency_key</code>；<code>org_id, execution_task_id, version_no</code></td>
+</tr>
+<tr>
+<td>当前反馈结果 <code>task_result</code></td>
+<td><code>id</code></td>
+<td>2</td>
+<td><code>org_id, execution_task_id</code></td>
+</tr>
+<tr>
+<td>安全事件 <code>task_safety_event</code></td>
+<td><code>id</code></td>
+<td>2</td>
+<td><code>org_id, feedback_id</code></td>
+</tr>
+<tr>
+<td>AI 生成作业 <code>plan_generation_job</code></td>
+<td><code>id</code></td>
+<td>3</td>
+<td><code>org_id, created_by, idempotency_key</code></td>
+</tr>
+<tr>
+<td>旧建议幂等记录 <code>legacy_recommendation_request</code></td>
+<td><code>id</code></td>
+<td>1</td>
+<td><code>org_id, created_by, request_key</code></td>
+</tr>
+<tr>
+<td>审计日志 <code>audit_log</code></td>
+<td><code>id</code></td>
+<td>0</td>
+<td>—</td>
+</tr>
+<tr>
+<td>应用元数据 <code>app_metadata</code></td>
+<td><code>metadata_key</code></td>
+<td>0</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h4>7.2 全部物理外键</h4>
+<p>下表的基数按外键、NULL 约束和联合唯一键计算；审核目标还受第 3 节互斥 CHECK 限制。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>子表与外键名</th>
+<th>子列 → 父表（列）</th>
+<th>每个子记录对应父记录数</th>
+<th>每个父记录对应子记录数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>patient_access_grant</code>；<code>fk_patient_access_grant_patient_id</code></td>
+<td><code>(org_id, patient_id)</code> → <code>patient(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>health_fact</code>；<code>fk_health_fact_patient_id</code></td>
+<td><code>(org_id, patient_id)</code> → <code>patient(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>health_fact</code>；<code>fk_health_fact_supersedes_fact_id</code></td>
+<td><code>(org_id, supersedes_fact_id)</code> → <code>health_fact(org_id, id)</code></td>
+<td>0..1</td>
+<td>0..1</td>
+</tr>
+<tr>
+<td><code>health_input_snapshot</code>；<code>fk_health_input_snapshot_patient_id</code></td>
+<td><code>(org_id, patient_id)</code> → <code>patient(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>legacy_archive_mapping</code>；<code>fk_legacy_archive_patient</code></td>
+<td><code>(org_id, patient_id)</code> → <code>patient(org_id, id)</code></td>
+<td>1</td>
+<td>0..1</td>
+</tr>
+<tr>
+<td><code>care_plan</code>；<code>fk_care_plan_current_version_id</code></td>
+<td><code>(org_id, current_version_id)</code> → <code>care_plan_version(org_id, id)</code></td>
+<td>0..1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>care_plan</code>；<code>fk_care_plan_patient_id</code></td>
+<td><code>(org_id, patient_id)</code> → <code>patient(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>care_plan_version</code>；<code>fk_care_plan_version_based_on_version_id</code></td>
+<td><code>(org_id, based_on_version_id)</code> → <code>care_plan_version(org_id, id)</code></td>
+<td>0..1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>care_plan_version</code>；<code>fk_care_plan_version_input_snapshot_id</code></td>
+<td><code>(org_id, input_snapshot_id)</code> → <code>health_input_snapshot(org_id, id)</code></td>
+<td>0..1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>care_plan_version</code>；<code>fk_care_plan_version_plan_id</code></td>
+<td><code>(org_id, plan_id)</code> → <code>care_plan(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>care_plan_module</code>；<code>fk_care_plan_module_plan_version_id</code></td>
+<td><code>(org_id, plan_version_id)</code> → <code>care_plan_version(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>plan_management_focus</code>；<code>fk_plan_management_focus_diagnosis_fact_id</code></td>
+<td><code>(org_id, diagnosis_fact_id)</code> → <code>health_fact(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>plan_management_focus</code>；<code>fk_plan_management_focus_plan_version_id</code></td>
+<td><code>(org_id, plan_version_id)</code> → <code>care_plan_version(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>care_plan_dimension</code>；<code>fk_care_plan_dimension_plan_version_id</code></td>
+<td><code>(org_id, plan_version_id)</code> → <code>care_plan_version(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>care_plan_item</code>；<code>fk_care_plan_item_dimension_id</code></td>
+<td><code>(org_id, dimension_id)</code> → <code>care_plan_dimension(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>care_plan_item</code>；<code>fk_care_plan_item_plan_version_id</code></td>
+<td><code>(org_id, plan_version_id)</code> → <code>care_plan_version(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>plan_item_basis</code>；<code>fk_plan_item_basis_fact_id</code></td>
+<td><code>(org_id, fact_id)</code> → <code>health_fact(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>plan_item_basis</code>；<code>fk_plan_item_basis_module_id</code></td>
+<td><code>(org_id, module_id)</code> → <code>care_plan_module(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>plan_item_basis</code>；<code>fk_plan_item_basis_plan_item_id</code></td>
+<td><code>(org_id, plan_item_id)</code> → <code>care_plan_item(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>condition_confirmation</code>；<code>fk_confirmation_fact</code></td>
+<td><code>(org_id, source_fact_id)</code> → <code>health_fact(org_id, id)</code></td>
+<td>0..1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>condition_confirmation</code>；<code>fk_confirmation_plan</code></td>
+<td><code>(org_id, plan_version_id)</code> → <code>care_plan_version(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>condition_confirmation</code>；<code>fk_confirmation_prior</code></td>
+<td><code>(org_id, supersedes_confirmation_id)</code> → <code>condition_confirmation(org_id, id)</code></td>
+<td>0..1</td>
+<td>0..1</td>
+</tr>
+<tr>
+<td><code>review_submission</code>；<code>fk_review_plan</code></td>
+<td><code>(org_id, plan_version_id)</code> → <code>care_plan_version(org_id, id)</code></td>
+<td>0..1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>review_submission</code>；<code>fk_review_task_bundle</code></td>
+<td><code>(org_id, task_bundle_id)</code> → <code>task_bundle(org_id, id)</code></td>
+<td>0..1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>review_submission</code>；<code>fk_review_task_preview</code></td>
+<td><code>(org_id, schedule_preview_id)</code> → <code>schedule_preview(org_id, id)</code></td>
+<td>0..1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>review_decision</code>；<code>fk_decision_submission</code></td>
+<td><code>(org_id, submission_id)</code> → <code>review_submission(org_id, id)</code></td>
+<td>1</td>
+<td>0..1</td>
+</tr>
+<tr>
+<td><code>task_bundle</code>；<code>fk_bundle_base</code></td>
+<td><code>(org_id, based_on_bundle_id)</code> → <code>task_bundle(org_id, id)</code></td>
+<td>0..1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>task_bundle</code>；<code>fk_bundle_decision</code></td>
+<td><code>(org_id, source_review_decision_id)</code> → <code>review_decision(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>task_bundle</code>；<code>fk_bundle_input</code></td>
+<td><code>(org_id, input_snapshot_id)</code> → <code>health_input_snapshot(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>task_bundle</code>；<code>fk_bundle_patient</code></td>
+<td><code>(org_id, patient_id)</code> → <code>patient(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>task_bundle</code>；<code>fk_bundle_plan</code></td>
+<td><code>(org_id, plan_version_id)</code> → <code>care_plan_version(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>task_bundle</code>；<code>fk_bundle_preview</code></td>
+<td><code>(org_id, latest_preview_id)</code> → <code>schedule_preview(org_id, id)</code></td>
+<td>0..1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>task_bundle</code>；<code>fk_bundle_review</code></td>
+<td><code>(org_id, source_review_submission_id)</code> → <code>review_submission(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>task_group</code>；<code>fk_group_bundle</code></td>
+<td><code>(org_id, task_bundle_id)</code> → <code>task_bundle(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>task_group_variant</code>；<code>fk_variant_group</code></td>
+<td><code>(org_id, task_group_id)</code> → <code>task_group(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>task_group_source</code>；<code>fk_source_fact</code></td>
+<td><code>(org_id, fact_id)</code> → <code>health_fact(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>task_group_source</code>；<code>fk_source_group</code></td>
+<td><code>(org_id, task_group_id)</code> → <code>task_group(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>task_group_source</code>；<code>fk_source_item</code></td>
+<td><code>(org_id, plan_item_id)</code> → <code>care_plan_item(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>schedule_preview</code>；<code>fk_preview_bundle</code></td>
+<td><code>(org_id, task_bundle_id)</code> → <code>task_bundle(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>publication_preview</code>；<code>publication_preview_ibfk_1</code></td>
+<td><code>(org_id, task_bundle_id)</code> → <code>task_bundle(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>publication</code>；<code>publication_ibfk_1</code></td>
+<td><code>(org_id, patient_id)</code> → <code>patient(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>publication</code>；<code>publication_ibfk_2</code></td>
+<td><code>(org_id, task_bundle_id)</code> → <code>task_bundle(org_id, id)</code></td>
+<td>1</td>
+<td>0..1</td>
+</tr>
+<tr>
+<td><code>publication</code>；<code>publication_ibfk_3</code></td>
+<td><code>(org_id, review_submission_id)</code> → <code>review_submission(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>publication</code>；<code>publication_ibfk_4</code></td>
+<td><code>(org_id, schedule_preview_id)</code> → <code>schedule_preview(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>publication</code>；<code>publication_ibfk_5</code></td>
+<td><code>(org_id, publication_preview_id)</code> → <code>publication_preview(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>publication_request</code>；<code>publication_request_ibfk_1</code></td>
+<td><code>(org_id, publication_id)</code> → <code>publication(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>execution_task</code>；<code>execution_task_ibfk_1</code></td>
+<td><code>(org_id, patient_id)</code> → <code>patient(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>execution_task</code>；<code>execution_task_ibfk_2</code></td>
+<td><code>(org_id, publication_id)</code> → <code>publication(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>execution_task</code>；<code>execution_task_ibfk_3</code></td>
+<td><code>(org_id, task_bundle_id)</code> → <code>task_bundle(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>execution_task</code>；<code>execution_task_ibfk_4</code></td>
+<td><code>(org_id, group_id)</code> → <code>task_group(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>execution_task</code>；<code>execution_task_ibfk_5</code></td>
+<td><code>(org_id, variant_id)</code> → <code>task_group_variant(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>execution_task</code>；<code>execution_task_ibfk_6</code></td>
+<td><code>(org_id, replaced_by_publication_id)</code> → <code>publication(org_id, id)</code></td>
+<td>0..1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>outbox_event</code>；<code>outbox_event_ibfk_1</code></td>
+<td><code>(org_id, publication_id)</code> → <code>publication(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>task_feedback</code>；<code>task_feedback_ibfk_1</code></td>
+<td><code>(org_id, execution_task_id)</code> → <code>execution_task(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>task_result</code>；<code>task_result_ibfk_1</code></td>
+<td><code>(org_id, execution_task_id)</code> → <code>execution_task(org_id, id)</code></td>
+<td>1</td>
+<td>0..1</td>
+</tr>
+<tr>
+<td><code>task_result</code>；<code>task_result_ibfk_2</code></td>
+<td><code>(org_id, current_feedback_id)</code> → <code>task_feedback(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>task_safety_event</code>；<code>task_safety_event_ibfk_1</code></td>
+<td><code>(org_id, execution_task_id)</code> → <code>execution_task(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>task_safety_event</code>；<code>task_safety_event_ibfk_2</code></td>
+<td><code>(org_id, feedback_id)</code> → <code>task_feedback(org_id, id)</code></td>
+<td>1</td>
+<td>0..1</td>
+</tr>
+<tr>
+<td><code>plan_generation_job</code>；<code>plan_generation_job_ibfk_1</code></td>
+<td><code>(org_id, patient_id)</code> → <code>patient(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>plan_generation_job</code>；<code>plan_generation_job_ibfk_2</code></td>
+<td><code>(org_id, plan_version_id)</code> → <code>care_plan_version(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>plan_generation_job</code>；<code>plan_generation_job_ibfk_3</code></td>
+<td><code>(org_id, input_snapshot_id)</code> → <code>health_input_snapshot(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+<tr>
+<td><code>legacy_recommendation_request</code>；<code>legacy_recommendation_request_ibfk_1</code></td>
+<td><code>(org_id, generation_job_id)</code> → <code>plan_generation_job(org_id, id)</code></td>
+<td>1</td>
+<td>0..N</td>
+</tr>
+</tbody>
+</table></div>
+<h3>8. 维护与复现</h3>
+<p>结构来源是 <code>src/main/resources/db/migration/V1…V11</code> 及本机已生效结构。图形、覆盖索引和文档都需跟随新增迁移更新，不能把这份日期快照当作永久最新。</p>
+<pre><code class="language-bash"># 仅在本机项目数据库就绪后刷新结构元数据，不读取业务行
+python3 docs/business/diagrams/capture_schema.py
+# 需要 Graphviz 的 dot 命令；生成原生可编辑图稿与完整关系索引
+python3 docs/business/diagrams/build_er_use_cases.py
+# 用 draw.io 桌面 CLI 导出 PNG，-e 将可编辑图数据嵌入 PNG
+/Applications/draw.io.app/Contents/MacOS/draw.io -x -f png -e --theme light -s 1.2 -b 20 \
+  -o docs/business/diagrams/backend-database-er.drawio.png \
+  docs/business/diagrams/backend-database-er.drawio
+</code></pre>
+<p>另外四张 ER 详图及用例图使用相同导出命令。<code>build_reading_page.py</code> 会把主文档、接口索引与本附录汇总进浏览器阅读版。本文及图中不存在数据库行数据或密钥。</p>
+</main></div>
+<dialog id="viewer"><div class="viewer-bar"><strong id="caption"></strong><button id="size">原尺寸</button><button id="close">关闭 ×</button></div><div class="canvas"><img id="large" alt=""></div></dialog>
+<script>
+const viewer=document.querySelector('#viewer'),canvas=document.querySelector('.canvas'),large=document.querySelector('#large'),size=document.querySelector('#size');
+document.querySelector('#print').addEventListener('click',()=>window.print());
+document.querySelectorAll('.diagram').forEach(b=>b.addEventListener('click',()=>{large.src=b.dataset.src;large.alt=b.dataset.caption;document.querySelector('#caption').textContent=b.dataset.caption;canvas.classList.remove('original');size.textContent='原尺寸';viewer.showModal();canvas.scrollTo(0,0)}));
+document.querySelector('#close').addEventListener('click',()=>viewer.close());
+size.addEventListener('click',()=>{const original=canvas.classList.toggle('original');size.textContent=original?'适应宽度':'原尺寸';canvas.scrollTo(0,0)});
+viewer.addEventListener('click',e=>{if(e.target===viewer)viewer.close()});
+</script></body></html>

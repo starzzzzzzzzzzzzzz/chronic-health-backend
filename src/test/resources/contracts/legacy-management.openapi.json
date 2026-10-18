@@ -1,0 +1,235 @@
+{
+  "openapi": "3.1.0",
+  "x-source-url": "http://116.178.155.215:18006/ncd-ai/v3/api-docs",
+  "x-source-date": "2026-10-18",
+  "x-source-sha256": "49a63f1f8cf30a6aa84120ff6d9ddddee9b84498f5b373222e66e4580b491cbf",
+  "paths": {
+    "/ncd-ai/store/care/drafts/basis/evaluate": {
+      "post": {
+        "tags": [
+          "care-draft-recommendation-controller"
+        ],
+        "operationId": "evaluateBasis",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvaluateBasisRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultEvaluated"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "EvaluateBasisRequest": {
+        "type": "object",
+        "properties": {
+          "archiveId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "shopId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "teamId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ResultEvaluated": {
+        "type": "object",
+        "description": "统一 API 响应",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "业务状态码",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "description": "响应消息",
+            "example": "success"
+          },
+          "data": {
+            "$ref": "#/components/schemas/Evaluated",
+            "description": "响应数据"
+          }
+        }
+      },
+      "Evaluated": {
+        "type": "object",
+        "properties": {
+          "archiveId": {
+            "type": "string"
+          },
+          "sourceHash": {
+            "type": "string"
+          },
+          "diseases": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Disease"
+            }
+          },
+          "medicationFacts": {
+            "type": "string"
+          },
+          "decisionExplanation": {
+            "$ref": "#/components/schemas/DecisionExplanation"
+          }
+        }
+      },
+      "Disease": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "risk": {
+            "type": "string"
+          },
+          "subtype": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string"
+          },
+          "basis": {
+            "type": "string"
+          },
+          "weights": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "managementTypes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Option"
+            }
+          },
+          "typeMatches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Match"
+            }
+          },
+          "secondarySubtypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ruleVersion": {
+            "type": "string"
+          }
+        }
+      },
+      "Option": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "condition": {
+            "type": "string"
+          },
+          "initialWeights": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "Match": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "missing": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Evidence"
+            }
+          }
+        }
+      },
+      "Evidence": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "quote": {
+            "type": "string"
+          }
+        }
+      },
+      "DecisionExplanation": {
+        "type": "object",
+        "properties": {
+          "analysisBasis": {
+            "type": "string"
+          },
+          "decisionSummary": {
+            "type": "string"
+          },
+          "pendingConfirmation": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
