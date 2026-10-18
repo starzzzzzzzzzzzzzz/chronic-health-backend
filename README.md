@@ -103,6 +103,8 @@ Java 与 Maven 二进制复用本机安装，未修改全局 shell、JAVA_HOME �
 
 ## 日常命令
 
+阿里云开发服务器已部署，公网 API 为 `https://120.26.14.242/ncd-ai`；前端伙伴可直接使用 [云端联调交接说明](docs/FRONTEND-CLOUD-HANDOFF.md)。运维、SSH 隧道、备份和验收记录见 [云端部署说明](docs/ALIYUN-DEPLOYMENT.md)。
+
 ```bash
 ./scripts/init-env.sh        # 首次生成随机密码；已存在时保留
 ./scripts/mvn.sh -version    # 确认 Maven 使用 JDK 17
