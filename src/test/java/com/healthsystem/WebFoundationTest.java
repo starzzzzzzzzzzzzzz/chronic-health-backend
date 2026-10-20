@@ -25,6 +25,7 @@ class WebFoundationTest {
                 .andExpect(status().isOk())
                 .andExpect(header().string("X-Request-Id", "health-check-001"))
                 .andExpect(jsonPath("$.code").value(200))
+                .andExpect(jsonPath("$.message").value("操作成功"))
                 .andExpect(jsonPath("$.data.status").value("UP"));
         assertThat(MDC.get("requestId")).isNull();
     }
@@ -42,6 +43,7 @@ class WebFoundationTest {
         mvc.perform(get("/app/archive/1").header("Authorization", "not-a-real-token"))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.code").value(401))
+                .andExpect(jsonPath("$.message").value("请先提供有效的身份凭证"))
                 .andExpect(header().exists("X-Request-Id"));
     }
 

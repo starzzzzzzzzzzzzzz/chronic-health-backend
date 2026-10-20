@@ -38,7 +38,7 @@ public class ApiDocumentationConfiguration {
     @Bean GlobalOpenApiCustomizer apiResponseDocumentation() {
         return api -> {
             var error=new ObjectSchema().addProperty("code",new IntegerSchema().example(400))
-                    .addProperty("message",new StringSchema().example("Invalid request parameters"))
+                    .addProperty("message",new StringSchema().example("请求参数不符合要求，请检查后重试"))
                     .addProperty("data",new Schema<>().nullable(true));
             api.getComponents().addSchemas("ApiError",error);
             // Jackson 3 JsonNode fields need explicit shapes after schema resolution.

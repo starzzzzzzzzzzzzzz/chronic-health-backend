@@ -34,7 +34,7 @@ class LegacyArchiveApiTest extends DatabaseApiTestSupport {
         var response=read(prefix);
         var data=response.path("data");
         assertThat(response.path("code").asInt()).isEqualTo(200);
-        assertThat(response.path("message").asText()).isEqualTo("success");
+        assertThat(response.path("message").asText()).isEqualTo("操作成功");
         assertThat(data.path("page").asInt()).isEqualTo(1);
         assertThat(data.path("pageSize").asInt()).isEqualTo(10);
         assertThat(data.path("total").asInt()).isEqualTo(1);

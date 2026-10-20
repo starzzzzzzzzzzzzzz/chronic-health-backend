@@ -63,12 +63,12 @@ public class SecurityConfiguration {
                         .authenticationEntryPoint((request, response, exception) -> {
                             response.setStatus(401);
                             response.setContentType("application/json;charset=UTF-8");
-                            response.getWriter().write("{\"code\":401,\"message\":\"Authentication required\",\"data\":null}");
+                            response.getWriter().write("{\"code\":401,\"message\":\"请先提供有效的身份凭证\",\"data\":null}");
                         })
                         .accessDeniedHandler((request, response, exception) -> {
                             response.setStatus(403);
                             response.setContentType("application/json;charset=UTF-8");
-                            response.getWriter().write("{\"code\":403,\"message\":\"Access denied\",\"data\":null}");
+                            response.getWriter().write("{\"code\":403,\"message\":\"无权执行此操作\",\"data\":null}");
                         }))
                 .build();
     }
