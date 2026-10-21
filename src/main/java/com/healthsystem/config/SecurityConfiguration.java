@@ -43,6 +43,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/store/care/grant-administration/archives").authenticated()
                         .requestMatchers(HttpMethod.GET, "/store/care/archives/*/input").authenticated()
                         .requestMatchers(HttpMethod.POST, "/store/care/drafts/recommendations/generate", "/store/care/drafts/basis/evaluate").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/care-plans", "/review-submissions", "/plan-versions/*/workflow").authenticated()
                         .requestMatchers(HttpMethod.GET, "/patients", "/patients/**", "/plan-versions/*", "/plan-versions/*/condition-confirmations", "/plan-versions/*/review-context", "/review-submissions/*").authenticated()
                         .requestMatchers(HttpMethod.POST, "/plan-versions/*/condition-confirmations", "/plan-versions/*/review-submissions", "/review-submissions/*/decisions", "/review-submissions/*/withdrawals").authenticated()
                         .requestMatchers(HttpMethod.POST, "/care-plans", "/care-plans/*/versions").authenticated()
